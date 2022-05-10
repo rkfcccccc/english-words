@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  database:
+    env_file:
+      - .env
+    build: ./docker/postgres/
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: ["CMD", "pg_isready -U backend"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
+
+networks: 
+  default: 
+    name: app_network
