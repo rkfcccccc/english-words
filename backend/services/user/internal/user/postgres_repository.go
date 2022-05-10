@@ -23,7 +23,7 @@ func (repo *PostgresRepository) Create(ctx context.Context, email, password stri
 	var userId int
 
 	query := fmt.Sprintf("INSERT INTO %s (email, password, register_date) VALUES ($1, $2, $3) RETURNING id", usersTable)
-	err := pgxscan.Get(ctx, repo.db, &userId, query, email, password, time.Now().Unix())
+	err := pgxscan.Get(ctx, repo.db, &userId, query, email, password, time.Now())
 
 	if err != nil {
 		return -1, fmt.Errorf("pgxscan.Get: %v", err)
