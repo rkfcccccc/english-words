@@ -11,3 +11,4 @@ go.work
 
 .DS_Store
 .env
+.vscode
