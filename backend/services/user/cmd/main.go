@@ -8,7 +8,9 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/rkfcccccc/english_words/user/internal/user"
+	"github.com/rkfcccccc/english_words/user/pkg/dsync/redsync"
 	"github.com/rkfcccccc/english_words/user/pkg/postgres"
+	"github.com/rkfcccccc/english_words/user/pkg/redis"
 	"google.golang.org/grpc"
 )
 
@@ -22,8 +24,11 @@ func main() {
 		os.Getenv("POSTGRES_HOST"), os.Getenv("POSTGRES_PORT"), os.Getenv("POSTGRES_DB"),
 	)
 
+	redis := redis.NewClient(os.Getenv("REDIS_HOST"), os.Getenv("REDIS_PORT"))
+	sync := redsync.NewClient(redis)
+
 	repo := user.NewPostgresRepository(db)
-	service := user.NewService(repo)
+	service := user.NewService(repo, sync)
 	server := user.NewServer(service)
 
 	listener, err := net.Listen("tcp", os.Getenv("USER_GRPC_ADDR"))

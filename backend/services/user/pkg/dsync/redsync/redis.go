@@ -1,4 +1,4 @@
-package redis
+package redsync
 
 import (
 	"github.com/go-redis/redis/v8"
@@ -11,7 +11,7 @@ type syncClient struct {
 	rs *redsync.Redsync
 }
 
-func NewSyncClient(client *redis.Client) dsync.Client {
+func NewClient(client *redis.Client) dsync.Client {
 	return &syncClient{redsync.New(goredis.NewPool(client))}
 }
 

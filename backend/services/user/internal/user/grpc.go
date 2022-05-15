@@ -2,9 +2,13 @@ package user
 
 import (
 	"context"
+	"errors"
+	"fmt"
 
 	pb "github.com/rkfcccccc/english_words/proto/user"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type Server struct {
@@ -22,8 +26,17 @@ func (server *Server) Register(s *grpc.Server) {
 
 func (server *Server) Create(ctx context.Context, in *pb.CreateRequest) (*pb.CreateResponse, error) {
 	userId, err := server.service.Create(ctx, in.Email, in.Password)
+
+	if errors.Is(err, ErrEmailAlreadyUsed) {
+		return nil, status.Error(codes.AlreadyExists, err.Error())
+	}
+
+	if errors.Is(err, ErrInvalidEmail) || errors.Is(err, ErrTooLongPassword) || errors.Is(err, ErrTooLongEmail) {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("service.Create: %v", err)
 	}
 
 	return &pb.CreateResponse{UserId: int32(userId)}, nil

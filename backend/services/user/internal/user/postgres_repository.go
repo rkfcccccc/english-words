@@ -2,10 +2,12 @@ package user
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
 	"github.com/georgysavva/scany/pgxscan"
+	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
@@ -38,6 +40,10 @@ func (repo *PostgresRepository) GetById(ctx context.Context, userId int) (*User,
 	query := fmt.Sprintf("SELECT * FROM %s WHERE id=$1", usersTable)
 	err := pgxscan.Get(ctx, repo.db, &user, query, userId)
 
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil, nil
+	}
+
 	if err != nil {
 		return nil, fmt.Errorf("pgxscan.Get: %v", err)
 	}
@@ -50,6 +56,10 @@ func (repo *PostgresRepository) GetByEmail(ctx context.Context, email string) (*
 
 	query := fmt.Sprintf("SELECT * FROM %s WHERE email=$1", usersTable)
 	err := pgxscan.Get(ctx, repo.db, &user, query, email)
+
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil, nil
+	}
 
 	if err != nil {
 		return nil, fmt.Errorf("pgxscan.Get: %v", err)
