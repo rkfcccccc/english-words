@@ -12,7 +12,7 @@ import (
 
 var emailRegex = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 
-var ErrEmailAlreadyUsed = errors.New("email already used")
+var ErrEmailAlreadyInUse = errors.New("email already in use")
 var ErrInvalidEmail = errors.New("invalid email")
 var ErrTooLongPassword = errors.New("too long password")
 var ErrTooLongEmail = errors.New("too long email")
@@ -26,6 +26,7 @@ func NewService(repo Repository, sync dsync.Client) *Service {
 	return &Service{repo, sync}
 }
 
+// TODO: move credentials validation to gateway (because email verification occurs before user instance creation and email needs to be verified)
 func (service *Service) Create(ctx context.Context, email, password string) (int, error) {
 	if emailRegex.FindString(email) == "" {
 		return -1, ErrInvalidEmail
@@ -52,7 +53,7 @@ func (service *Service) Create(ctx context.Context, email, password string) (int
 	}
 
 	if user != nil {
-		return -1, ErrEmailAlreadyUsed
+		return -1, ErrEmailAlreadyInUse
 	}
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)

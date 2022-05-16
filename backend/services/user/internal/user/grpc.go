@@ -27,7 +27,7 @@ func (server *Server) Register(s *grpc.Server) {
 func (server *Server) Create(ctx context.Context, in *pb.CreateRequest) (*pb.CreateResponse, error) {
 	userId, err := server.service.Create(ctx, in.Email, in.Password)
 
-	if errors.Is(err, ErrEmailAlreadyUsed) {
+	if errors.Is(err, ErrEmailAlreadyInUse) {
 		return nil, status.Error(codes.AlreadyExists, err.Error())
 	}
 
