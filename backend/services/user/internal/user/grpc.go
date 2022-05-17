@@ -8,6 +8,7 @@ import (
 	pb "github.com/rkfcccccc/english_words/proto/user"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
 
@@ -27,11 +28,22 @@ func (server *Server) Register(s *grpc.Server) {
 func (server *Server) Create(ctx context.Context, in *pb.CreateRequest) (*pb.CreateResponse, error) {
 	userId, err := server.service.Create(ctx, in.Email, in.Password)
 
-	if errors.Is(err, ErrEmailAlreadyInUse) {
+	if errors.Is(err, ErrAlreadyExists) {
 		return nil, status.Error(codes.AlreadyExists, err.Error())
 	}
 
-	if errors.Is(err, ErrInvalidEmail) || errors.Is(err, ErrTooLongPassword) || errors.Is(err, ErrTooLongEmail) {
+	if errors.Is(err, ErrInvalidEmail) {
+		grpc.SetTrailer(ctx, metadata.Pairs("ERROR_NAME", "INVALID_EMAIL"))
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
+	if errors.Is(err, ErrTooLongPassword) {
+		grpc.SetTrailer(ctx, metadata.Pairs("ERROR_NAME", "TOO_LONG_PASSWORD"))
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
+	if errors.Is(err, ErrTooLongEmail) {
+		grpc.SetTrailer(ctx, metadata.Pairs("ERROR_NAME", "TOO_LONG_EMAIL"))
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
@@ -44,6 +56,11 @@ func (server *Server) Create(ctx context.Context, in *pb.CreateRequest) (*pb.Cre
 
 func (server *Server) GetById(ctx context.Context, in *pb.GetByIdRequest) (*pb.User, error) {
 	u, err := server.service.GetById(ctx, int(in.UserId))
+
+	if errors.Is(err, ErrNotFound) {
+		return nil, status.Error(codes.NotFound, err.Error())
+	}
+
 	if err != nil {
 		return nil, err
 	}
@@ -53,6 +70,11 @@ func (server *Server) GetById(ctx context.Context, in *pb.GetByIdRequest) (*pb.U
 
 func (server *Server) GetByEmail(ctx context.Context, in *pb.GetByEmailRequest) (*pb.User, error) {
 	u, err := server.service.GetByEmail(ctx, in.Email)
+
+	if errors.Is(err, ErrNotFound) {
+		return nil, status.Error(codes.NotFound, err.Error())
+	}
+
 	if err != nil {
 		return nil, err
 	}
@@ -62,6 +84,7 @@ func (server *Server) GetByEmail(ctx context.Context, in *pb.GetByEmailRequest) 
 
 func (server *Server) Delete(ctx context.Context, in *pb.DeleteRequest) (*pb.DeleteResponse, error) {
 	err := server.service.Delete(ctx, int(in.UserId))
+
 	if err != nil {
 		return nil, err
 	}

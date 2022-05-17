@@ -12,10 +12,11 @@ import (
 
 var emailRegex = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 
-var ErrEmailAlreadyInUse = errors.New("email already in use")
+var ErrAlreadyExists = errors.New("email already in use")
 var ErrInvalidEmail = errors.New("invalid email")
 var ErrTooLongPassword = errors.New("too long password")
 var ErrTooLongEmail = errors.New("too long email")
+var ErrNotFound = errors.New("user was not found")
 
 type Service struct {
 	repo Repository
@@ -53,7 +54,7 @@ func (service *Service) Create(ctx context.Context, email, password string) (int
 	}
 
 	if user != nil {
-		return -1, ErrEmailAlreadyInUse
+		return -1, ErrAlreadyExists
 	}
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
@@ -65,11 +66,31 @@ func (service *Service) Create(ctx context.Context, email, password string) (int
 }
 
 func (service *Service) GetById(ctx context.Context, userId int) (*User, error) {
-	return service.repo.GetById(ctx, userId)
+	user, err := service.repo.GetById(ctx, userId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if user == nil {
+		return nil, ErrNotFound
+	}
+
+	return user, nil
 }
 
 func (service *Service) GetByEmail(ctx context.Context, email string) (*User, error) {
-	return service.repo.GetByEmail(ctx, email)
+	user, err := service.repo.GetByEmail(ctx, email)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if user == nil {
+		return nil, ErrNotFound
+	}
+
+	return user, nil
 }
 
 func (service *Service) Delete(ctx context.Context, userId int) error {
