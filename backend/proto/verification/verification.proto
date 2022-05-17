@@ -1,0 +1,25 @@
+syntax = "proto3";
+option go_package = "github.com/rkfcccccc/english_words/proto/verification";
+
+message SendCodeRequest {
+    string email = 1;
+    int32 typeId = 2;
+}
+
+message SendCodeResponse {
+    string request_id = 1;
+}   
+
+message VerifyRequest {
+    string request_id = 1;
+    int32 code = 2;
+}
+
+message VerifyResponse {
+    bool success = 1;
+}
+
+service VerificationService {
+    rpc Verify(VerifyRequest) returns (VerifyResponse) {}
+    rpc SendCode(SendCodeRequest) returns (SendCodeResponse) {}
+}
