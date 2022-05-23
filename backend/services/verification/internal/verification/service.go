@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
 	"math/rand"
 	"time"
 
@@ -15,7 +14,7 @@ import (
 const (
 	MAX_REQUESTS_PER_TYPE = 3
 	MAX_ATTEMPTS          = 3
-	CODE_LENGTH           = 4 // keep in mind to change database field size when changing this
+	CODE_LENGTH           = 4 // keep in mind to change database and proto field when changing this
 	CODE_TTL              = time.Minute * 5
 )
 
@@ -48,7 +47,6 @@ func (service *Service) deleteAllExpired(ctx context.Context) error {
 		return nil
 	}
 
-	log.Println("deleted expired")
 	return service.repo.DeleteAllExpired(ctx)
 }
 
