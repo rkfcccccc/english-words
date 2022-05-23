@@ -1,14 +1,12 @@
 version: '3'
 
 # TODO: make network more secure
-
 services:
-  database:
-    env_file:
-      - .env
+  postgres:
+    env_file: .env
     build: ./docker/postgres/
     ports:
-      - 5432:5432
+      - $POSTGRES_PORT:5432
     healthcheck:
       test: ["CMD", "pg_isready -U backend"]
       interval: 10s
@@ -17,12 +15,31 @@ services:
       start_period: 10s
     restart: unless-stopped
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+  
+  mongo:
+    image: mongo:4
+    env_file: .env
+    command: --quiet
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=$MONGO_USER
+      - MONGO_INITDB_ROOT_PASSWORD=$MONGO_PASSWORD
+      - MONGO_INITDB_DATABASE=$MONGO_DB
+    ports:
+      - $MONGO_PORT:27017
+    healthcheck:
+      test: ["CMD","mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
   
   redis:
     image: "redis:7.0.0-alpine"
-    env_file:
-      - .env
+    env_file: .env
     ports:
       - 6379:6379
     healthcheck:
@@ -35,7 +52,8 @@ services:
       - redis_data:/data
 
 volumes:
-  db_data:
+  postgres_data:
+  mongo_data:
   redis_data:
 
 networks: 
