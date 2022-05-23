@@ -1,7 +1,7 @@
 package dictionaryapi
 
 type Definition struct {
-	Text    string `json:"definition"`
+	Text    string `json:"text"`
 	Example string `json:"example"`
 }
 
