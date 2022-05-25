@@ -3,13 +3,16 @@ package dictionaryapi
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
 )
 
-var ErrNoDefinitionsFound = errors.New("no definitions found")
+type client struct{}
+
+func NewClient() Client {
+	return &client{}
+}
 
 func fetchWordEntries(ctx context.Context, language, word string) ([]Entry, error) {
 	url := fmt.Sprintf("https://api.dictionaryapi.dev/api/v2/entries/%s/%s", language, word)
@@ -46,7 +49,7 @@ func fetchWordEntries(ctx context.Context, language, word string) ([]Entry, erro
 	return result, nil
 }
 
-func GetWordEntry(ctx context.Context, language, word string) (*Entry, error) {
+func (c *client) GetWordEntry(ctx context.Context, language, word string) (*Entry, error) {
 	entries, err := fetchWordEntries(ctx, language, word)
 	if err != nil {
 		return nil, err

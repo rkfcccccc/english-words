@@ -1,5 +1,9 @@
 package dictionaryapi
 
+import "errors"
+
+var ErrNoDefinitionsFound = errors.New("no definitions found")
+
 type Definition struct {
 	Text    string `json:"text"`
 	Example string `json:"example"`
