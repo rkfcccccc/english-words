@@ -34,5 +34,13 @@ require (
 )
 
 require github.com/rkfcccccc/english_words/proto v0.0.0
-
 replace github.com/rkfcccccc/english_words/proto => ../../proto
+
+require github.com/rkfcccccc/english_words/shared_pkg/dsync v0.0.0
+replace github.com/rkfcccccc/english_words/shared_pkg/dsync => ../../shared_pkg/dsync
+
+require github.com/rkfcccccc/english_words/shared_pkg/postgres v0.0.0
+replace github.com/rkfcccccc/english_words/shared_pkg/postgres => ../../shared_pkg/postgres
+
+require github.com/rkfcccccc/english_words/shared_pkg/redis v0.0.0
+replace github.com/rkfcccccc/english_words/shared_pkg/redis => ../../shared_pkg/redis

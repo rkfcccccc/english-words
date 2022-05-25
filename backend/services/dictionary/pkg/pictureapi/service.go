@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/rkfcccccc/english_words/dictionary/pkg/cache"
+	"github.com/rkfcccccc/english_words/shared_pkg/cache"
 )
 
 const cacheTTL = time.Hour

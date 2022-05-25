@@ -6,7 +6,7 @@ import (
 
 	rcache "github.com/go-redis/cache/v8"
 	"github.com/go-redis/redis/v8"
-	"github.com/rkfcccccc/english_words/dictionary/pkg/cache"
+	"github.com/rkfcccccc/english_words/shared_pkg/cache"
 )
 
 type repository struct {

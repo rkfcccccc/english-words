@@ -7,7 +7,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/rkfcccccc/english_words/verification/pkg/dsync"
+	"github.com/rkfcccccc/english_words/shared_pkg/dsync"
 	"github.com/rkfcccccc/english_words/verification/pkg/mail"
 )
 

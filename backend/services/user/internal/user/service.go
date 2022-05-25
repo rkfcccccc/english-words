@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/rkfcccccc/english_words/user/pkg/dsync"
+	"github.com/rkfcccccc/english_words/shared_pkg/dsync"
 	"golang.org/x/crypto/bcrypt"
 )
 
