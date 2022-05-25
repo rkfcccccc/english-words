@@ -6,10 +6,16 @@ require github.com/stretchr/testify v1.7.1
 
 require (
 	github.com/andybalholm/cascadia v1.3.1 // indirect
+	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
+	github.com/go-redis/redis/v8 v8.11.5 // indirect
+	github.com/go-redsync/redsync/v4 v4.5.0 // indirect
 	github.com/go-stack/stack v1.8.1 // indirect
+	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
-	github.com/google/go-cmp v0.5.6 // indirect
+	github.com/hashicorp/errwrap v1.0.0 // indirect
+	github.com/hashicorp/go-multierror v1.1.0 // indirect
 	github.com/klauspost/compress v1.15.4 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
@@ -20,23 +26,28 @@ require (
 	golang.org/x/crypto v0.0.0-20220518034528-6f7dac969898 // indirect
 	golang.org/x/net v0.0.0-20220520000938-2e3eb7b945c2 // indirect
 	golang.org/x/sync v0.0.0-20220513210516-0976fa681c29 // indirect
+	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
 	golang.org/x/text v0.3.7 // indirect
-	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
-	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
+	google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013 // indirect
+	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c // indirect
+)
+
+require (
+	github.com/rkfcccccc/english_words/proto v0.0.0
+	github.com/rkfcccccc/english_words/shared_pkg/cache v0.0.0
+	github.com/rkfcccccc/english_words/shared_pkg/dsync v0.0.0
+	github.com/rkfcccccc/english_words/shared_pkg/mongodb v0.0.0
+	github.com/rkfcccccc/english_words/shared_pkg/redis v0.0.0
 )
 
 replace github.com/rkfcccccc/english_words/proto => ../../proto
 
-require github.com/rkfcccccc/english_words/shared_pkg/dsync v0.0.0
+replace github.com/rkfcccccc/english_words/shared_pkg/redis => ../../shared_pkg/redis
 
 replace github.com/rkfcccccc/english_words/shared_pkg/dsync => ../../shared_pkg/dsync
 
-require github.com/rkfcccccc/english_words/shared_pkg/cache v0.0.0
-
 replace github.com/rkfcccccc/english_words/shared_pkg/cache => ../../shared_pkg/cache
-
-require github.com/rkfcccccc/english_words/shared_pkg/mongodb v0.0.0
 
 replace github.com/rkfcccccc/english_words/shared_pkg/mongodb => ../../shared_pkg/mongodb
 
@@ -44,6 +55,5 @@ require (
 	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/joho/godotenv v1.4.0
 	go.mongodb.org/mongo-driver v1.9.1
+	google.golang.org/grpc v1.46.2
 )
-
-replace github.com/rkfcccccc/english_words/shared_pkg/redis => ../../shared_pkg/redis

@@ -1,0 +1,35 @@
+syntax = "proto3";
+option go_package = "github.com/rkfcccccc/english_words/proto/dictionary";
+
+message Definition {
+    string text = 1;
+    string example = 2;
+}
+
+message Meaning {
+    string part_of_speech = 1;
+    repeated Definition definitions = 2;
+    repeated string synonyms = 3;
+    repeated string antonyms = 4;
+}
+
+message WordEntry {
+    string id = 1;
+    string word = 2;
+    string phonetic = 3;
+    repeated Meaning meanings = 4;
+}
+
+message Word {
+    string word = 1;
+}
+
+message WordId {
+    string wordId = 1;
+}
+
+service DictionaryService {
+    rpc Create(Word) returns (WordId) {}
+    rpc GetById(WordId) returns (WordEntry) {}
+    rpc GetByName(Word) returns (WordEntry) {}
+}

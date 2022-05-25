@@ -56,7 +56,7 @@ func (service *Service) Create(ctx context.Context, word string) (string, error)
 }
 
 func (service *Service) GetByWord(ctx context.Context, word string) (*WordEntry, error) {
-	return service.repo.GetById(ctx, word)
+	return service.repo.GetByWord(ctx, word)
 }
 
 func (service *Service) GetById(ctx context.Context, wordId string) (*WordEntry, error) {
