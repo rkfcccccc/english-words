@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/rkfcccccc/english_words/dictionary/internal/dictionary"
-	"github.com/rkfcccccc/english_words/dictionary/pkg/dictionaryapi"
+	"github.com/rkfcccccc/english_words/services/dictionary/internal/dictionary"
+	"github.com/rkfcccccc/english_words/services/dictionary/pkg/dictionaryapi"
 	"github.com/rkfcccccc/english_words/shared_pkg/dsync"
 	"github.com/stretchr/testify/assert"
 )

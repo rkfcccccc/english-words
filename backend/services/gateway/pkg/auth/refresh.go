@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/rkfcccccc/english_words/gateway/pkg/cache"
+	"github.com/rkfcccccc/english_words/services/gateway/pkg/cache"
 )
 
 const refreshTTL = time.Hour * 24 * 30 * 6

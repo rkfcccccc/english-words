@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/joho/godotenv"
-	"github.com/rkfcccccc/english_words/dictionary/internal/dictionary"
+	"github.com/rkfcccccc/english_words/services/dictionary/internal/dictionary"
 	"github.com/rkfcccccc/english_words/shared_pkg/mongodb"
 	"github.com/stretchr/testify/assert"
 )

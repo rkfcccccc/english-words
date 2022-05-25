@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/rkfcccccc/english_words/dictionary/pkg/dictionaryapi"
+	"github.com/rkfcccccc/english_words/services/dictionary/pkg/dictionaryapi"
 	"github.com/rkfcccccc/english_words/shared_pkg/dsync"
 )
 

@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/rkfcccccc/english_words/dictionary/pkg/pictureapi"
+	"github.com/rkfcccccc/english_words/services/dictionary/pkg/pictureapi"
 
 	"github.com/PuerkitoBio/goquery"
 )

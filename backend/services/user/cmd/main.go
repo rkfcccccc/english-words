@@ -7,10 +7,10 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	"github.com/rkfcccccc/english_words/services/user/internal/user"
 	"github.com/rkfcccccc/english_words/shared_pkg/dsync/redsync"
 	"github.com/rkfcccccc/english_words/shared_pkg/postgres"
 	"github.com/rkfcccccc/english_words/shared_pkg/redis"
-	"github.com/rkfcccccc/english_words/user/internal/user"
 	"google.golang.org/grpc"
 )
 

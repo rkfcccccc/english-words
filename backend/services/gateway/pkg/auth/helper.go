@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/rkfcccccc/english_words/gateway/pkg/cache"
+	"github.com/rkfcccccc/english_words/services/gateway/pkg/cache"
 )
 
 var (
