@@ -89,5 +89,5 @@ func (server *Server) Delete(ctx context.Context, in *pb.DeleteRequest) (*pb.Del
 		return nil, err
 	}
 
-	return &pb.DeleteResponse{Success: true}, nil
+	return &pb.DeleteResponse{}, nil
 }

@@ -1,6 +1,7 @@
 syntax = "proto3";
 option go_package = "github.com/rkfcccccc/english_words/proto/user";
 
+/* Create */
 message CreateRequest {
     string email = 1;
     string password = 2;
@@ -10,6 +11,7 @@ message CreateResponse {
     int32 user_id = 1;
 }
 
+/* Get */
 message GetByIdRequest {
     int32 user_id = 1;
 }
@@ -25,14 +27,14 @@ message User {
     int64 register_date = 4;
 }
 
+/* Delete */
 message DeleteRequest {
     int32 user_id = 1;
 }
 
-message DeleteResponse {
-    bool success = 1;
-}
+message DeleteResponse {}
 
+/* Service */
 service UserService {
     rpc Create(CreateRequest) returns (CreateResponse) {}
     rpc GetById(GetByIdRequest) returns (User) {}
