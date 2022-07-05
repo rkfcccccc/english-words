@@ -1,0 +1,68 @@
+syntax = "proto3";
+option go_package = "github.com/rkfcccccc/english_words/proto/movie";
+
+message Movie {
+    string imdb_id = 1;
+    string title = 2;
+    int32 year = 3;
+    string poster_url = 4;
+}
+
+message MovieWords {
+    repeated string words = 1;
+}
+
+/* Create */
+message CreateRequest {
+    Movie movie = 1;
+    repeated string words = 2;
+}
+
+message CreateResponse {}
+
+/* Get */ 
+message GetRequest {
+    string imdb_id = 1;
+}
+
+/* Delete */
+message DeleteRequest {
+    string imdb_id = 1;
+}
+
+message DeleteResponse {}
+
+/* User */ 
+message FavoritesRequest {
+    int32 user_id = 1;
+}
+
+message FavoritesResponse {
+    repeated Movie movies = 1;
+}
+
+message AddUserRequest {
+    string imdb_id = 1;
+    int32 user_id = 2;
+}
+
+message RemoveUserRequest {
+    string imdb_id = 1;
+    int32 user_id = 2;
+}
+
+message AddUserResponse {}
+message RemoveUserResponse {}
+
+service MovieService {
+    rpc Create(CreateRequest) returns (CreateResponse) {}
+    rpc Get(GetRequest) returns (Movie) {}
+    rpc GetWords(GetRequest) returns (MovieWords) {}
+    rpc Delete(DeleteRequest) returns (DeleteResponse) {}
+
+    rpc GetUserFavorites(FavoritesRequest) returns (FavoritesResponse) {}
+
+    rpc AddUser(AddUserRequest) returns (AddUserResponse) {}
+    rpc RemoveUser(RemoveUserRequest) returns (RemoveUserResponse) {}
+}
+
