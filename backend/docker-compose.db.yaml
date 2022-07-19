@@ -1,10 +1,11 @@
 version: '3'
 
-# TODO: make network more secure
 services:
   postgres:
-    env_file: .env
     build: ./docker/postgres/
+    container_name: postgres
+    hostname: postgres
+    env_file: .env
     ports:
       - $POSTGRES_PORT:5432
     healthcheck:
@@ -19,8 +20,9 @@ services:
   
   mongo:
     image: mongo:4
+    container_name: mongo
+    hostname: mongo
     env_file: .env
-    command: --quiet
     environment:
       - MONGO_INITDB_ROOT_USERNAME=$MONGO_USER
       - MONGO_INITDB_ROOT_PASSWORD=$MONGO_PASSWORD
@@ -38,10 +40,12 @@ services:
       - mongo_data:/data/db
   
   redis:
-    image: "redis:7.0.0-alpine"
+    image: redis:7.0.0-alpine
+    container_name: redis
+    hostname: redis
     env_file: .env
     ports:
-      - 6379:6379
+      - $REDIS_PORT:6379
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -55,7 +59,3 @@ volumes:
   postgres_data:
   mongo_data:
   redis_data:
-
-networks: 
-  default: 
-    name: app_network
