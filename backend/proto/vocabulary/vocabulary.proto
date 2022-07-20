@@ -1,0 +1,40 @@
+syntax = "proto3";
+option go_package = "github.com/rkfcccccc/english_words/proto/vocabulary";
+
+message SetAlreadyLearnedRequest {
+    int32 user_id = 1;
+    string word_id = 2;
+    bool is_already_learned = 3;
+}
+
+message SetAlreadyLearnedResponse {}
+
+message GetChallengeRequest {
+    int32 user_id = 1;
+}
+
+message GetChallengeResponse {
+    string word_id = 1;
+    int32 learning_step = 2;
+}
+
+message PromoteWordRequest {
+    int32 user_id = 1;
+    string word_id = 2;
+}
+
+message PromoteWordResponse {}
+
+message ResistWordRequest {
+    int32 user_id = 1;
+    string word_id = 2;
+}
+
+message ResistWordResponse {}
+
+service VocabularyService {
+    rpc GetChallenge(GetChallengeRequest) returns (GetChallengeResponse) {}
+    rpc PromoteWord(PromoteWordRequest) returns (PromoteWordResponse) {}
+    rpc ResistWord(ResistWordRequest) returns (ResistWordResponse) {}
+    rpc SetAlreadyLearned(SetAlreadyLearnedRequest) returns (SetAlreadyLearnedResponse) {}
+}
