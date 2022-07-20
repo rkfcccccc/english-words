@@ -42,3 +42,18 @@ create table movies_users (
     imdb_id varchar(16) references movies (imdb_id) on delete cascade,
     primary key (user_id, imdb_id)
 );
+
+create table vocabulary (
+    user_id int references users (id) on delete cascade not null,
+    word_id char(24) not null, /* mongodb dictionary._id */
+
+    already_learned boolean not null default false,
+    learning_step int not null default 0,
+
+    next_challenge int,
+
+    count int not null,
+    primary key (user_id, word_id)
+);
+
+CREATE INDEX idx_vocabulary_user_id ON vocabulary(user_id);
