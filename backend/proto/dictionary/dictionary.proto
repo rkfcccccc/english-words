@@ -1,4 +1,5 @@
 syntax = "proto3";
+package dictionary;
 option go_package = "github.com/rkfcccccc/english_words/proto/dictionary";
 
 message Definition {

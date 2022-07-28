@@ -1,4 +1,5 @@
 syntax = "proto3";
+package vocabulary;
 option go_package = "github.com/rkfcccccc/english_words/proto/vocabulary";
 
 message SetAlreadyLearnedRequest {

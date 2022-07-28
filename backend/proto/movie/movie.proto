@@ -1,4 +1,5 @@
 syntax = "proto3";
+package movie;
 option go_package = "github.com/rkfcccccc/english_words/proto/movie";
 
 message Movie {

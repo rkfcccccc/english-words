@@ -41,7 +41,7 @@ func NewMovieServiceClient(cc grpc.ClientConnInterface) MovieServiceClient {
 
 func (c *movieServiceClient) Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error) {
 	out := new(CreateResponse)
-	err := c.cc.Invoke(ctx, "/MovieService/Create", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/movie.MovieService/Create", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func (c *movieServiceClient) Create(ctx context.Context, in *CreateRequest, opts
 
 func (c *movieServiceClient) Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*Movie, error) {
 	out := new(Movie)
-	err := c.cc.Invoke(ctx, "/MovieService/Get", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/movie.MovieService/Get", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +59,7 @@ func (c *movieServiceClient) Get(ctx context.Context, in *GetRequest, opts ...gr
 
 func (c *movieServiceClient) GetWords(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*MovieWords, error) {
 	out := new(MovieWords)
-	err := c.cc.Invoke(ctx, "/MovieService/GetWords", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/movie.MovieService/GetWords", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func (c *movieServiceClient) GetWords(ctx context.Context, in *GetRequest, opts 
 
 func (c *movieServiceClient) Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error) {
 	out := new(DeleteResponse)
-	err := c.cc.Invoke(ctx, "/MovieService/Delete", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/movie.MovieService/Delete", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +77,7 @@ func (c *movieServiceClient) Delete(ctx context.Context, in *DeleteRequest, opts
 
 func (c *movieServiceClient) GetUserFavorites(ctx context.Context, in *FavoritesRequest, opts ...grpc.CallOption) (*FavoritesResponse, error) {
 	out := new(FavoritesResponse)
-	err := c.cc.Invoke(ctx, "/MovieService/GetUserFavorites", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/movie.MovieService/GetUserFavorites", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -86,7 +86,7 @@ func (c *movieServiceClient) GetUserFavorites(ctx context.Context, in *Favorites
 
 func (c *movieServiceClient) AddUser(ctx context.Context, in *AddUserRequest, opts ...grpc.CallOption) (*AddUserResponse, error) {
 	out := new(AddUserResponse)
-	err := c.cc.Invoke(ctx, "/MovieService/AddUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/movie.MovieService/AddUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -95,7 +95,7 @@ func (c *movieServiceClient) AddUser(ctx context.Context, in *AddUserRequest, op
 
 func (c *movieServiceClient) RemoveUser(ctx context.Context, in *RemoveUserRequest, opts ...grpc.CallOption) (*RemoveUserResponse, error) {
 	out := new(RemoveUserResponse)
-	err := c.cc.Invoke(ctx, "/MovieService/RemoveUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/movie.MovieService/RemoveUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -164,7 +164,7 @@ func _MovieService_Create_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/MovieService/Create",
+		FullMethod: "/movie.MovieService/Create",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MovieServiceServer).Create(ctx, req.(*CreateRequest))
@@ -182,7 +182,7 @@ func _MovieService_Get_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/MovieService/Get",
+		FullMethod: "/movie.MovieService/Get",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MovieServiceServer).Get(ctx, req.(*GetRequest))
@@ -200,7 +200,7 @@ func _MovieService_GetWords_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/MovieService/GetWords",
+		FullMethod: "/movie.MovieService/GetWords",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MovieServiceServer).GetWords(ctx, req.(*GetRequest))
@@ -218,7 +218,7 @@ func _MovieService_Delete_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/MovieService/Delete",
+		FullMethod: "/movie.MovieService/Delete",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MovieServiceServer).Delete(ctx, req.(*DeleteRequest))
@@ -236,7 +236,7 @@ func _MovieService_GetUserFavorites_Handler(srv interface{}, ctx context.Context
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/MovieService/GetUserFavorites",
+		FullMethod: "/movie.MovieService/GetUserFavorites",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MovieServiceServer).GetUserFavorites(ctx, req.(*FavoritesRequest))
@@ -254,7 +254,7 @@ func _MovieService_AddUser_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/MovieService/AddUser",
+		FullMethod: "/movie.MovieService/AddUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MovieServiceServer).AddUser(ctx, req.(*AddUserRequest))
@@ -272,7 +272,7 @@ func _MovieService_RemoveUser_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/MovieService/RemoveUser",
+		FullMethod: "/movie.MovieService/RemoveUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MovieServiceServer).RemoveUser(ctx, req.(*RemoveUserRequest))
@@ -284,7 +284,7 @@ func _MovieService_RemoveUser_Handler(srv interface{}, ctx context.Context, dec 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var MovieService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "MovieService",
+	ServiceName: "movie.MovieService",
 	HandlerType: (*MovieServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

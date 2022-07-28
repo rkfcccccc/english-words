@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.19.4
-// source: verification/verification.proto
+// source: verification.proto
 
 package verification
 
@@ -36,7 +36,7 @@ func NewVerificationServiceClient(cc grpc.ClientConnInterface) VerificationServi
 
 func (c *verificationServiceClient) Verify(ctx context.Context, in *VerifyRequest, opts ...grpc.CallOption) (*VerifyResponse, error) {
 	out := new(VerifyResponse)
-	err := c.cc.Invoke(ctx, "/VerificationService/Verify", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/verification.VerificationService/Verify", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +45,7 @@ func (c *verificationServiceClient) Verify(ctx context.Context, in *VerifyReques
 
 func (c *verificationServiceClient) SendCode(ctx context.Context, in *SendCodeRequest, opts ...grpc.CallOption) (*SendCodeResponse, error) {
 	out := new(SendCodeResponse)
-	err := c.cc.Invoke(ctx, "/VerificationService/SendCode", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/verification.VerificationService/SendCode", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +94,7 @@ func _VerificationService_Verify_Handler(srv interface{}, ctx context.Context, d
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/VerificationService/Verify",
+		FullMethod: "/verification.VerificationService/Verify",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(VerificationServiceServer).Verify(ctx, req.(*VerifyRequest))
@@ -112,7 +112,7 @@ func _VerificationService_SendCode_Handler(srv interface{}, ctx context.Context,
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/VerificationService/SendCode",
+		FullMethod: "/verification.VerificationService/SendCode",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(VerificationServiceServer).SendCode(ctx, req.(*SendCodeRequest))
@@ -124,7 +124,7 @@ func _VerificationService_SendCode_Handler(srv interface{}, ctx context.Context,
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var VerificationService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "VerificationService",
+	ServiceName: "verification.VerificationService",
 	HandlerType: (*VerificationServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -137,5 +137,5 @@ var VerificationService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "verification/verification.proto",
+	Metadata: "verification.proto",
 }

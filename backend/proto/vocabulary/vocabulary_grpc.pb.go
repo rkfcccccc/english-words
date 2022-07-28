@@ -38,7 +38,7 @@ func NewVocabularyServiceClient(cc grpc.ClientConnInterface) VocabularyServiceCl
 
 func (c *vocabularyServiceClient) GetChallenge(ctx context.Context, in *GetChallengeRequest, opts ...grpc.CallOption) (*GetChallengeResponse, error) {
 	out := new(GetChallengeResponse)
-	err := c.cc.Invoke(ctx, "/VocabularyService/GetChallenge", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/vocabulary.VocabularyService/GetChallenge", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +47,7 @@ func (c *vocabularyServiceClient) GetChallenge(ctx context.Context, in *GetChall
 
 func (c *vocabularyServiceClient) PromoteWord(ctx context.Context, in *PromoteWordRequest, opts ...grpc.CallOption) (*PromoteWordResponse, error) {
 	out := new(PromoteWordResponse)
-	err := c.cc.Invoke(ctx, "/VocabularyService/PromoteWord", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/vocabulary.VocabularyService/PromoteWord", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +56,7 @@ func (c *vocabularyServiceClient) PromoteWord(ctx context.Context, in *PromoteWo
 
 func (c *vocabularyServiceClient) ResistWord(ctx context.Context, in *ResistWordRequest, opts ...grpc.CallOption) (*ResistWordResponse, error) {
 	out := new(ResistWordResponse)
-	err := c.cc.Invoke(ctx, "/VocabularyService/ResistWord", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/vocabulary.VocabularyService/ResistWord", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +65,7 @@ func (c *vocabularyServiceClient) ResistWord(ctx context.Context, in *ResistWord
 
 func (c *vocabularyServiceClient) SetAlreadyLearned(ctx context.Context, in *SetAlreadyLearnedRequest, opts ...grpc.CallOption) (*SetAlreadyLearnedResponse, error) {
 	out := new(SetAlreadyLearnedResponse)
-	err := c.cc.Invoke(ctx, "/VocabularyService/SetAlreadyLearned", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/vocabulary.VocabularyService/SetAlreadyLearned", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -122,7 +122,7 @@ func _VocabularyService_GetChallenge_Handler(srv interface{}, ctx context.Contex
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/VocabularyService/GetChallenge",
+		FullMethod: "/vocabulary.VocabularyService/GetChallenge",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(VocabularyServiceServer).GetChallenge(ctx, req.(*GetChallengeRequest))
@@ -140,7 +140,7 @@ func _VocabularyService_PromoteWord_Handler(srv interface{}, ctx context.Context
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/VocabularyService/PromoteWord",
+		FullMethod: "/vocabulary.VocabularyService/PromoteWord",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(VocabularyServiceServer).PromoteWord(ctx, req.(*PromoteWordRequest))
@@ -158,7 +158,7 @@ func _VocabularyService_ResistWord_Handler(srv interface{}, ctx context.Context,
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/VocabularyService/ResistWord",
+		FullMethod: "/vocabulary.VocabularyService/ResistWord",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(VocabularyServiceServer).ResistWord(ctx, req.(*ResistWordRequest))
@@ -176,7 +176,7 @@ func _VocabularyService_SetAlreadyLearned_Handler(srv interface{}, ctx context.C
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/VocabularyService/SetAlreadyLearned",
+		FullMethod: "/vocabulary.VocabularyService/SetAlreadyLearned",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(VocabularyServiceServer).SetAlreadyLearned(ctx, req.(*SetAlreadyLearnedRequest))
@@ -188,7 +188,7 @@ func _VocabularyService_SetAlreadyLearned_Handler(srv interface{}, ctx context.C
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var VocabularyService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "VocabularyService",
+	ServiceName: "vocabulary.VocabularyService",
 	HandlerType: (*VocabularyServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

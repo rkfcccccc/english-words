@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.19.4
-// source: dictionary/dictionary.proto
+// source: dictionary.proto
 
 package dictionary
 
@@ -37,7 +37,7 @@ func NewDictionaryServiceClient(cc grpc.ClientConnInterface) DictionaryServiceCl
 
 func (c *dictionaryServiceClient) Create(ctx context.Context, in *Word, opts ...grpc.CallOption) (*WordId, error) {
 	out := new(WordId)
-	err := c.cc.Invoke(ctx, "/DictionaryService/Create", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/dictionary.DictionaryService/Create", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +46,7 @@ func (c *dictionaryServiceClient) Create(ctx context.Context, in *Word, opts ...
 
 func (c *dictionaryServiceClient) GetById(ctx context.Context, in *WordId, opts ...grpc.CallOption) (*WordEntry, error) {
 	out := new(WordEntry)
-	err := c.cc.Invoke(ctx, "/DictionaryService/GetById", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/dictionary.DictionaryService/GetById", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +55,7 @@ func (c *dictionaryServiceClient) GetById(ctx context.Context, in *WordId, opts 
 
 func (c *dictionaryServiceClient) GetByName(ctx context.Context, in *Word, opts ...grpc.CallOption) (*WordEntry, error) {
 	out := new(WordEntry)
-	err := c.cc.Invoke(ctx, "/DictionaryService/GetByName", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/dictionary.DictionaryService/GetByName", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -108,7 +108,7 @@ func _DictionaryService_Create_Handler(srv interface{}, ctx context.Context, dec
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/DictionaryService/Create",
+		FullMethod: "/dictionary.DictionaryService/Create",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DictionaryServiceServer).Create(ctx, req.(*Word))
@@ -126,7 +126,7 @@ func _DictionaryService_GetById_Handler(srv interface{}, ctx context.Context, de
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/DictionaryService/GetById",
+		FullMethod: "/dictionary.DictionaryService/GetById",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DictionaryServiceServer).GetById(ctx, req.(*WordId))
@@ -144,7 +144,7 @@ func _DictionaryService_GetByName_Handler(srv interface{}, ctx context.Context, 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/DictionaryService/GetByName",
+		FullMethod: "/dictionary.DictionaryService/GetByName",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DictionaryServiceServer).GetByName(ctx, req.(*Word))
@@ -156,7 +156,7 @@ func _DictionaryService_GetByName_Handler(srv interface{}, ctx context.Context, 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var DictionaryService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "DictionaryService",
+	ServiceName: "dictionary.DictionaryService",
 	HandlerType: (*DictionaryServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -173,5 +173,5 @@ var DictionaryService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "dictionary/dictionary.proto",
+	Metadata: "dictionary.proto",
 }
