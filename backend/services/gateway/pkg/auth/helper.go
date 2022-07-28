@@ -11,7 +11,11 @@ import (
 var (
 	ErrTokenExpired = errors.New("token expired")
 	ErrInvalidToken = errors.New("invalid token")
+	ErrRefreshMiss  = errors.New("no user with that refresh token")
 )
+
+const refreshTTL = time.Hour * 24 * 30 * 6
+const tokenTTL = time.Minute * 5
 
 type UserClaims struct {
 	UserId int `json:"user_id"`
@@ -20,10 +24,9 @@ type UserClaims struct {
 
 type Helper struct {
 	signingKey string
-	tokenTTL   time.Duration
 	cache      cache.Repository
 }
 
-func NewHelper(signingKey string, tokenTTL time.Duration, repo cache.Repository) *Helper {
-	return &Helper{signingKey, tokenTTL, repo}
+func NewHelper(signingKey string, repo cache.Repository) *Helper {
+	return &Helper{signingKey, repo}
 }

@@ -42,7 +42,7 @@ func (helper *Helper) IssueJWT(user_id int) (string, error) {
 	claims := UserClaims{
 		user_id,
 		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(helper.tokenTTL).Unix(),
+			ExpiresAt: time.Now().Add(tokenTTL).Unix(),
 			IssuedAt:  time.Now().Unix(),
 		},
 	}

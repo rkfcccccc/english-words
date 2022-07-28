@@ -5,14 +5,9 @@ import (
 	"crypto/rand"
 	"errors"
 	"fmt"
-	"time"
 
 	"github.com/rkfcccccc/english_words/shared_pkg/cache"
 )
-
-const refreshTTL = time.Hour * 24 * 30 * 6
-
-var ErrRefreshMiss = errors.New("no user with that refresh token")
 
 func generateToken32() string {
 	b := make([]byte, 32)
