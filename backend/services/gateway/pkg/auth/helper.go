@@ -23,10 +23,10 @@ type UserClaims struct {
 }
 
 type Helper struct {
-	signingKey string
+	signingKey []byte
 	cache      cache.Repository
 }
 
 func NewHelper(signingKey string, repo cache.Repository) *Helper {
-	return &Helper{signingKey, repo}
+	return &Helper{[]byte(signingKey), repo}
 }
