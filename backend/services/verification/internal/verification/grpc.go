@@ -7,6 +7,7 @@ import (
 	pb "github.com/rkfcccccc/english_words/proto/verification"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
 
@@ -27,11 +28,12 @@ func (server *Server) SendCode(ctx context.Context, in *pb.SendCodeRequest) (*pb
 	requestId, err := server.service.SendCode(ctx, in.Email, int(in.TypeId))
 
 	if errors.Is(err, ErrTooManyRequests) {
+		grpc.SetTrailer(ctx, metadata.Pairs("ERROR_NAME", "TOO_MANY_REQUESTS"))
 		return nil, status.Errorf(codes.ResourceExhausted, err.Error())
 	}
 
 	if err != nil {
-		return nil, status.Errorf(codes.Unknown, err.Error())
+		return nil, err
 	}
 
 	return &pb.SendCodeResponse{RequestId: requestId}, nil
@@ -41,11 +43,17 @@ func (server *Server) Verify(ctx context.Context, in *pb.VerifyRequest) (*pb.Ver
 	ok, err := server.service.Verify(ctx, in.RequestId, int(in.Code))
 
 	if errors.Is(err, ErrNotFound) {
+		grpc.SetTrailer(ctx, metadata.Pairs("ERROR_NAME", "REQUEST_NOT_FOUND"))
 		return nil, status.Errorf(codes.NotFound, err.Error())
 	}
 
+	if errors.Is(err, ErrNoAttemptsLeft) {
+		grpc.SetTrailer(ctx, metadata.Pairs("ERROR_NAME", "NO_ATTEMPTS_LEFT"))
+		return nil, status.Errorf(codes.ResourceExhausted, err.Error())
+	}
+
 	if err != nil {
-		return nil, status.Errorf(codes.Unknown, err.Error())
+		return nil, err
 	}
 
 	return &pb.VerifyResponse{Success: ok}, nil
