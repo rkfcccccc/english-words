@@ -3,8 +3,10 @@ package main
 import (
 	"context"
 	"log"
+	"math/rand"
 	"net"
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 	"github.com/rkfcccccc/english_words/services/verification/internal/verification"
@@ -16,6 +18,8 @@ import (
 )
 
 func main() {
+	rand.Seed(time.Now().UnixNano())
+
 	if err := godotenv.Load("../../.env"); err != nil {
 		log.Fatalf("failed to load .env: %v", err)
 	}
