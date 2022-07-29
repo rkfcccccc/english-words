@@ -42,11 +42,6 @@ func (server *Server) Create(ctx context.Context, in *pb.CreateRequest) (*pb.Cre
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	if errors.Is(err, ErrTooLongEmail) {
-		grpc.SetTrailer(ctx, metadata.Pairs("ERROR_NAME", "TOO_LONG_EMAIL"))
-		return nil, status.Error(codes.InvalidArgument, err.Error())
-	}
-
 	if err != nil {
 		return nil, fmt.Errorf("service.Create: %v", err)
 	}

@@ -15,7 +15,6 @@ var emailRegex = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-
 var ErrAlreadyExists = errors.New("email already in use")
 var ErrInvalidEmail = errors.New("invalid email")
 var ErrTooLongPassword = errors.New("too long password")
-var ErrTooLongEmail = errors.New("too long email")
 var ErrNotFound = errors.New("user was not found")
 
 type Service struct {
@@ -38,7 +37,7 @@ func (service *Service) Create(ctx context.Context, email, password string) (int
 	}
 
 	if len(email) > 64 {
-		return -1, ErrTooLongEmail
+		return -1, ErrInvalidEmail
 	}
 
 	mutex := service.sync.NewMutex(fmt.Sprintf("user_%s", email))
