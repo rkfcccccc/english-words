@@ -9,6 +9,8 @@ import (
 	"github.com/rkfcccccc/english_words/shared_pkg/cache"
 )
 
+// TODO: somehow rename all these functions because they sound shitty
+
 func generateToken32() string {
 	b := make([]byte, 32)
 	rand.Read(b)
@@ -28,6 +30,16 @@ func (helper *Helper) GetRefreshToken(ctx context.Context, token string) (int, e
 	}
 
 	return user_id, nil
+}
+
+func (helper *Helper) DeleteRefreshToken(ctx context.Context, token string) error {
+	err := helper.cache.Del(ctx, fmt.Sprintf("refresh_%s", token))
+
+	if err != nil {
+		return fmt.Errorf("helper.cache.Del: %v", err)
+	}
+
+	return nil
 }
 
 func (helper *Helper) generateFreeToken(ctx context.Context) (string, error) {
