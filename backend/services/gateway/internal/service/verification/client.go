@@ -35,7 +35,7 @@ func NewClient(addr string) *Client {
 	return &Client{conn: conn, client: client}
 }
 
-func (c *Client) SendCode(ctx context.Context, email string, typeId int) (string, error) {
+func (c *Client) SendCode(ctx context.Context, email string, typeId Type) (string, error) {
 	var trailer metadata.MD
 	response, err := c.client.SendCode(ctx, &pb.SendCodeRequest{Email: email, TypeId: int32(typeId)}, grpc.Trailer(&trailer))
 
