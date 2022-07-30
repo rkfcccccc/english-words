@@ -20,6 +20,8 @@ require (
 	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2 // indirect
 	golang.org/x/sys v0.0.0-20220715151400-c0bba94af5f8 // indirect
 	golang.org/x/text v0.3.7 // indirect
+	google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013 // indirect
+	google.golang.org/grpc v1.48.0
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
@@ -33,6 +35,26 @@ require (
 
 replace github.com/rkfcccccc/english_words/proto => ../../proto
 
+require github.com/rkfcccccc/english_words/proto v0.0.0
+
 require github.com/rkfcccccc/english_words/shared_pkg/cache v0.0.0
 
 replace github.com/rkfcccccc/english_words/shared_pkg/cache => ../../shared_pkg/cache
+
+require github.com/rkfcccccc/english_words/shared_pkg/redis v0.0.0
+
+require (
+	github.com/cespare/xxhash/v2 v2.1.2 // indirect
+	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
+	github.com/go-redis/cache/v8 v8.4.3 // indirect
+	github.com/klauspost/compress v1.15.4 // indirect
+	github.com/pierrec/lz4/v4 v4.1.14 // indirect
+	github.com/segmentio/kafka-go v0.4.32 // indirect
+	github.com/vmihailenco/go-tinylfu v0.2.2 // indirect
+	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
+	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
+	golang.org/x/exp v0.0.0-20220518171630-0b5c67f07fdf // indirect
+	golang.org/x/sync v0.0.0-20220513210516-0976fa681c29 // indirect
+)
+
+replace github.com/rkfcccccc/english_words/shared_pkg/redis => ../../shared_pkg/redis
