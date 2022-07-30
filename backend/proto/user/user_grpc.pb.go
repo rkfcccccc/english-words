@@ -25,6 +25,7 @@ type UserServiceClient interface {
 	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
 	GetById(ctx context.Context, in *GetByIdRequest, opts ...grpc.CallOption) (*User, error)
 	GetByEmail(ctx context.Context, in *GetByEmailRequest, opts ...grpc.CallOption) (*User, error)
+	GetByEmailAndPassword(ctx context.Context, in *GetByEmailAndPasswordRequest, opts ...grpc.CallOption) (*User, error)
 	Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
 }
 
@@ -63,6 +64,15 @@ func (c *userServiceClient) GetByEmail(ctx context.Context, in *GetByEmailReques
 	return out, nil
 }
 
+func (c *userServiceClient) GetByEmailAndPassword(ctx context.Context, in *GetByEmailAndPasswordRequest, opts ...grpc.CallOption) (*User, error) {
+	out := new(User)
+	err := c.cc.Invoke(ctx, "/user.UserService/GetByEmailAndPassword", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error) {
 	out := new(DeleteResponse)
 	err := c.cc.Invoke(ctx, "/user.UserService/Delete", in, out, opts...)
@@ -79,6 +89,7 @@ type UserServiceServer interface {
 	Create(context.Context, *CreateRequest) (*CreateResponse, error)
 	GetById(context.Context, *GetByIdRequest) (*User, error)
 	GetByEmail(context.Context, *GetByEmailRequest) (*User, error)
+	GetByEmailAndPassword(context.Context, *GetByEmailAndPasswordRequest) (*User, error)
 	Delete(context.Context, *DeleteRequest) (*DeleteResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
@@ -95,6 +106,9 @@ func (UnimplementedUserServiceServer) GetById(context.Context, *GetByIdRequest) 
 }
 func (UnimplementedUserServiceServer) GetByEmail(context.Context, *GetByEmailRequest) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetByEmail not implemented")
+}
+func (UnimplementedUserServiceServer) GetByEmailAndPassword(context.Context, *GetByEmailAndPasswordRequest) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetByEmailAndPassword not implemented")
 }
 func (UnimplementedUserServiceServer) Delete(context.Context, *DeleteRequest) (*DeleteResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
@@ -166,6 +180,24 @@ func _UserService_GetByEmail_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_GetByEmailAndPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetByEmailAndPasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetByEmailAndPassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/GetByEmailAndPassword",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetByEmailAndPassword(ctx, req.(*GetByEmailAndPasswordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteRequest)
 	if err := dec(in); err != nil {
@@ -202,6 +234,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetByEmail",
 			Handler:    _UserService_GetByEmail_Handler,
+		},
+		{
+			MethodName: "GetByEmailAndPassword",
+			Handler:    _UserService_GetByEmailAndPassword_Handler,
 		},
 		{
 			MethodName: "Delete",

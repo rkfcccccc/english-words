@@ -77,6 +77,20 @@ func (server *Server) GetByEmail(ctx context.Context, in *pb.GetByEmailRequest) 
 	return &pb.User{Id: int32(u.Id), Email: u.Email, Password: u.Password, RegisterDate: u.RegisterDate.Unix()}, nil
 }
 
+func (server *Server) GetByEmailAndPassword(ctx context.Context, in *pb.GetByEmailAndPasswordRequest) (*pb.User, error) {
+	u, err := server.service.GetByEmailAndPassword(ctx, in.Email, in.Password)
+
+	if errors.Is(err, ErrNotFound) {
+		return nil, status.Error(codes.NotFound, err.Error())
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.User{Id: int32(u.Id), Email: u.Email, Password: u.Password, RegisterDate: u.RegisterDate.Unix()}, nil
+}
+
 func (server *Server) Delete(ctx context.Context, in *pb.DeleteRequest) (*pb.DeleteResponse, error) {
 	err := server.service.Delete(ctx, int(in.UserId))
 

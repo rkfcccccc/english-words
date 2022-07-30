@@ -47,7 +47,7 @@ func (service *Service) Create(ctx context.Context, email, password string) (int
 
 	defer mutex.Unlock()
 
-	user, err := service.GetByEmail(ctx, email)
+	user, err := service.repo.GetByEmail(ctx, email)
 	if err != nil {
 		return -1, fmt.Errorf("service.GetByEmail: %v", err)
 	}
@@ -87,6 +87,22 @@ func (service *Service) GetByEmail(ctx context.Context, email string) (*User, er
 
 	if user == nil {
 		return nil, ErrNotFound
+	}
+
+	return user, nil
+}
+
+func (service *Service) GetByEmailAndPassword(ctx context.Context, email, password string) (*User, error) {
+	user, err := service.GetByEmail(ctx, email)
+	if err != nil {
+		return nil, err
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
+		return nil, ErrNotFound
+	} else if err != nil {
+		return nil, fmt.Errorf("bcrypt.CompareHashAndPassword: %v", err)
 	}
 
 	return user, nil

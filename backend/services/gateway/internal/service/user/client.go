@@ -72,6 +72,17 @@ func (c *Client) GetByEmail(ctx context.Context, email string) (*User, error) {
 	return transformFromGRPC(response), err
 }
 
+func (c *Client) GetByEmailAndPassword(ctx context.Context, email, password string) (*User, error) {
+	in := &pb.GetByEmailAndPasswordRequest{Email: email, Password: password}
+	response, err := c.client.GetByEmailAndPassword(ctx, in)
+
+	if status.Code(err) == codes.NotFound {
+		return nil, ErrNotFound
+	}
+
+	return transformFromGRPC(response), err
+}
+
 func (c *Client) Delete(ctx context.Context, userId int) error {
 	_, err := c.client.Delete(ctx, &pb.DeleteRequest{UserId: int32(userId)})
 	return err
