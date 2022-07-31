@@ -28,7 +28,7 @@ class GradientButton extends StatelessWidget {
     final loadingWidget = SizedBox.square(
       dimension: 3.w,
       child: const CircularProgressIndicator(
-        strokeWidth: 2,
+        strokeWidth: 3,
         color: Colors.white,
       ),
     );
@@ -37,8 +37,10 @@ class GradientButton extends StatelessWidget {
       width: double.infinity,
       height: 12.w,
       decoration: BoxDecoration(
-        gradient: onPressed != null ? Gradients.purple2pink : null,
-        color: onPressed != null ? null : const Color.fromRGBO(23, 23, 23, 1),
+        gradient: onPressed != null && !loading ? Gradients.purple2pink : null,
+        color: onPressed != null && !loading
+            ? null
+            : const Color.fromRGBO(23, 23, 23, 1),
         borderRadius: BorderRadius.circular(13),
       ),
       child: ElevatedButton(
@@ -46,7 +48,7 @@ class GradientButton extends StatelessWidget {
           primary: Colors.transparent,
           onSurface: Colors.transparent,
         ),
-        onPressed: onPressed,
+        onPressed: loading ? null : onPressed,
         child: loading ? loadingWidget : textWidget,
       ),
     );
