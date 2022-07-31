@@ -32,14 +32,26 @@ class _Painter extends CustomPainter {
 class GradientTextField extends StatefulWidget {
   final String label;
   final String placeholder;
+  final void Function(String)? onSubmitted;
+  final void Function(String)? onChanged;
+  final bool Function(String)? validator;
+  final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
   final bool obscureText;
+  final bool autofocus;
 
-  const GradientTextField(
-      {Key? key,
-      required this.label,
-      required this.placeholder,
-      this.obscureText = false})
-      : super(key: key);
+  const GradientTextField({
+    Key? key,
+    required this.label,
+    required this.placeholder,
+    this.obscureText = false,
+    this.autofocus = false,
+    this.textInputAction,
+    this.keyboardType,
+    this.onSubmitted,
+    this.onChanged,
+    this.validator,
+  }) : super(key: key);
 
   @override
   State<GradientTextField> createState() => _GradientTextFieldState();
@@ -47,12 +59,23 @@ class GradientTextField extends StatefulWidget {
 
 class _GradientTextFieldState extends State<GradientTextField>
     with SingleTickerProviderStateMixin {
-  late Animation animation;
+  late TextEditingController _editingController;
   late AnimationController _controller;
+  late Animation animation;
   late FocusNode _focusNode;
+
+  bool _touched = false;
+  bool _passesValidator = true;
 
   @override
   void initState() {
+    _editingController = TextEditingController()
+      ..addListener(() {
+        if (widget.validator != null) {
+          _passesValidator = widget.validator!(_editingController.text);
+        }
+      });
+
     _controller = AnimationController(
         duration: const Duration(milliseconds: 150), vsync: this);
 
@@ -66,6 +89,7 @@ class _GradientTextFieldState extends State<GradientTextField>
         setState(() {
           if (_focusNode.hasFocus) {
             _controller.forward();
+            _touched = true;
           } else {
             _controller.reverse();
           }
@@ -77,6 +101,9 @@ class _GradientTextFieldState extends State<GradientTextField>
 
   @override
   Widget build(BuildContext context) {
+    var showValidator =
+        _touched && !_focusNode.hasFocus && widget.validator != null;
+
     return GestureDetector(
       onTap: () => _focusNode.requestFocus(),
       child: Column(
@@ -93,23 +120,44 @@ class _GradientTextFieldState extends State<GradientTextField>
           SizedBox(height: 2.w),
           Container(
             decoration: BoxDecoration(
-                color: const Color.fromRGBO(23, 23, 23, 1),
-                borderRadius: BorderRadius.circular(13),
-                border: Border.all(color: const Color.fromRGBO(30, 30, 30, 1))),
+              color: const Color.fromRGBO(23, 23, 23, 1),
+              borderRadius: BorderRadius.circular(13),
+              border: Border.all(
+                color: const Color.fromRGBO(33, 33, 33, 1),
+                width: 2,
+              ),
+            ),
             child: CustomPaint(
               painter: _Painter(Gradients.purple2pink,
                   const Radius.circular(12), 2, animation.value),
-              child: Padding(
-                padding: EdgeInsets.all(4.w),
-                child: SizedBox(
-                  child: TextField(
-                    focusNode: _focusNode,
-                    autocorrect: false,
-                    obscureText: widget.obscureText,
-                    cursorColor: Gradients.purple2pink.colors.first,
-                    decoration: InputDecoration.collapsed(
-                      hintText: widget.placeholder,
-                    ),
+              child: SizedBox(
+                child: Padding(
+                  padding: EdgeInsets.all(4.w),
+                  child: Row(
+                    children: [
+                      Flexible(
+                        child: TextField(
+                          autocorrect: false,
+                          keyboardType: widget.keyboardType,
+                          autofocus: widget.autofocus,
+                          onChanged: widget.onChanged,
+                          obscureText: widget.obscureText,
+                          textInputAction: widget.textInputAction,
+                          onSubmitted: widget.onSubmitted,
+                          controller: _editingController,
+                          focusNode: _focusNode,
+                          cursorColor: Gradients.purple2pink.colors.first,
+                          decoration: InputDecoration.collapsed(
+                            hintText: widget.placeholder,
+                          ),
+                        ),
+                      ),
+                      AnimatedOpacity(
+                        opacity: showValidator ? 1 : 0,
+                        duration: const Duration(milliseconds: 150),
+                        child: RoundedValidatorStatus(ok: _passesValidator),
+                      )
+                    ],
                   ),
                 ),
               ),
@@ -117,6 +165,35 @@ class _GradientTextFieldState extends State<GradientTextField>
           ),
         ],
       ),
+    );
+  }
+}
+
+class RoundedValidatorStatus extends StatelessWidget {
+  final bool ok;
+
+  const RoundedValidatorStatus({
+    Key? key,
+    required this.ok,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        SizedBox(width: 2.w),
+        Container(
+          padding: EdgeInsets.all(1.w),
+          decoration: BoxDecoration(
+            color: const Color.fromRGBO(33, 33, 33, 1),
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: Icon(
+            ok ? Icons.check_rounded : Icons.close_rounded,
+            size: 10.sp,
+          ),
+        )
+      ],
     );
   }
 }

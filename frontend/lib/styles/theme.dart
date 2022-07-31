@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-
 import 'gradients.dart';
 
 var appTheme = ThemeData.dark().copyWith(
   textSelectionTheme: TextSelectionThemeData(
       selectionColor: Gradients.purple2pink.colors.last.withOpacity(0.2)),
-  scaffoldBackgroundColor: Color.fromRGBO(17, 17, 17, 1),
+  scaffoldBackgroundColor: const Color.fromRGBO(17, 17, 17, 1),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(
       elevation: MaterialStateProperty.all(0),
