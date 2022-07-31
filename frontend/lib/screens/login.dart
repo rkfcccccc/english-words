@@ -1,5 +1,6 @@
 import 'package:english_words/screens/signup.dart';
 import 'package:english_words/screens/verification.dart';
+import 'package:english_words/transitions/no_animation.dart';
 import 'package:english_words/widgets/gradient_button.dart';
 import 'package:english_words/widgets/gradient_text_field.dart';
 import 'package:flutter/cupertino.dart';
@@ -82,10 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   CupertinoButton(
                     onPressed: () => Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (ctx) => const SignupScreen(),
-                        fullscreenDialog: true,
-                      ),
+                      NoAnimationRoute(child: const SignupScreen()),
                     ),
                     child: Text(
                       "Sign up",
