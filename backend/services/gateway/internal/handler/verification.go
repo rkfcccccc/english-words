@@ -20,7 +20,7 @@ func (h *Handlers) verifyRequest(c *gin.Context, typeId verification.Type, email
 			return false, fmt.Errorf("Verification.SendCode: %v", err)
 		}
 
-		c.JSON(http.StatusAccepted, gin.H{"requestId": requestId})
+		c.JSON(http.StatusAccepted, gin.H{"request_id": requestId})
 		return false, nil
 	}
 
