@@ -25,10 +25,11 @@ func (server *Server) Register(s *grpc.Server) {
 	pb.RegisterUserServiceServer(s, server)
 }
 
-func (server *Server) Create(ctx context.Context, in *pb.CreateRequest) (*pb.CreateResponse, error) {
-	userId, err := server.service.Create(ctx, in.Email, in.Password)
+func (server *Server) CanCreate(ctx context.Context, in *pb.CanCreateRequest) (*pb.CanCreateResponse, error) {
+	ok, err := server.service.CanCreate(ctx, in.Email, in.Password)
 
 	if errors.Is(err, ErrAlreadyExists) {
+		grpc.SetTrailer(ctx, metadata.Pairs("ERROR_NAME", "ALREADY_EXISTS"))
 		return nil, status.Error(codes.AlreadyExists, err.Error())
 	}
 
@@ -37,10 +38,20 @@ func (server *Server) Create(ctx context.Context, in *pb.CreateRequest) (*pb.Cre
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	if errors.Is(err, ErrTooLongPassword) {
-		grpc.SetTrailer(ctx, metadata.Pairs("ERROR_NAME", "TOO_LONG_PASSWORD"))
+	if errors.Is(err, ErrInvalidPassword) {
+		grpc.SetTrailer(ctx, metadata.Pairs("ERROR_NAME", "INVALID_PASSWORD"))
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
+
+	if err != nil {
+		return nil, fmt.Errorf("service.Create: %v", err)
+	}
+
+	return &pb.CanCreateResponse{Ok: ok}, nil
+}
+
+func (server *Server) Create(ctx context.Context, in *pb.CreateRequest) (*pb.CreateResponse, error) {
+	userId, err := server.service.Create(ctx, in.Email, in.Password)
 
 	if err != nil {
 		return nil, fmt.Errorf("service.Create: %v", err)

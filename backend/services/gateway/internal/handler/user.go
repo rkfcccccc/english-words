@@ -31,11 +31,41 @@ func (h *Handlers) issueCredentials(c *gin.Context, userId int) (string, string,
 	return jwt, refresh, nil
 }
 
+func (h *Handlers) canCreateAccount(c *gin.Context, email, password string) bool {
+	ok, err := h.Services.User.CanCreate(c, email, password)
+
+	switch err {
+	case user_service.ErrAlreadyExists:
+		c.AbortWithStatus(http.StatusConflict)
+		return false
+	case user_service.ErrInvalidEmail:
+		c.AbortWithStatus(http.StatusBadRequest)
+		return false
+	case user_service.ErrInvalidPassword:
+		c.AbortWithStatus(http.StatusBadRequest)
+		return false
+	}
+
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, fmt.Errorf("User.CanCreate: %v", err))
+		return false
+	} else if !ok {
+		c.AbortWithError(http.StatusInternalServerError, errors.New("User.CanCreate: cannot create an account"))
+		return false
+	}
+
+	return false
+}
+
 func (h *Handlers) UserSignup(c *gin.Context) {
 	var body signupInput
 
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	if ok := h.canCreateAccount(c, body.Email, body.Password); !ok {
 		return
 	}
 
@@ -49,19 +79,6 @@ func (h *Handlers) UserSignup(c *gin.Context) {
 	}
 
 	userId, err := h.Services.User.Create(c, body.Email, body.Password)
-
-	switch err {
-	case user_service.ErrAlreadyExists:
-		c.AbortWithStatus(http.StatusBadRequest)
-		return
-	case user_service.ErrInvalidEmail:
-		c.AbortWithStatus(http.StatusBadRequest)
-		return
-	case user_service.ErrTooLongPassword:
-		c.AbortWithStatus(http.StatusBadRequest)
-		return
-	}
-
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, fmt.Errorf("User.Create: %v", err))
 		return
@@ -79,7 +96,7 @@ func (h *Handlers) UserSignup(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
+	c.JSON(http.StatusCreated, gin.H{
 		"jwt":     jwt,
 		"refresh": refresh,
 	})
@@ -191,7 +208,8 @@ func (h *Handlers) UserRecovery(c *gin.Context) {
 	}
 
 	// TODO: h.Services.User.UpdatePassword(c, user.Id, body.Password) function
-	panic("UserRecovery unimlemented")
+	c.AbortWithStatus(http.StatusNotImplemented)
+	return
 
 	jwt, refresh, err := h.issueCredentials(c, user.Id)
 	if err != nil {

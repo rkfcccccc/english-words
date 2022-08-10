@@ -14,7 +14,7 @@ var emailRegex = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-
 
 var ErrAlreadyExists = errors.New("email already in use")
 var ErrInvalidEmail = errors.New("invalid email")
-var ErrTooLongPassword = errors.New("too long password")
+var ErrInvalidPassword = errors.New("invalid password")
 var ErrNotFound = errors.New("user was not found")
 
 type Service struct {
@@ -26,20 +26,33 @@ func NewService(repo Repository, sync dsync.Client) *Service {
 	return &Service{repo, sync}
 }
 
-// TODO: move credentials validation to gateway (because email verification occurs before user instance creation and email needs to be verified)
-func (service *Service) Create(ctx context.Context, email, password string) (int, error) {
+func (service *Service) CanCreate(ctx context.Context, email, password string) (bool, error) {
 	if emailRegex.FindString(email) == "" {
-		return -1, ErrInvalidEmail
+		return false, ErrInvalidEmail
 	}
 
-	if len(password) > 72 {
-		return -1, ErrTooLongPassword
+	if len(password) > 72 || len(password) < 6 {
+		return false, ErrInvalidPassword
 	}
 
 	if len(email) > 64 {
-		return -1, ErrInvalidEmail
+		return false, ErrInvalidEmail
 	}
 
+	user, err := service.repo.GetByEmail(ctx, email)
+	if err != nil {
+		return false, fmt.Errorf("service.GetByEmail: %v", err)
+	}
+
+	if user != nil {
+		return false, ErrAlreadyExists
+	}
+
+	return true, nil
+}
+
+// TODO: move credentials validation to gateway (because email verification occurs before user instance creation and email needs to be verified)
+func (service *Service) Create(ctx context.Context, email, password string) (int, error) {
 	mutex := service.sync.NewMutex(fmt.Sprintf("user_%s", email))
 	if err := mutex.Lock(); err != nil {
 		return -1, fmt.Errorf("mutex.Lock: %v", err)
@@ -47,13 +60,11 @@ func (service *Service) Create(ctx context.Context, email, password string) (int
 
 	defer mutex.Unlock()
 
-	user, err := service.repo.GetByEmail(ctx, email)
+	ok, err := service.CanCreate(ctx, email, password)
 	if err != nil {
-		return -1, fmt.Errorf("service.GetByEmail: %v", err)
-	}
-
-	if user != nil {
-		return -1, ErrAlreadyExists
+		return -1, err
+	} else if !ok {
+		return -1, errors.New("cannot create an account")
 	}
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)

@@ -2,6 +2,16 @@ syntax = "proto3";
 package user;
 option go_package = "github.com/rkfcccccc/english_words/proto/user";
 
+/* Can Create */
+message CanCreateRequest {
+    string email = 1;
+    string password = 2;
+}   
+
+message CanCreateResponse {
+    bool ok = 1;
+}
+
 /* Create */
 message CreateRequest {
     string email = 1;
@@ -42,9 +52,12 @@ message DeleteResponse {}
 
 /* Service */
 service UserService {
+    rpc CanCreate(CanCreateRequest) returns (CanCreateResponse) {}
     rpc Create(CreateRequest) returns (CreateResponse) {}
+
     rpc GetById(GetByIdRequest) returns (User) {}
     rpc GetByEmail(GetByEmailRequest) returns (User) {}
     rpc GetByEmailAndPassword(GetByEmailAndPasswordRequest) returns (User) {}
+    
     rpc Delete(DeleteRequest) returns (DeleteResponse) {}
 }

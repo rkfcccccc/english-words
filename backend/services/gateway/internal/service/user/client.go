@@ -17,7 +17,7 @@ import (
 
 var ErrAlreadyExists = errors.New("email already in use")
 var ErrInvalidEmail = errors.New("invalid email")
-var ErrTooLongPassword = errors.New("too long password")
+var ErrInvalidPassword = errors.New("invalid password")
 var ErrNotFound = errors.New("user was not found")
 
 type Client struct {
@@ -36,18 +36,25 @@ func NewClient(addr string) *Client {
 	return &Client{conn: conn, client: client}
 }
 
-func (c *Client) Create(ctx context.Context, email, password string) (int, error) {
+func (c *Client) CanCreate(ctx context.Context, email, password string) (bool, error) {
 	var trailer metadata.MD
-	response, err := c.client.Create(ctx, &pb.CreateRequest{Email: email, Password: password}, grpc.Trailer(&trailer))
+	response, err := c.client.CanCreate(ctx, &pb.CanCreateRequest{Email: email, Password: password}, grpc.Trailer(&trailer))
 
 	switch c.GetErrorName(trailer) {
 	case "ALREADY_EXISTS":
-		return -1, ErrAlreadyExists
+		return false, ErrAlreadyExists
 	case "INVALID_EMAIL":
-		return -1, ErrInvalidEmail
-	case "TOO_LONG_PASSWORD":
-		return -1, ErrTooLongPassword
+		return false, ErrInvalidEmail
+	case "INVALID_PASSWORD":
+		return false, ErrInvalidPassword
 	}
+
+	return response.GetOk(), err
+}
+
+func (c *Client) Create(ctx context.Context, email, password string) (int, error) {
+	var trailer metadata.MD
+	response, err := c.client.Create(ctx, &pb.CreateRequest{Email: email, Password: password}, grpc.Trailer(&trailer))
 
 	return int(response.GetUserId()), err
 }
