@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -16,7 +17,10 @@ type verificationInput struct {
 func (h *Handlers) verifyRequest(c *gin.Context, typeId verification.Type, email string, data *verificationInput) (bool, error) {
 	if data == nil {
 		requestId, err := h.Services.Verification.SendCode(c, email, typeId)
-		if err != nil {
+		if errors.Is(err, verification.ErrTooManyRequests) {
+			c.AbortWithStatusJSON(http.StatusTooManyRequests, h.newError("TOO_MANY_REQUESTS"))
+			return false, nil
+		} else if err != nil {
 			return false, fmt.Errorf("Verification.SendCode: %v", err)
 		}
 
@@ -25,7 +29,11 @@ func (h *Handlers) verifyRequest(c *gin.Context, typeId verification.Type, email
 	}
 
 	success, err := h.Services.Verification.Verify(c, data.RequestId, data.Code)
-	if err != nil {
+	if errors.Is(err, verification.ErrNotFound) {
+		c.AbortWithStatusJSON(http.StatusNotFound, h.newError("NOT_FOUND"))
+	} else if errors.Is(err, verification.ErrNoAttemptsLeft) {
+		c.AbortWithStatusJSON(http.StatusConflict, h.newError("NO_ATTEMPTS_LEFT"))
+	} else if err != nil {
 		return false, fmt.Errorf("Verification.Verify: %v", err)
 	}
 

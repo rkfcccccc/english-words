@@ -36,13 +36,13 @@ func (h *Handlers) canCreateAccount(c *gin.Context, email, password string) bool
 
 	switch err {
 	case user_service.ErrAlreadyExists:
-		c.AbortWithStatus(http.StatusConflict)
+		c.AbortWithStatusJSON(http.StatusConflict, h.newError("ALREADY_EXISTS"))
 		return false
 	case user_service.ErrInvalidEmail:
-		c.AbortWithStatus(http.StatusBadRequest)
+		c.AbortWithStatusJSON(http.StatusBadRequest, h.newError("INVALID_EMAIL"))
 		return false
 	case user_service.ErrInvalidPassword:
-		c.AbortWithStatus(http.StatusBadRequest)
+		c.AbortWithStatusJSON(http.StatusBadRequest, h.newError("INVALID_PASSWORD"))
 		return false
 	}
 
@@ -74,7 +74,6 @@ func (h *Handlers) UserSignup(c *gin.Context) {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	} else if !proceed {
-		c.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
 
@@ -116,7 +115,7 @@ func (h *Handlers) UserRefresh(c *gin.Context) {
 
 	userId, err := h.Auth.GetRefreshToken(c, body.Token)
 	if errors.Is(err, auth.ErrRefreshMiss) {
-		c.AbortWithStatus(http.StatusNotFound)
+		c.AbortWithStatusJSON(http.StatusNotFound, h.newError("NOT_FOUND"))
 		return
 	} else if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, fmt.Errorf("Auth.GetRefreshToken: %v", err))
@@ -156,7 +155,7 @@ func (h *Handlers) UserLogin(c *gin.Context) {
 
 	user, err := h.Services.User.GetByEmailAndPassword(c, body.Email, body.Password)
 	if errors.Is(err, user_service.ErrNotFound) {
-		c.AbortWithStatus(http.StatusUnauthorized)
+		c.AbortWithStatusJSON(http.StatusUnauthorized, h.newError("UNAUTHORIZED"))
 		return
 	} else if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
