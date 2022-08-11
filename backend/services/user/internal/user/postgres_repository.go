@@ -34,6 +34,17 @@ func (repo *PostgresRepository) Create(ctx context.Context, email, password stri
 	return userId, nil
 }
 
+func (repo *PostgresRepository) UpdatePassword(ctx context.Context, userId int, password string) error {
+	query := fmt.Sprintf("UPDATE %s SET password=$2 WHERE id=$1", usersTable)
+	_, err := repo.db.Exec(ctx, query, userId, password)
+
+	if err != nil {
+		return fmt.Errorf("db.Exec: %v", err)
+	}
+
+	return nil
+}
+
 func (repo *PostgresRepository) GetById(ctx context.Context, userId int) (*User, error) {
 	var user User
 

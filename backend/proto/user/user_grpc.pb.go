@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type UserServiceClient interface {
 	CanCreate(ctx context.Context, in *CanCreateRequest, opts ...grpc.CallOption) (*CanCreateResponse, error)
 	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
+	UpdatePassword(ctx context.Context, in *UpdatePasswordRequest, opts ...grpc.CallOption) (*UpdatePasswordResponse, error)
 	GetById(ctx context.Context, in *GetByIdRequest, opts ...grpc.CallOption) (*User, error)
 	GetByEmail(ctx context.Context, in *GetByEmailRequest, opts ...grpc.CallOption) (*User, error)
 	GetByEmailAndPassword(ctx context.Context, in *GetByEmailAndPasswordRequest, opts ...grpc.CallOption) (*User, error)
@@ -50,6 +51,15 @@ func (c *userServiceClient) CanCreate(ctx context.Context, in *CanCreateRequest,
 func (c *userServiceClient) Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error) {
 	out := new(CreateResponse)
 	err := c.cc.Invoke(ctx, "/user.UserService/Create", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) UpdatePassword(ctx context.Context, in *UpdatePasswordRequest, opts ...grpc.CallOption) (*UpdatePasswordResponse, error) {
+	out := new(UpdatePasswordResponse)
+	err := c.cc.Invoke(ctx, "/user.UserService/UpdatePassword", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -98,6 +108,7 @@ func (c *userServiceClient) Delete(ctx context.Context, in *DeleteRequest, opts 
 type UserServiceServer interface {
 	CanCreate(context.Context, *CanCreateRequest) (*CanCreateResponse, error)
 	Create(context.Context, *CreateRequest) (*CreateResponse, error)
+	UpdatePassword(context.Context, *UpdatePasswordRequest) (*UpdatePasswordResponse, error)
 	GetById(context.Context, *GetByIdRequest) (*User, error)
 	GetByEmail(context.Context, *GetByEmailRequest) (*User, error)
 	GetByEmailAndPassword(context.Context, *GetByEmailAndPasswordRequest) (*User, error)
@@ -114,6 +125,9 @@ func (UnimplementedUserServiceServer) CanCreate(context.Context, *CanCreateReque
 }
 func (UnimplementedUserServiceServer) Create(context.Context, *CreateRequest) (*CreateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
+}
+func (UnimplementedUserServiceServer) UpdatePassword(context.Context, *UpdatePasswordRequest) (*UpdatePasswordResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePassword not implemented")
 }
 func (UnimplementedUserServiceServer) GetById(context.Context, *GetByIdRequest) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetById not implemented")
@@ -172,6 +186,24 @@ func _UserService_Create_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).Create(ctx, req.(*CreateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_UpdatePassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).UpdatePassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/UpdatePassword",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).UpdatePassword(ctx, req.(*UpdatePasswordRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -262,6 +294,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Create",
 			Handler:    _UserService_Create_Handler,
+		},
+		{
+			MethodName: "UpdatePassword",
+			Handler:    _UserService_UpdatePassword_Handler,
 		},
 		{
 			MethodName: "GetById",

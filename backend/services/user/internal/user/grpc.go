@@ -60,6 +60,16 @@ func (server *Server) Create(ctx context.Context, in *pb.CreateRequest) (*pb.Cre
 	return &pb.CreateResponse{UserId: int32(userId)}, nil
 }
 
+func (server *Server) UpdatePassword(ctx context.Context, in *pb.UpdatePasswordRequest) (*pb.UpdatePasswordResponse, error) {
+	err := server.service.UpdatePassword(ctx, int(in.UserId), in.Password)
+
+	if err != nil {
+		return nil, fmt.Errorf("service.UpdatePassword: %v", err)
+	}
+
+	return &pb.UpdatePasswordResponse{}, nil
+}
+
 func (server *Server) GetById(ctx context.Context, in *pb.GetByIdRequest) (*pb.User, error) {
 	u, err := server.service.GetById(ctx, int(in.UserId))
 

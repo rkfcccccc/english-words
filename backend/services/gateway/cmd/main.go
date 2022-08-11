@@ -31,6 +31,7 @@ func main() {
 	services := service.NewService()
 	handlers := handler.NewHandlers(services, authHelper)
 
+	// TODO: definitely all this router lines to handler package
 	router := gin.Default()
 	router.Use(gin.Recovery())
 
@@ -40,7 +41,7 @@ func main() {
 	userGroup.POST("/signup", handlers.UserSignup)
 	userGroup.POST("/login", handlers.UserLogin)
 	userGroup.POST("/refresh", handlers.UserRefresh)
-	// TODO: userGroup.POST("/recovery", handlers.UserRecovery)
+	userGroup.POST("/recovery", handlers.UserRecovery)
 
 	// authorized := router.Group("/", authorizedHandler)
 

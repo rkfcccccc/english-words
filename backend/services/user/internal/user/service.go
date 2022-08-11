@@ -26,32 +26,73 @@ func NewService(repo Repository, sync dsync.Client) *Service {
 	return &Service{repo, sync}
 }
 
-func (service *Service) CanCreate(ctx context.Context, email, password string) (bool, error) {
+func (service *Service) checkEmail(ctx context.Context, email string) error {
 	if emailRegex.FindString(email) == "" {
-		return false, ErrInvalidEmail
-	}
-
-	if len(password) > 72 || len(password) < 6 {
-		return false, ErrInvalidPassword
+		return ErrInvalidEmail
 	}
 
 	if len(email) > 64 {
-		return false, ErrInvalidEmail
+		return ErrInvalidEmail
 	}
 
 	user, err := service.repo.GetByEmail(ctx, email)
 	if err != nil {
-		return false, fmt.Errorf("service.GetByEmail: %v", err)
+		return fmt.Errorf("service.GetByEmail: %v", err)
 	}
 
 	if user != nil {
-		return false, ErrAlreadyExists
+		return ErrAlreadyExists
+	}
+
+	return nil
+}
+
+func (service *Service) checkPassword(_ context.Context, password string) error {
+	if len(password) > 72 || len(password) < 6 {
+		return ErrInvalidPassword
+	}
+
+	return nil
+}
+
+func (service *Service) hashPassword(password string) (string, error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return "", fmt.Errorf("bcrypt.GenerateFromPassword: %v", err)
+	}
+
+	return string(hash), err
+}
+
+func (service *Service) CanCreate(ctx context.Context, email, password string) (bool, error) {
+	if err := service.checkPassword(ctx, password); err != nil {
+		return false, err
+	}
+
+	if err := service.checkEmail(ctx, email); err != nil {
+		return false, err
 	}
 
 	return true, nil
 }
 
-// TODO: move credentials validation to gateway (because email verification occurs before user instance creation and email needs to be verified)
+func (service *Service) UpdatePassword(ctx context.Context, userId int, password string) error {
+	if err := service.checkPassword(ctx, password); err != nil {
+		return err
+	}
+
+	hash, err := service.hashPassword(password)
+	if err != nil {
+		return fmt.Errorf("bcrypt.GenerateFromPassword: %v", err)
+	}
+
+	if err := service.repo.UpdatePassword(ctx, userId, hash); err != nil {
+		return fmt.Errorf("repo.UpdatePassword: %v", err)
+	}
+
+	return nil
+}
+
 func (service *Service) Create(ctx context.Context, email, password string) (int, error) {
 	mutex := service.sync.NewMutex(fmt.Sprintf("user_%s", email))
 	if err := mutex.Lock(); err != nil {
@@ -67,7 +108,7 @@ func (service *Service) Create(ctx context.Context, email, password string) (int
 		return -1, errors.New("cannot create an account")
 	}
 
-	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	hash, err := service.hashPassword(password)
 	if err != nil {
 		return -1, fmt.Errorf("bcrypt.GenerateFromPassword: %v", err)
 	}

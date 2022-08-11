@@ -52,6 +52,17 @@ func (c *Client) CanCreate(ctx context.Context, email, password string) (bool, e
 	return response.GetOk(), err
 }
 
+func (c *Client) UpdatePassword(ctx context.Context, userId int, password string) error {
+	var trailer metadata.MD
+	_, err := c.client.UpdatePassword(ctx, &pb.UpdatePasswordRequest{UserId: int32(userId), Password: password}, grpc.Trailer(&trailer))
+
+	if c.GetErrorName(trailer) == "INVALID_PASSWORD" {
+		return ErrInvalidPassword
+	}
+
+	return err
+}
+
 func (c *Client) Create(ctx context.Context, email, password string) (int, error) {
 	var trailer metadata.MD
 	response, err := c.client.Create(ctx, &pb.CreateRequest{Email: email, Password: password}, grpc.Trailer(&trailer))

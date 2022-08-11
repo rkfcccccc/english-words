@@ -197,18 +197,22 @@ func (h *Handlers) UserRecovery(c *gin.Context) {
 		return
 	}
 
-	proceed, err := h.verifyRequest(c, verification.Registration, body.Email, body.Verification)
+	proceed, err := h.verifyRequest(c, verification.Recovery, body.Email, body.Verification)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	} else if !proceed {
-		c.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
 
-	// TODO: h.Services.User.UpdatePassword(c, user.Id, body.Password) function
-	c.AbortWithStatus(http.StatusNotImplemented)
-	return
+	err = h.Services.User.UpdatePassword(c, user.Id, body.Password)
+	if errors.Is(err, user_service.ErrInvalidPassword) {
+		c.AbortWithStatusJSON(http.StatusBadRequest, h.newError("INVALID_PASSWORD"))
+		return
+	} else if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
 
 	jwt, refresh, err := h.issueCredentials(c, user.Id)
 	if err != nil {

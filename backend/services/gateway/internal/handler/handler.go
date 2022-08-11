@@ -13,3 +13,7 @@ type Handlers struct {
 func NewHandlers(services *service.Services, authHelper *auth.Helper) *Handlers {
 	return &Handlers{services, authHelper}
 }
+
+func (h *Handlers) newError(errName string) map[string]any {
+	return map[string]any{"error_name": errName}
+}
