@@ -1,10 +1,11 @@
+import 'package:english_words/screens/splash.dart';
 import 'package:english_words/styles/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
 
-import 'screens/signup.dart';
-
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
   runApp(const MyApp());
 }
 
@@ -17,7 +18,8 @@ class MyApp extends StatelessWidget {
       builder: (context, orientation, deviceType) => MaterialApp(
         themeMode: ThemeMode.light,
         theme: appTheme,
-        home: const SignupScreen(),
+        home: const SplashScreen(),
+        debugShowCheckedModeBanner: false,
       ),
     );
   }
