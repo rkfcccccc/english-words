@@ -30,12 +30,19 @@ func (h *Handlers) verifyRequest(c *gin.Context, typeId verification.Type, email
 
 	success, err := h.Services.Verification.Verify(c, data.RequestId, data.Code)
 	if errors.Is(err, verification.ErrNotFound) {
-		c.AbortWithStatusJSON(http.StatusNotFound, h.newError("NOT_FOUND"))
+		c.AbortWithStatusJSON(http.StatusConflict, h.newError("NO_ATTEMPTS_LEFT"))
+		return false, nil
 	} else if errors.Is(err, verification.ErrNoAttemptsLeft) {
 		c.AbortWithStatusJSON(http.StatusConflict, h.newError("NO_ATTEMPTS_LEFT"))
+		return false, nil
 	} else if err != nil {
 		return false, fmt.Errorf("Verification.Verify: %v", err)
 	}
 
-	return success, err
+	if !success {
+		c.AbortWithStatusJSON(http.StatusBadRequest, h.newError("WRONG_CODE"))
+		return false, nil
+	}
+
+	return true, err
 }
