@@ -23,9 +23,11 @@ Also there will be a list of movies that will represent a collection of words
 
 For now it looks like this:
 
+<p float="left">
 <img src="preview/signup.png" width="128"/>
 <img src="preview/verification.png" width="128"/>
 <img src="preview/home.png" width="128"/>
+</p>
 
 ## Future growth opportunities
 Implement a language-dependent API for learning words not only in English.
