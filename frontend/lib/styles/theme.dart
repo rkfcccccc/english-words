@@ -18,6 +18,16 @@ var appTheme = ThemeData.dark().copyWith(
       ),
     ),
   ),
+  snackBarTheme: SnackBarThemeData(
+    elevation: 0,
+    behavior: SnackBarBehavior.floating,
+    backgroundColor: const Color.fromRGBO(33, 33, 33, 1),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
+    contentTextStyle: const TextStyle(
+      color: Color.fromRGBO(205, 205, 205, 1),
+      fontSize: 15,
+    ),
+  ),
   textButtonTheme: TextButtonThemeData(
     style: ButtonStyle(
       shape: MaterialStateProperty.all(

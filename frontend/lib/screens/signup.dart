@@ -1,6 +1,11 @@
+import 'package:english_words/screens/home.dart';
 import 'package:english_words/screens/login.dart';
 import 'package:english_words/screens/verification.dart';
+import 'package:english_words/transitions/fade_page.dart';
 import 'package:english_words/transitions/no_animation.dart';
+import 'package:english_words/utils/api/user/models.dart';
+import 'package:english_words/utils/api/user/user.dart' as user_api;
+import 'package:english_words/utils/errors.dart';
 import 'package:english_words/widgets/gradient_button.dart';
 import 'package:english_words/widgets/gradient_text_field.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,24 +24,80 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   String email = "", password = "";
+  bool loading = false;
 
   bool emailValidator(String text) {
     return text.length <= 64 && emailRegexp.matchAsPrefix(text) != null;
   }
 
   bool passwordValidator(String text) {
-    return text.length <= 72 && text.isNotEmpty;
+    return text.length >= 6 && text.length <= 72 && text.isNotEmpty;
   }
 
-  void onContinue() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (ctx) => VerificationScreen(
-          email: email,
-          onSubmitted: print,
-        ),
+  Future<String> proceedVerification() async {
+    final data = await user_api.signup(email, password);
+    return data.requestId!;
+  }
+
+  Future<void> onVerificationSubmitted(
+    String requestId,
+    int code,
+  ) async {
+    final navigator = Navigator.of(context);
+    final data = await user_api.signup(
+      email,
+      password,
+      verification: VerificationData(
+        requestId: requestId,
+        code: code,
       ),
     );
+
+    await user_api.storeCredentials(data.jwt!, data.refresh!);
+
+    navigator.pushReplacement(
+      FadeTransitionRoute(child: const HomeScreen()),
+    );
+  }
+
+  void onContinue() async {
+    setState(() {
+      loading = true;
+    });
+
+    try {
+      final navigator = Navigator.of(context);
+      final requestId = await proceedVerification();
+
+      navigator.push(
+        MaterialPageRoute(
+          builder: (ctx) => VerificationScreen(
+            email: email,
+            requestId: requestId,
+            onResended: proceedVerification,
+            onSubmitted: onVerificationSubmitted,
+          ),
+        ),
+      );
+    } on AppError catch (err) {
+      final snackBar = SnackBar(
+        behavior: SnackBarBehavior.floating,
+        content: Text(err.message ?? "Unknown error"),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+
+    await Future.delayed(const Duration(milliseconds: 250));
+
+    setState(() {
+      loading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
@@ -83,7 +144,7 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
               SizedBox(height: indent),
               GradientButton(
-                // loading: true,
+                loading: loading,
                 onPressed: canContinue ? onContinue : null,
                 text: "Continue",
               ),

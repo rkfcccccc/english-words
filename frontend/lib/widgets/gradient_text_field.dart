@@ -84,6 +84,10 @@ class _GradientTextFieldState extends State<GradientTextField>
         setState(() {});
       });
 
+    if (widget.autofocus) {
+      _controller.forward(from: 1);
+    }
+
     _focusNode = FocusNode()
       ..addListener(() {
         setState(() {
@@ -97,6 +101,13 @@ class _GradientTextFieldState extends State<GradientTextField>
       });
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
