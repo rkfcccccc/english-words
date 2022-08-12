@@ -54,7 +54,7 @@ func (h *Handlers) canCreateAccount(c *gin.Context, email, password string) bool
 		return false
 	}
 
-	return false
+	return true
 }
 
 func (h *Handlers) UserSignup(c *gin.Context) {
