@@ -18,6 +18,15 @@ Future<SignupResponse> signup(
   return SignupResponse.fromMap(data);
 }
 
+Future<CredentialsResponse> login(String email, password) async {
+  final data = await request("post", "/user/login", body: {
+    "email": email,
+    "password": password,
+  });
+
+  return CredentialsResponse.fromMap(data);
+}
+
 var refreshLock = false;
 Future<void> refresh() async {
   if (refreshLock) {

@@ -1,11 +1,15 @@
 import 'package:english_words/screens/signup.dart';
-import 'package:english_words/screens/verification.dart';
+import 'package:english_words/transitions/fade_page.dart';
 import 'package:english_words/transitions/no_animation.dart';
+import 'package:english_words/utils/errors.dart';
 import 'package:english_words/widgets/gradient_button.dart';
 import 'package:english_words/widgets/gradient_text_field.dart';
+import 'package:english_words/utils/api/user/user.dart' as user_api;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+
+import 'home.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -17,16 +21,25 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   String email = "", password = "";
 
-  void onContinue() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (ctx) => VerificationScreen(
-          email: email,
-          onSubmitted: print,
-        ),
-      ),
-    );
+  void onContinue() async {
+    try {
+      final navigator = Navigator.of(context);
+      final data = await user_api.login(email, password);
+      await user_api.storeCredentials(data.jwt, data.refresh);
+
+      navigator.pushReplacement(
+        FadeTransitionRoute(child: const HomeScreen()),
+      );
+    } on AppError catch (err) {
+      final snackBar = SnackBar(
+        content: Text(err.message ?? "Unknown error"),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
   }
+
+  bool get canContinue => email != "" && password != "";
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
               GradientTextField(
                 label: "Email",
                 placeholder: "example@gmail.com",
+                validator: (x) => x != "",
                 onChanged: (text) => setState(() {
                   email = text;
                 }),
@@ -61,15 +75,16 @@ class _LoginScreenState extends State<LoginScreen> {
               GradientTextField(
                 label: "Password",
                 placeholder: "very_strong_password",
+                validator: (x) => x != "",
                 onChanged: (text) => setState(() {
                   password = text;
                 }),
-                onSubmitted: print,
+                onSubmitted: (_) => canContinue ? onContinue() : null,
                 obscureText: true,
               ),
               SizedBox(height: indent),
               GradientButton(
-                onPressed: () {},
+                onPressed: canContinue ? onContinue : null,
                 text: "Log in",
               ),
               Row(
