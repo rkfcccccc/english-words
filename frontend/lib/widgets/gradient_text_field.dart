@@ -30,20 +30,24 @@ class _Painter extends CustomPainter {
 }
 
 class GradientTextField extends StatefulWidget {
-  final String label;
+  final String? label;
   final String placeholder;
   final void Function(String)? onSubmitted;
   final void Function(String)? onChanged;
   final bool Function(String)? validator;
+  final VoidCallback? onFocused;
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
   final bool obscureText;
   final bool autofocus;
+  final EdgeInsets? padding;
 
   const GradientTextField({
     Key? key,
-    required this.label,
     required this.placeholder,
+    this.label,
+    this.onFocused,
+    this.padding,
     this.obscureText = false,
     this.autofocus = false,
     this.textInputAction,
@@ -92,6 +96,8 @@ class _GradientTextFieldState extends State<GradientTextField>
       ..addListener(() {
         setState(() {
           if (_focusNode.hasFocus) {
+            if (widget.onFocused != null) widget.onFocused!();
+
             _controller.forward();
             _touched = true;
           } else {
@@ -120,15 +126,17 @@ class _GradientTextFieldState extends State<GradientTextField>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 13),
-            child: Text(widget.label,
+          if (widget.label != null)
+            Padding(
+              padding: EdgeInsets.only(left: 13, bottom: 2.w),
+              child: Text(
+                widget.label!,
                 style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
-                    color: Color.fromRGBO(225, 225, 225, 1))),
-          ),
-          SizedBox(height: 2.w),
+                    color: Color.fromRGBO(225, 225, 225, 1)),
+              ),
+            ),
           Container(
             decoration: BoxDecoration(
               color: const Color.fromRGBO(23, 23, 23, 1),
@@ -143,7 +151,7 @@ class _GradientTextFieldState extends State<GradientTextField>
                   const Radius.circular(12), 2, animation.value),
               child: SizedBox(
                 child: Padding(
-                  padding: EdgeInsets.all(4.w),
+                  padding: widget.padding ?? EdgeInsets.all(4.w),
                   child: Row(
                     children: [
                       Flexible(
