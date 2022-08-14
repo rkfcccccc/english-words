@@ -7,6 +7,7 @@ class FadeTransitionRoute extends PageRouteBuilder {
     required this.child,
   }) : super(
           transitionDuration: const Duration(milliseconds: 150),
+          reverseTransitionDuration: const Duration(milliseconds: 150),
           pageBuilder: (context, animation, secondaryAnimation) => child,
         );
 
