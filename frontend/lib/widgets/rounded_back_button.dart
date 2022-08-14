@@ -11,6 +11,7 @@ class RoundedBackButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         padding: EdgeInsets.all(3.5.w),
         primary: Colors.transparent,
+        onPrimary: const Color.fromRGBO(54, 54, 54, 1),
         minimumSize: Size.zero,
         side: const BorderSide(
           width: 2,
