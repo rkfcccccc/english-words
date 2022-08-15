@@ -1,5 +1,6 @@
-import 'dart:ui';
-
+import 'package:english_words/screens/search.dart';
+import 'package:english_words/transitions/fade_page.dart';
+import 'package:english_words/widgets/gradient_text_field.dart';
 import 'package:english_words/widgets/section.dart';
 import 'package:english_words/widgets/section_favorite_movies.dart';
 import 'package:english_words/widgets/section_vocabulary.dart';
@@ -25,6 +26,17 @@ class HomeScreen extends StatelessWidget {
                     fontSize: 23.sp,
                     fontWeight: FontWeight.w700,
                   ),
+                ),
+                SizedBox(height: 4.w),
+                GradientTextField(
+                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 3.w),
+                  placeholder: "Search for a word, movie, etc..",
+                  onFocused: () {
+                    FocusScope.of(context).unfocus();
+                    Navigator.of(context).push(
+                      FadeTransitionRoute(child: const SearchScreen()),
+                    );
+                  },
                 ),
                 SizedBox(height: 4.w),
                 const VocabularySection(),
