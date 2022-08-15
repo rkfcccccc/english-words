@@ -33,9 +33,9 @@ func (service *Service) Create(ctx context.Context, word string) (string, error)
 
 	defer mutex.Unlock()
 
-	entry, err := service.GetByWord(ctx, word)
+	entry, err := service.repo.GetByWord(ctx, word)
 	if err != nil {
-		return "", fmt.Errorf("service.GetByWord: %v", err)
+		return "", fmt.Errorf("repo.GetByWord: %v", err)
 	}
 
 	if entry != nil {
@@ -48,7 +48,7 @@ func (service *Service) Create(ctx context.Context, word string) (string, error)
 	}
 
 	if err != nil {
-		return "", fmt.Errorf("service.GetByWord: %v", err)
+		return "", fmt.Errorf("dict.GetWordEntry: %v", err)
 	}
 
 	wordId, err := service.repo.Create(ctx, TransformFromApi(dEntry))
