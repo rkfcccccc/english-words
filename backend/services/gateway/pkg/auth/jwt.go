@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"errors"
 	"fmt"
 	"time"
 
@@ -17,21 +16,23 @@ func (helper *Helper) ParseJWT(tokenString string) (*UserClaims, error) {
 		return []byte(helper.signingKey), nil
 	})
 
-	if token.Valid {
-		claims, ok := token.Claims.(UserClaims)
-		if !ok {
-			return nil, errors.New("token claims are not of type tokenClaims")
-		}
-
-		return &claims, nil
-	}
-
 	if ve, ok := err.(*jwt.ValidationError); ok {
 		if ve.Errors&(jwt.ValidationErrorExpired|jwt.ValidationErrorNotValidYet) != 0 {
 			return nil, ErrTokenExpired
 		}
 
 		return nil, ErrInvalidToken
+	} else if err != nil {
+		return nil, fmt.Errorf("jwt.Parse: %v", err)
+	}
+
+	if token.Valid {
+		claims, ok := token.Claims.(UserClaims)
+		if !ok {
+			return nil, ErrInvalidToken
+		}
+
+		return &claims, nil
 	}
 
 	return nil, fmt.Errorf("parse failed: %v", err)
