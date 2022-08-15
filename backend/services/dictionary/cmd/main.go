@@ -9,6 +9,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/rkfcccccc/english_words/services/dictionary/internal/dictionary"
 	"github.com/rkfcccccc/english_words/services/dictionary/pkg/dictionaryapi"
+	"github.com/rkfcccccc/english_words/services/dictionary/pkg/lemmatizer"
 	"github.com/rkfcccccc/english_words/shared_pkg/dsync/redsync"
 	"github.com/rkfcccccc/english_words/shared_pkg/mongodb"
 	"github.com/rkfcccccc/english_words/shared_pkg/redis"
@@ -32,9 +33,10 @@ func main() {
 	redis := redis.NewClient(os.Getenv("REDIS_HOST"), os.Getenv("REDIS_PORT"))
 	sync := redsync.NewClient(redis)
 	dict := dictionaryapi.NewClient()
+	lemm := lemmatizer.New("en")
 
 	repo := dictionary.NewMongoRepository(db.Collection("dictionary"))
-	service := dictionary.NewService(repo, sync, dict)
+	service := dictionary.NewService(repo, sync, dict, lemm)
 	server := dictionary.NewServer(service)
 
 	listener, err := net.Listen("tcp", os.Getenv("DICTIONARY_GRPC_ADDR"))

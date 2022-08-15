@@ -6,6 +6,7 @@ import (
 
 	"github.com/rkfcccccc/english_words/services/dictionary/internal/dictionary"
 	"github.com/rkfcccccc/english_words/services/dictionary/pkg/dictionaryapi"
+	"github.com/rkfcccccc/english_words/services/dictionary/pkg/lemmatizer"
 	"github.com/rkfcccccc/english_words/shared_pkg/dsync"
 	"github.com/stretchr/testify/assert"
 )
@@ -14,7 +15,8 @@ func TestServiceCreate(t *testing.T) {
 	repo := dictionary.NewRepositoryMock()
 	stub := dsync.NewStubClient()
 	dict := dictionaryapi.NewMockClient()
-	service := dictionary.NewService(repo, stub, dict)
+	lemm := lemmatizer.New("en")
+	service := dictionary.NewService(repo, stub, dict, lemm)
 
 	dEntry := dictionaryapi.Entry{
 		Word:     "test entry word",
@@ -58,7 +60,8 @@ func TestServiceGet(t *testing.T) {
 	repo := dictionary.NewRepositoryMock()
 	stub := dsync.NewStubClient()
 	dict := dictionaryapi.NewMockClient()
-	service := dictionary.NewService(repo, stub, dict)
+	lemm := lemmatizer.New("en")
+	service := dictionary.NewService(repo, stub, dict, lemm)
 
 	expectedEntry := &dictionary.WordEntry{}
 
@@ -85,7 +88,8 @@ func TestDelete(t *testing.T) {
 	repo := dictionary.NewRepositoryMock()
 	stub := dsync.NewStubClient()
 	dict := dictionaryapi.NewMockClient()
-	service := dictionary.NewService(repo, stub, dict)
+	lemm := lemmatizer.New("en")
+	service := dictionary.NewService(repo, stub, dict, lemm)
 
 	repo.PushErrResponse(nil)
 	err := service.Delete(context.Background(), "some_id")
