@@ -11,11 +11,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/rkfcccccc/english_words/services/gateway/internal/handler"
-	"github.com/rkfcccccc/english_words/services/gateway/internal/service"
 	"github.com/rkfcccccc/english_words/services/gateway/pkg/auth"
 	"github.com/rkfcccccc/english_words/services/gateway/pkg/server"
 	"github.com/rkfcccccc/english_words/shared_pkg/cache/redcache"
 	"github.com/rkfcccccc/english_words/shared_pkg/redis"
+	"github.com/rkfcccccc/english_words/shared_pkg/services"
 )
 
 func main() {
@@ -28,7 +28,7 @@ func main() {
 
 	authHelper := auth.NewHelper(os.Getenv("JWT_KEY"), cache)
 
-	services := service.NewService()
+	services := services.NewService()
 	handlers := handler.NewHandlers(services, authHelper)
 
 	// TODO: definitely all this router lines to handler package
@@ -58,7 +58,7 @@ func main() {
 	server := server.NewServer(router)
 	server.Run()
 
-	quit := make(chan os.Signal)
+	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
 	log.Println("Shutting down server...")

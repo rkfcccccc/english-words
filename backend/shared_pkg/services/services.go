@@ -1,13 +1,13 @@
-package service
+package services
 
 import (
 	"os"
 
-	"github.com/rkfcccccc/english_words/services/gateway/internal/service/dictionary"
-	"github.com/rkfcccccc/english_words/services/gateway/internal/service/movie"
-	"github.com/rkfcccccc/english_words/services/gateway/internal/service/user"
-	"github.com/rkfcccccc/english_words/services/gateway/internal/service/verification"
-	"github.com/rkfcccccc/english_words/services/gateway/internal/service/vocabulary"
+	"github.com/rkfcccccc/english_words/shared_pkg/services/dictionary"
+	"github.com/rkfcccccc/english_words/shared_pkg/services/movie"
+	"github.com/rkfcccccc/english_words/shared_pkg/services/user"
+	"github.com/rkfcccccc/english_words/shared_pkg/services/verification"
+	"github.com/rkfcccccc/english_words/shared_pkg/services/vocabulary"
 )
 
 type Services struct {

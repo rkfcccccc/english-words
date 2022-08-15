@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/rkfcccccc/english_words/services/gateway/internal/service/verification"
+	"github.com/rkfcccccc/english_words/shared_pkg/services/verification"
 )
 
 type verificationInput struct {

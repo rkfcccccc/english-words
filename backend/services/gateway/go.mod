@@ -43,6 +43,10 @@ replace github.com/rkfcccccc/english_words/shared_pkg/cache => ../../shared_pkg/
 
 require github.com/rkfcccccc/english_words/shared_pkg/redis v0.0.0
 
+replace github.com/rkfcccccc/english_words/shared_pkg/services => ../../shared_pkg/services
+
+require github.com/rkfcccccc/english_words/shared_pkg/services v0.0.0
+
 require (
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect

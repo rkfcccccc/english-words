@@ -12,7 +12,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	pb "github.com/rkfcccccc/english_words/proto/user"
-	"github.com/rkfcccccc/english_words/services/gateway/internal/service/base"
+	"github.com/rkfcccccc/english_words/shared_pkg/services/base"
 )
 
 var ErrAlreadyExists = errors.New("email already in use")

@@ -1,16 +1,16 @@
 package handler
 
 import (
-	"github.com/rkfcccccc/english_words/services/gateway/internal/service"
 	"github.com/rkfcccccc/english_words/services/gateway/pkg/auth"
+	"github.com/rkfcccccc/english_words/shared_pkg/services"
 )
 
 type Handlers struct {
-	Services *service.Services
+	Services *services.Services
 	Auth     *auth.Helper
 }
 
-func NewHandlers(services *service.Services, authHelper *auth.Helper) *Handlers {
+func NewHandlers(services *services.Services, authHelper *auth.Helper) *Handlers {
 	return &Handlers{services, authHelper}
 }
 

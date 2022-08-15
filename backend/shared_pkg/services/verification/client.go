@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc/metadata"
 
 	pb "github.com/rkfcccccc/english_words/proto/verification"
-	"github.com/rkfcccccc/english_words/services/gateway/internal/service/base"
+	"github.com/rkfcccccc/english_words/shared_pkg/services/base"
 )
 
 var (

@@ -6,9 +6,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	user_service "github.com/rkfcccccc/english_words/services/gateway/internal/service/user"
-	"github.com/rkfcccccc/english_words/services/gateway/internal/service/verification"
 	"github.com/rkfcccccc/english_words/services/gateway/pkg/auth"
+	user_service "github.com/rkfcccccc/english_words/shared_pkg/services/user"
+	"github.com/rkfcccccc/english_words/shared_pkg/services/verification"
 )
 
 type signupInput struct {
