@@ -3,10 +3,15 @@ package dictionaryapi
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 )
+
+var ErrNoDefinitionsFound = errors.New("no definitions found")
+var ErrTooManyRequests = errors.New("too many requests")
 
 type client struct{}
 
@@ -26,6 +31,10 @@ func fetchWordEntries(ctx context.Context, language, word string) ([]Entry, erro
 
 	if response.StatusCode == 404 {
 		return nil, ErrNoDefinitionsFound
+	}
+
+	if response.StatusCode == 429 {
+		return nil, ErrTooManyRequests
 	}
 
 	bytes, err := io.ReadAll(response.Body)
@@ -50,10 +59,18 @@ func fetchWordEntries(ctx context.Context, language, word string) ([]Entry, erro
 }
 
 func (c *client) GetWordEntry(ctx context.Context, language, word string) (*Entry, error) {
-	entries, err := fetchWordEntries(ctx, language, word)
-	if err != nil {
-		return nil, err
-	}
+	for {
+		entries, err := fetchWordEntries(ctx, language, word)
+		if errors.Is(err, ErrTooManyRequests) {
+			fmt.Println("Too many requests")
+			time.Sleep(time.Second * 30)
+			// TODO: maybe we should do something other in this case
+			continue
+		} else if err != nil {
+			return nil, err
+		}
 
-	return &entries[0], nil
+		fmt.Println(entries[0].Word)
+		return &entries[0], nil
+	}
 }
