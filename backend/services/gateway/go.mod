@@ -21,21 +21,21 @@ require (
 	golang.org/x/sys v0.0.0-20220715151400-c0bba94af5f8 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013 // indirect
-	google.golang.org/grpc v1.48.0
+	google.golang.org/grpc v1.48.0 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
 
 require (
 	github.com/gin-gonic/gin v1.8.1
-	github.com/go-redis/redis/v8 v8.11.5
+	github.com/go-redis/redis/v8 v8.11.5 // indirect
 	github.com/golang-jwt/jwt/v4 v4.4.2
 	github.com/joho/godotenv v1.4.0
 )
 
 replace github.com/rkfcccccc/english_words/proto => ../../proto
 
-require github.com/rkfcccccc/english_words/proto v0.0.0
+require github.com/rkfcccccc/english_words/proto v0.0.0 // indirect
 
 require github.com/rkfcccccc/english_words/shared_pkg/cache v0.0.0
 
