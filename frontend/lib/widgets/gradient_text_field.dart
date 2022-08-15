@@ -65,7 +65,10 @@ class _GradientTextFieldState extends State<GradientTextField>
     with SingleTickerProviderStateMixin {
   late TextEditingController _editingController;
   late AnimationController _controller;
+
   late Animation animation;
+  late Animation reverseAnimation;
+
   late FocusNode _focusNode;
 
   bool _touched = false;
@@ -84,6 +87,11 @@ class _GradientTextFieldState extends State<GradientTextField>
         duration: const Duration(milliseconds: 150), vsync: this);
 
     animation = Tween<double>(begin: 0, end: 1).animate(_controller)
+      ..addListener(() {
+        setState(() {});
+      });
+
+    reverseAnimation = Tween<double>(begin: 1, end: 0).animate(_controller)
       ..addListener(() {
         setState(() {});
       });
@@ -142,13 +150,17 @@ class _GradientTextFieldState extends State<GradientTextField>
               color: const Color.fromRGBO(23, 23, 23, 1),
               borderRadius: BorderRadius.circular(13),
               border: Border.all(
-                color: const Color.fromRGBO(33, 33, 33, 1),
+                color: Color.fromRGBO(33, 33, 33, reverseAnimation.value),
                 width: 2,
               ),
             ),
             child: CustomPaint(
-              painter: _Painter(Gradients.purple2pink,
-                  const Radius.circular(12), 2, animation.value),
+              painter: _Painter(
+                  Gradients.purple2pink,
+                  const Radius.circular(13),
+                  2,
+                  animation
+                      .value), // TODO: it seems that does not fit the contianer
               child: SizedBox(
                 child: Padding(
                   padding: widget.padding ?? EdgeInsets.all(4.w),
