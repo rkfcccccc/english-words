@@ -32,7 +32,7 @@ func (l *Lemmatizer) init(language string) error {
 
 	lines := strings.Split(string(bytes), "\n")
 	for i, line := range lines {
-		words := strings.Split(line, "\t")
+		words := strings.Split(strings.TrimSpace(line), "\t")
 
 		if len(words) != 2 {
 			return fmt.Errorf("failed parsing words at line %d", i+1)
