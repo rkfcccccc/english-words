@@ -43,9 +43,9 @@ func main() {
 	userGroup.POST("/refresh", handlers.UserRefresh)
 	userGroup.POST("/recovery", handlers.UserRecovery)
 
-	// authorized := router.Group("/", authorizedHandler)
+	authorized := router.Group("/", handlers.AuthRequired)
 
-	movieGroup := apiGroup.Group("/movies")
+	movieGroup := authorized.Group("/movies")
 	movieGroup.POST("/", handlers.MovieCreate)
 	// movieGroup.GET("/:id") - get info about :id
 	// movieGroup.UPDATE("/:id/favorite") - make movie :id unfavorite
