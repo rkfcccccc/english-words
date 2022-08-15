@@ -22,6 +22,16 @@ func (server *Server) Register(s *grpc.Server) {
 	pb.RegisterMovieServiceServer(s, server)
 }
 
+func (server *Server) CreateByUrl(ctx context.Context, in *pb.CreateByUrlRequest) (*pb.CreateByUrlResponse, error) {
+	err := server.service.CreateByUrl(ctx, TransformMovieFromGRPC(in.Movie), in.SubtitlesUrl)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.CreateByUrlResponse{}, nil
+}
+
 func (server *Server) Create(ctx context.Context, in *pb.CreateRequest) (*pb.CreateResponse, error) {
 	err := server.service.Create(ctx, TransformMovieFromGRPC(in.Movie), in.Words)
 

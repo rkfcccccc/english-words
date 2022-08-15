@@ -21,6 +21,15 @@ message CreateRequest {
 
 message CreateResponse {}
 
+
+/* CreateByUrl */
+message CreateByUrlRequest {
+    Movie movie = 1;
+    string subtitlesUrl = 2;
+}
+
+message CreateByUrlResponse {}
+
 /* Get */ 
 message GetRequest {
     string imdb_id = 1;
@@ -57,6 +66,8 @@ message RemoveUserResponse {}
 
 service MovieService {
     rpc Create(CreateRequest) returns (CreateResponse) {}
+    rpc CreateByUrl(CreateByUrlRequest) returns (CreateByUrlResponse) {}
+
     rpc Get(GetRequest) returns (Movie) {}
     rpc GetWords(GetRequest) returns (MovieWords) {}
     rpc Delete(DeleteRequest) returns (DeleteResponse) {}

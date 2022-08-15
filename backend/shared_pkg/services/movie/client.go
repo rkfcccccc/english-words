@@ -25,8 +25,13 @@ func NewClient(addr string) *Client {
 	return &Client{conn, client}
 }
 
-func (c *Client) Create(ctx context.Context, movie *Movie, words []string) error {
-	_, err := c.client.Create(ctx, &pb.CreateRequest{Movie: transformMovieToGRPC(movie), Words: words})
+func (c *Client) CreateByUrl(ctx context.Context, movie *Movie, subtitlesUrl string) error {
+	_, err := c.client.CreateByUrl(ctx, &pb.CreateByUrlRequest{Movie: transformMovieToGRPC(movie), SubtitlesUrl: subtitlesUrl})
+	return err
+}
+
+func (c *Client) Create(ctx context.Context, movie *Movie, wordsIds []string) error {
+	_, err := c.client.Create(ctx, &pb.CreateRequest{Movie: transformMovieToGRPC(movie), Words: wordsIds})
 	return err
 }
 
