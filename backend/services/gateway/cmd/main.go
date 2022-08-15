@@ -45,7 +45,8 @@ func main() {
 
 	// authorized := router.Group("/", authorizedHandler)
 
-	// movieGroup := authorized.Group("/movies")
+	movieGroup := apiGroup.Group("/movies")
+	movieGroup.POST("/", handlers.MovieCreate)
 	// movieGroup.GET("/:id") - get info about :id
 	// movieGroup.UPDATE("/:id/favorite") - make movie :id unfavorite
 	// movieGroup.DELETE("/:id/favorite") - add :id favorite
