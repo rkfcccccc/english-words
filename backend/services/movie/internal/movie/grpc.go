@@ -23,27 +23,27 @@ func (server *Server) Register(s *grpc.Server) {
 }
 
 func (server *Server) CreateByUrl(ctx context.Context, in *pb.CreateByUrlRequest) (*pb.CreateByUrlResponse, error) {
-	err := server.service.CreateByUrl(ctx, TransformMovieFromGRPC(in.Movie), in.SubtitlesUrl)
+	movieId, err := server.service.CreateByUrl(ctx, TransformMovieFromGRPC(in.Movie), in.SubtitlesUrl)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.CreateByUrlResponse{}, nil
+	return &pb.CreateByUrlResponse{MovieId: int32(movieId)}, nil
 }
 
 func (server *Server) Create(ctx context.Context, in *pb.CreateRequest) (*pb.CreateResponse, error) {
-	err := server.service.Create(ctx, TransformMovieFromGRPC(in.Movie), in.Words)
+	movieId, err := server.service.Create(ctx, TransformMovieFromGRPC(in.Movie), in.Words)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.CreateResponse{}, nil
+	return &pb.CreateResponse{MovieId: int32(movieId)}, nil
 }
 
 func (server *Server) Get(ctx context.Context, in *pb.GetRequest) (*pb.Movie, error) {
-	movie, err := server.service.Get(ctx, in.ImdbId)
+	movie, err := server.service.Get(ctx, int(in.MovieId))
 
 	if err != nil {
 		return nil, err
@@ -57,7 +57,7 @@ func (server *Server) Get(ctx context.Context, in *pb.GetRequest) (*pb.Movie, er
 }
 
 func (server *Server) GetWords(ctx context.Context, in *pb.GetRequest) (*pb.MovieWords, error) {
-	words, err := server.service.GetWords(ctx, in.ImdbId)
+	words, err := server.service.GetWords(ctx, int(in.MovieId))
 
 	if err != nil {
 		return nil, err
@@ -67,7 +67,7 @@ func (server *Server) GetWords(ctx context.Context, in *pb.GetRequest) (*pb.Movi
 }
 
 func (server *Server) Delete(ctx context.Context, in *pb.DeleteRequest) (*pb.DeleteResponse, error) {
-	err := server.service.Delete(ctx, in.ImdbId)
+	err := server.service.Delete(ctx, int(in.MovieId))
 
 	if err != nil {
 		return nil, err
@@ -92,7 +92,7 @@ func (server *Server) GetUserFavorites(ctx context.Context, in *pb.FavoritesRequ
 }
 
 func (server *Server) AddUser(ctx context.Context, in *pb.AddUserRequest) (*pb.AddUserResponse, error) {
-	err := server.service.AddUser(ctx, in.ImdbId, int(in.UserId))
+	err := server.service.AddUser(ctx, int(in.MovieId), int(in.UserId))
 
 	if err != nil {
 		return nil, err
@@ -102,7 +102,7 @@ func (server *Server) AddUser(ctx context.Context, in *pb.AddUserRequest) (*pb.A
 }
 
 func (server *Server) RemoveUser(ctx context.Context, in *pb.RemoveUserRequest) (*pb.RemoveUserResponse, error) {
-	err := server.service.RemoveUser(ctx, in.ImdbId, int(in.UserId))
+	err := server.service.RemoveUser(ctx, int(in.MovieId), int(in.UserId))
 
 	if err != nil {
 		return nil, err

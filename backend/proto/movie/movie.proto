@@ -3,10 +3,11 @@ package movie;
 option go_package = "github.com/rkfcccccc/english_words/proto/movie";
 
 message Movie {
-    string imdb_id = 1;
-    string title = 2;
-    int32 year = 3;
-    string poster_url = 4;
+    int32 id = 1;
+    string imdb_id = 2;
+    string title = 3;
+    int32 year = 4;
+    string poster_url = 5;
 }
 
 message MovieWords {
@@ -19,7 +20,9 @@ message CreateRequest {
     repeated string words = 2;
 }
 
-message CreateResponse {}
+message CreateResponse {
+    int32 movieId = 1;
+}
 
 
 /* CreateByUrl */
@@ -28,16 +31,18 @@ message CreateByUrlRequest {
     string subtitlesUrl = 2;
 }
 
-message CreateByUrlResponse {}
+message CreateByUrlResponse {
+    int32 movieId = 1;
+}
 
 /* Get */ 
 message GetRequest {
-    string imdb_id = 1;
+    int32 movie_id = 1;
 }
 
 /* Delete */
 message DeleteRequest {
-    string imdb_id = 1;
+    int32 movie_id = 1;
 }
 
 message DeleteResponse {}
@@ -52,12 +57,12 @@ message FavoritesResponse {
 }
 
 message AddUserRequest {
-    string imdb_id = 1;
+    int32 movie_id = 1;
     int32 user_id = 2;
 }
 
 message RemoveUserRequest {
-    string imdb_id = 1;
+    int32 movie_id = 1;
     int32 user_id = 2;
 }
 

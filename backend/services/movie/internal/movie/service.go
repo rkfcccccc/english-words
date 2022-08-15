@@ -19,12 +19,12 @@ func NewService(repo Repository, dict *dictionary.Client) *Service {
 	return &Service{repo, dict}
 }
 
-func (service *Service) CreateByUrl(ctx context.Context, movie *Movie, subtitlesUrl string) error {
+func (service *Service) CreateByUrl(ctx context.Context, movie *Movie, subtitlesUrl string) (int, error) {
 	log.Printf("creating movie \"%s\"..\n", movie.Title)
 
 	words, err := srt.GetWordsFromURL(subtitlesUrl)
 	if err != nil {
-		return fmt.Errorf("srt.GetWordsFromURL: %v", err)
+		return -1, fmt.Errorf("srt.GetWordsFromURL: %v", err)
 	}
 
 	log.Printf("found %d words in that movie\n", len(words))
@@ -35,7 +35,7 @@ func (service *Service) CreateByUrl(ctx context.Context, movie *Movie, subtitles
 		if errors.Is(err, dictionary.ErrNoDefinitionsFound) {
 			continue
 		} else if err != nil {
-			return err
+			return -1, fmt.Errorf("dict.Create: %v", err)
 		}
 
 		log.Printf("%s -> %s\n", word, wordId)
@@ -54,28 +54,28 @@ func (service *Service) CreateByUrl(ctx context.Context, movie *Movie, subtitles
 	return service.repo.Create(ctx, movie, wordsIds)
 }
 
-func (service *Service) Create(ctx context.Context, movie *Movie, wordsIds []string) error {
+func (service *Service) Create(ctx context.Context, movie *Movie, wordsIds []string) (int, error) {
 	return service.repo.Create(ctx, movie, wordsIds)
 }
 
-func (service *Service) Delete(ctx context.Context, imdbId string) error {
-	return service.repo.Delete(ctx, imdbId)
+func (service *Service) Delete(ctx context.Context, movieId int) error {
+	return service.repo.Delete(ctx, movieId)
 }
 
-func (service *Service) Get(ctx context.Context, imdbId string) (*Movie, error) {
-	return service.repo.Get(ctx, imdbId)
+func (service *Service) Get(ctx context.Context, movieId int) (*Movie, error) {
+	return service.repo.Get(ctx, movieId)
 }
 
-func (service *Service) GetWords(ctx context.Context, imdbId string) ([]string, error) {
-	return service.repo.GetWords(ctx, imdbId)
+func (service *Service) GetWords(ctx context.Context, movieId int) ([]string, error) {
+	return service.repo.GetWords(ctx, movieId)
 }
 
-func (service *Service) AddUser(ctx context.Context, imdbId string, userId int) error {
-	return service.repo.AddUser(ctx, imdbId, userId)
+func (service *Service) AddUser(ctx context.Context, movieId int, userId int) error {
+	return service.repo.AddUser(ctx, movieId, userId)
 }
 
-func (service *Service) RemoveUser(ctx context.Context, imdbId string, userId int) error {
-	return service.repo.RemoveUser(ctx, imdbId, userId)
+func (service *Service) RemoveUser(ctx context.Context, movieId int, userId int) error {
+	return service.repo.RemoveUser(ctx, movieId, userId)
 }
 
 func (service *Service) Search(ctx context.Context, query string) ([]Movie, error) {

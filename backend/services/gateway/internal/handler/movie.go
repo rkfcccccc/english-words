@@ -34,10 +34,11 @@ func (h *Handlers) MovieCreate(c *gin.Context) {
 		PosterUrl: body.Movie.PosterUrl,
 	}
 
-	if err := h.Services.Movie.CreateByUrl(c, movie, body.SubtitlesUrl); err != nil {
+	movieId, err := h.Services.Movie.CreateByUrl(c, movie, body.SubtitlesUrl)
+	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"status": "success"})
+	c.JSON(http.StatusOK, gin.H{"movie_id": movieId})
 }

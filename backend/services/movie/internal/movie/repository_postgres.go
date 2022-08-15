@@ -24,19 +24,20 @@ func NewPostgresRepository(db *pgxpool.Pool) Repository {
 	return &postgresRepository{db}
 }
 
-func (repo *postgresRepository) Create(ctx context.Context, movie *Movie, words []string) error {
+func (repo *postgresRepository) Create(ctx context.Context, movie *Movie, words []string) (int, error) {
 	if words == nil || len(words) == 0 {
-		return fmt.Errorf("no words given")
+		return -1, fmt.Errorf("no words given")
 	}
 
 	tx, err := repo.db.Begin(ctx)
 	if err != nil {
-		return fmt.Errorf("db.Begin: %v", err)
+		return -1, fmt.Errorf("db.Begin: %v", err)
 	}
 
-	query := fmt.Sprintf("INSERT INTO %s (imdb_id, title, year, poster_url) VALUES ($1, $2, $3, $4)", moviesTbl)
-	if _, err = tx.Exec(ctx, query, movie.ImdbId, movie.Title, movie.Year, movie.PosterUrl); err != nil {
-		return fmt.Errorf("db.Exec: %v", err)
+	var movieId int
+	query := fmt.Sprintf("INSERT INTO %s (imdb_id, title, year, poster_url) VALUES ($1, $2, $3, $4) RETURNING id", moviesTbl)
+	if err := pgxscan.Get(ctx, tx, &movieId, query, movie.ImdbId, movie.Title, movie.Year, movie.PosterUrl); err != nil {
+		return -1, fmt.Errorf("pgxscan.Get: %v", err)
 	}
 
 	for chunk := 0; chunk*chunkSize < len(words); chunk++ {
@@ -46,29 +47,29 @@ func (repo *postgresRepository) Create(ctx context.Context, movie *Movie, words 
 		queryValues := []string{}
 
 		for i := 0; start+i < len(words) && i < chunkSize; i++ {
-			values = append(values, movie.ImdbId, words[start+i])
+			values = append(values, movieId, words[start+i])
 			queryValues = append(queryValues, fmt.Sprintf("($%d, $%d)", 2*i+1, 2*i+2))
 		}
 
-		query = fmt.Sprintf("INSERT INTO %s (imdb_id, word_id) VALUES %s", moviesWordsTbl, strings.Join(queryValues, ", "))
+		query = fmt.Sprintf("INSERT INTO %s (movie_id, word_id) VALUES %s", moviesWordsTbl, strings.Join(queryValues, ", "))
 		if _, err = tx.Exec(ctx, query, values...); err != nil {
 			tx.Rollback(ctx)
-			return fmt.Errorf("db.Exec: %v", err)
+			return -1, fmt.Errorf("db.Exec: %v", err)
 		}
 	}
 
 	if err := tx.Commit(ctx); err != nil {
-		return fmt.Errorf("tx.Commit: %v", err)
+		return -1, fmt.Errorf("tx.Commit: %v", err)
 	}
 
-	return err
+	return movieId, nil
 }
 
-func (repo *postgresRepository) Get(ctx context.Context, imdbId string) (*Movie, error) {
+func (repo *postgresRepository) Get(ctx context.Context, movieId int) (*Movie, error) {
 	var result Movie
 
-	query := fmt.Sprintf("SELECT * FROM %s WHERE imdb_id = $1", moviesTbl)
-	err := pgxscan.Get(ctx, repo.db, &result, query, imdbId)
+	query := fmt.Sprintf("SELECT * FROM %s WHERE id = $1", moviesTbl)
+	err := pgxscan.Get(ctx, repo.db, &result, query, movieId)
 
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, nil
@@ -81,11 +82,11 @@ func (repo *postgresRepository) Get(ctx context.Context, imdbId string) (*Movie,
 	return &result, nil
 }
 
-func (repo *postgresRepository) GetWords(ctx context.Context, imdbId string) ([]string, error) {
+func (repo *postgresRepository) GetWords(ctx context.Context, movieId int) ([]string, error) {
 	var result []string
 
-	query := fmt.Sprintf("SELECT word_id FROM %s WHERE imdb_id = $1", moviesWordsTbl)
-	err := pgxscan.Select(ctx, repo.db, &result, query, imdbId)
+	query := fmt.Sprintf("SELECT word_id FROM %s WHERE id = $1", moviesWordsTbl)
+	err := pgxscan.Select(ctx, repo.db, &result, query, movieId)
 
 	if errors.Is(err, pgx.ErrNoRows) {
 		return []string{}, nil
@@ -98,9 +99,9 @@ func (repo *postgresRepository) GetWords(ctx context.Context, imdbId string) ([]
 	return result, nil
 }
 
-func (repo *postgresRepository) Delete(ctx context.Context, imdbId string) error {
-	query := fmt.Sprintf("DELETE FROM %s WHERE imdb_id=$1", moviesTbl)
-	_, err := repo.db.Exec(ctx, query, imdbId)
+func (repo *postgresRepository) Delete(ctx context.Context, movieId int) error {
+	query := fmt.Sprintf("DELETE FROM %s WHERE id=$1", moviesTbl)
+	_, err := repo.db.Exec(ctx, query, movieId)
 
 	if err != nil {
 		return fmt.Errorf("db.Exec: %v", err)
@@ -109,9 +110,9 @@ func (repo *postgresRepository) Delete(ctx context.Context, imdbId string) error
 	return nil
 }
 
-func (repo *postgresRepository) AddUser(ctx context.Context, imdbId string, userId int) error {
-	query := fmt.Sprintf("INSERT INTO %s (imdb_id, user_id) VALUES ($1, $2)", moviesUsersTbl)
-	_, err := repo.db.Exec(ctx, query, imdbId, userId)
+func (repo *postgresRepository) AddUser(ctx context.Context, movieId int, userId int) error {
+	query := fmt.Sprintf("INSERT INTO %s (movie_id, user_id) VALUES ($1, $2)", moviesUsersTbl)
+	_, err := repo.db.Exec(ctx, query, movieId, userId)
 
 	if err != nil {
 		return fmt.Errorf("db.Exec: %v", err)
@@ -120,9 +121,9 @@ func (repo *postgresRepository) AddUser(ctx context.Context, imdbId string, user
 	return nil
 }
 
-func (repo *postgresRepository) RemoveUser(ctx context.Context, imdbId string, userId int) error {
-	query := fmt.Sprintf("DELETE FROM %s WHERE imdb_id=$1 and user_id=$2", moviesUsersTbl)
-	_, err := repo.db.Exec(ctx, query, imdbId, userId)
+func (repo *postgresRepository) RemoveUser(ctx context.Context, movieId int, userId int) error {
+	query := fmt.Sprintf("DELETE FROM %s WHERE movie_id=$1 and user_id=$2", moviesUsersTbl)
+	_, err := repo.db.Exec(ctx, query, movieId, userId)
 
 	if err != nil {
 		return fmt.Errorf("db.Exec: %v", err)

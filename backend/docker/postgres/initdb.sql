@@ -23,24 +23,25 @@ create table verifications (
 );
 
 create table movies (
-    imdb_id varchar(16) primary key,
+    id serial primary key,
+    imdb_id varchar(16) unique,
     title varchar(128) not null,
     year smallint not null,
     poster_url varchar(128) not null
 );
 
 create table movies_words (
-    imdb_id varchar(16) references movies (imdb_id) on delete cascade,
+    movie_id int references movies (id) on delete cascade,
     word_id char(24) not null, /* mongodb dictionary._id */
-    primary key (imdb_id, word_id)
+    primary key (movie_id, word_id)
 );
 
-CREATE INDEX idx_movies_words_imdb_id ON movies_words(imdb_id);
+CREATE INDEX idx_movies_words_movie_id ON movies_words(movie_id);
 
 create table movies_users (
+    movie_id int references movies (id) on delete cascade,
     user_id int references users (id) on delete cascade,
-    imdb_id varchar(16) references movies (imdb_id) on delete cascade,
-    primary key (user_id, imdb_id)
+    primary key (movie_id, user_id)
 );
 
 create table vocabulary (
