@@ -80,5 +80,5 @@ func (c *Client) AddWords(ctx context.Context, userId int, wordIds ...string) er
 }
 
 func (c *Client) DeleteWords(ctx context.Context, userId int, wordIds ...string) error {
-	return c.writeWordActionsToKafka(ctx, userId, true, wordIds...)
+	return c.writeWordActionsToKafka(ctx, userId, false, wordIds...)
 }
