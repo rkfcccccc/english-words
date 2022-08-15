@@ -11,3 +11,7 @@ require (
 	google.golang.org/grpc v1.48.0 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 )
+
+replace github.com/rkfcccccc/english_words/proto => ../../proto
+
+require github.com/rkfcccccc/english_words/proto v0.0.0

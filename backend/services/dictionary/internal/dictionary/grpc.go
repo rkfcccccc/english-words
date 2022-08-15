@@ -43,10 +43,6 @@ func (server *Server) GetById(ctx context.Context, in *pb.WordId) (*pb.WordEntry
 		return nil, err
 	}
 
-	if entry == nil {
-		return nil, status.Errorf(codes.NotFound, "word was not found")
-	}
-
 	return TransformToGRPC(entry), nil
 }
 

@@ -2,13 +2,18 @@ package dictionary
 
 import (
 	"context"
+	"errors"
 	"log"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/status"
 
 	pb "github.com/rkfcccccc/english_words/proto/dictionary"
 )
+
+var ErrNoDefinitionsFound = errors.New("no definitions found")
 
 type Client struct {
 	conn   *grpc.ClientConn
@@ -27,6 +32,10 @@ func NewClient(addr string) *Client {
 
 func (c *Client) Create(ctx context.Context, word string) (string, error) {
 	response, err := c.client.Create(ctx, &pb.Word{Word: word})
+	if status.Code(err) == codes.NotFound {
+		return "", ErrNoDefinitionsFound
+	}
+
 	return response.GetWordId(), err
 }
 

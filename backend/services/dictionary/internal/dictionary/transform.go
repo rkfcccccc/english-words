@@ -32,6 +32,10 @@ func TransformFromApi(dEntry *dictionaryapi.Entry) *WordEntry {
 }
 
 func TransformToGRPC(dEntry *WordEntry) *pb.WordEntry {
+	if dEntry == nil {
+		return nil
+	}
+
 	entry := pb.WordEntry{
 		Word:     dEntry.Word,
 		Phonetic: dEntry.Phonetic,
