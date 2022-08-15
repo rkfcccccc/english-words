@@ -8,15 +8,18 @@ import (
 
 	"github.com/rkfcccccc/english_words/services/movie/pkg/srt"
 	"github.com/rkfcccccc/english_words/shared_pkg/services/dictionary"
+	"github.com/rkfcccccc/english_words/shared_pkg/services/vocabulary"
 )
 
 type Service struct {
 	repo Repository
-	dict *dictionary.Client
+
+	dictionary *dictionary.Client
+	vocabulary *vocabulary.Client
 }
 
-func NewService(repo Repository, dict *dictionary.Client) *Service {
-	return &Service{repo, dict}
+func NewService(repo Repository, dictionary *dictionary.Client, vocabulary *vocabulary.Client) *Service {
+	return &Service{repo, dictionary, vocabulary}
 }
 
 func (service *Service) CreateByUrl(ctx context.Context, movie *Movie, subtitlesUrl string) (int, error) {
@@ -30,7 +33,7 @@ func (service *Service) CreateByUrl(ctx context.Context, movie *Movie, subtitles
 	log.Printf("found %d words in that movie\n", len(words))
 	seen := make(map[string]struct{}, len(words))
 	for _, word := range words {
-		wordId, err := service.dict.Create(ctx, word)
+		wordId, err := service.dictionary.Create(ctx, word)
 
 		if errors.Is(err, dictionary.ErrNoDefinitionsFound) {
 			continue
@@ -71,11 +74,37 @@ func (service *Service) GetWords(ctx context.Context, movieId int) ([]string, er
 }
 
 func (service *Service) AddUser(ctx context.Context, movieId int, userId int) error {
-	return service.repo.AddUser(ctx, movieId, userId)
+	wordsIds, err := service.GetWords(ctx, movieId)
+	if err != nil {
+		return fmt.Errorf("service.GetWords: %v", err)
+	}
+
+	if err := service.vocabulary.AddWords(ctx, userId, wordsIds...); err != nil {
+		return fmt.Errorf("vocabulary.AddWords: %v", err)
+	}
+
+	if err := service.repo.AddUser(ctx, movieId, userId); err != nil {
+		return fmt.Errorf("repo.AddUser: %v", err)
+	}
+
+	return nil
 }
 
 func (service *Service) RemoveUser(ctx context.Context, movieId int, userId int) error {
-	return service.repo.RemoveUser(ctx, movieId, userId)
+	wordsIds, err := service.GetWords(ctx, movieId)
+	if err != nil {
+		return fmt.Errorf("service.GetWords: %v", err)
+	}
+
+	if err := service.vocabulary.DeleteWords(ctx, userId, wordsIds...); err != nil {
+		return fmt.Errorf("vocabulary.AddWords: %v", err)
+	}
+
+	if err := service.repo.RemoveUser(ctx, movieId, userId); err != nil {
+		return fmt.Errorf("repo.AddUser: %v", err)
+	}
+
+	return nil
 }
 
 func (service *Service) Search(ctx context.Context, query string) ([]Movie, error) {
