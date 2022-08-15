@@ -11,6 +11,7 @@ type Repository interface {
 
 	AddUser(ctx context.Context, movieId int, userId int) error
 	RemoveUser(ctx context.Context, movieId int, userId int) error
+	IsFavorite(ctx context.Context, movieId int, userId int) (bool, error)
 
 	Search(ctx context.Context, query string) ([]Movie, error)
 	GetUserFavorites(ctx context.Context, userId int) ([]Movie, error)

@@ -74,6 +74,12 @@ func (service *Service) GetWords(ctx context.Context, movieId int) ([]string, er
 }
 
 func (service *Service) AddUser(ctx context.Context, movieId int, userId int) error {
+	if fav, err := service.repo.IsFavorite(ctx, movieId, userId); err != nil {
+		return fmt.Errorf("repo.IsFavorite: %v", err)
+	} else if fav {
+		return errors.New("already favorite")
+	}
+
 	wordsIds, err := service.GetWords(ctx, movieId)
 	if err != nil {
 		return fmt.Errorf("service.GetWords: %v", err)
@@ -91,6 +97,12 @@ func (service *Service) AddUser(ctx context.Context, movieId int, userId int) er
 }
 
 func (service *Service) RemoveUser(ctx context.Context, movieId int, userId int) error {
+	if fav, err := service.repo.IsFavorite(ctx, movieId, userId); err != nil {
+		return fmt.Errorf("repo.IsFavorite: %v", err)
+	} else if !fav {
+		return errors.New("already unfavorite")
+	}
+
 	wordsIds, err := service.GetWords(ctx, movieId)
 	if err != nil {
 		return fmt.Errorf("service.GetWords: %v", err)

@@ -25,7 +25,7 @@ func NewPostgresRepository(db *pgxpool.Pool) Repository {
 }
 
 func (repo *postgresRepository) Create(ctx context.Context, movie *Movie, words []string) (int, error) {
-	if words == nil || len(words) == 0 {
+	if len(words) == 0 {
 		return -1, fmt.Errorf("no words given")
 	}
 
@@ -85,7 +85,7 @@ func (repo *postgresRepository) Get(ctx context.Context, movieId int) (*Movie, e
 func (repo *postgresRepository) GetWords(ctx context.Context, movieId int) ([]string, error) {
 	var result []string
 
-	query := fmt.Sprintf("SELECT word_id FROM %s WHERE id = $1", moviesWordsTbl)
+	query := fmt.Sprintf("SELECT word_id FROM %s WHERE movie_id = $1", moviesWordsTbl)
 	err := pgxscan.Select(ctx, repo.db, &result, query, movieId)
 
 	if errors.Is(err, pgx.ErrNoRows) {
@@ -130,6 +130,22 @@ func (repo *postgresRepository) RemoveUser(ctx context.Context, movieId int, use
 	}
 
 	return nil
+}
+
+func (repo *postgresRepository) IsFavorite(ctx context.Context, movieId int, userId int) (bool, error) {
+	var result bool
+	query := fmt.Sprintf("SELECT true FROM %s WHERE movie_id=$1 and user_id=$2", moviesUsersTbl)
+
+	err := pgxscan.Get(ctx, repo.db, &result, query, movieId, userId)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return false, nil
+	}
+
+	if err != nil {
+		return false, fmt.Errorf("db.Exec: %v", err)
+	}
+
+	return result, nil
 }
 
 func (repo *postgresRepository) Search(ctx context.Context, searchQuery string) ([]Movie, error) {
