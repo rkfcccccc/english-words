@@ -7,7 +7,7 @@ type Definition struct {
 }
 
 type Meaning struct {
-	PartOfSpeech string       `json:"partOfSpeech"`
+	PartOfSpeech string       `json:"part_of_speech"`
 	Definitions  []Definition `json:"definitions"`
 	Synonyms     []string     `json:"synonyms"`
 	Antonyms     []string     `json:"antonyms"`
