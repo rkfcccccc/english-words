@@ -35,6 +35,15 @@ message CreateByUrlResponse {
     int32 movieId = 1;
 }
 
+/* Search */
+message SearchRequest {
+    string query = 1;
+}
+
+message SearchResponse {
+    repeated Movie movies = 1;
+}
+
 /* Get */ 
 message GetRequest {
     int32 movie_id = 1;
@@ -72,6 +81,8 @@ message RemoveUserResponse {}
 service MovieService {
     rpc Create(CreateRequest) returns (CreateResponse) {}
     rpc CreateByUrl(CreateByUrlRequest) returns (CreateByUrlResponse) {}
+
+    rpc Search(SearchRequest) returns (SearchResponse) {}
 
     rpc Get(GetRequest) returns (Movie) {}
     rpc GetWords(GetRequest) returns (MovieWords) {}

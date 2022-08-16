@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type MovieServiceClient interface {
 	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
 	CreateByUrl(ctx context.Context, in *CreateByUrlRequest, opts ...grpc.CallOption) (*CreateByUrlResponse, error)
+	Search(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*SearchResponse, error)
 	Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*Movie, error)
 	GetWords(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*MovieWords, error)
 	Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
@@ -52,6 +53,15 @@ func (c *movieServiceClient) Create(ctx context.Context, in *CreateRequest, opts
 func (c *movieServiceClient) CreateByUrl(ctx context.Context, in *CreateByUrlRequest, opts ...grpc.CallOption) (*CreateByUrlResponse, error) {
 	out := new(CreateByUrlResponse)
 	err := c.cc.Invoke(ctx, "/movie.MovieService/CreateByUrl", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *movieServiceClient) Search(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*SearchResponse, error) {
+	out := new(SearchResponse)
+	err := c.cc.Invoke(ctx, "/movie.MovieService/Search", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -118,6 +128,7 @@ func (c *movieServiceClient) RemoveUser(ctx context.Context, in *RemoveUserReque
 type MovieServiceServer interface {
 	Create(context.Context, *CreateRequest) (*CreateResponse, error)
 	CreateByUrl(context.Context, *CreateByUrlRequest) (*CreateByUrlResponse, error)
+	Search(context.Context, *SearchRequest) (*SearchResponse, error)
 	Get(context.Context, *GetRequest) (*Movie, error)
 	GetWords(context.Context, *GetRequest) (*MovieWords, error)
 	Delete(context.Context, *DeleteRequest) (*DeleteResponse, error)
@@ -136,6 +147,9 @@ func (UnimplementedMovieServiceServer) Create(context.Context, *CreateRequest) (
 }
 func (UnimplementedMovieServiceServer) CreateByUrl(context.Context, *CreateByUrlRequest) (*CreateByUrlResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateByUrl not implemented")
+}
+func (UnimplementedMovieServiceServer) Search(context.Context, *SearchRequest) (*SearchResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Search not implemented")
 }
 func (UnimplementedMovieServiceServer) Get(context.Context, *GetRequest) (*Movie, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
@@ -200,6 +214,24 @@ func _MovieService_CreateByUrl_Handler(srv interface{}, ctx context.Context, dec
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MovieServiceServer).CreateByUrl(ctx, req.(*CreateByUrlRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MovieService_Search_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MovieServiceServer).Search(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/movie.MovieService/Search",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MovieServiceServer).Search(ctx, req.(*SearchRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -326,6 +358,10 @@ var MovieService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateByUrl",
 			Handler:    _MovieService_CreateByUrl_Handler,
+		},
+		{
+			MethodName: "Search",
+			Handler:    _MovieService_Search_Handler,
 		},
 		{
 			MethodName: "Get",
