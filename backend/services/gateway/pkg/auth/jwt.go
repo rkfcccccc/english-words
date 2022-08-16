@@ -8,7 +8,7 @@ import (
 )
 
 func (helper *Helper) ParseJWT(tokenString string) (*UserClaims, error) {
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &UserClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
@@ -27,12 +27,12 @@ func (helper *Helper) ParseJWT(tokenString string) (*UserClaims, error) {
 	}
 
 	if token.Valid {
-		claims, ok := token.Claims.(UserClaims)
+		claims, ok := token.Claims.(*UserClaims)
 		if !ok {
 			return nil, ErrInvalidToken
 		}
 
-		return &claims, nil
+		return claims, nil
 	}
 
 	return nil, fmt.Errorf("parse failed: %v", err)
@@ -42,9 +42,9 @@ func (helper *Helper) ParseJWT(tokenString string) (*UserClaims, error) {
 func (helper *Helper) IssueJWT(user_id int) (string, error) {
 	claims := UserClaims{
 		user_id,
-		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(tokenTTL).Unix(),
-			IssuedAt:  time.Now().Unix(),
+		jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(tokenTTL)),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},
 	}
 

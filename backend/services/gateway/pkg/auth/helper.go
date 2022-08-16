@@ -19,7 +19,7 @@ const tokenTTL = time.Minute * 5
 
 type UserClaims struct {
 	UserId int `json:"user_id"`
-	jwt.StandardClaims
+	jwt.RegisteredClaims
 }
 
 type Helper struct {
