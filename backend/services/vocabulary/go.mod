@@ -17,7 +17,7 @@ require (
 	github.com/klauspost/compress v1.14.2 // indirect
 	github.com/pierrec/lz4/v4 v4.1.14 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/segmentio/kafka-go v0.4.32 // indirect
+	github.com/segmentio/kafka-go v0.4.32
 	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2 // indirect
 	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
 	golang.org/x/text v0.3.7 // indirect

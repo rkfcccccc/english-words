@@ -43,17 +43,18 @@ func main() {
 	userGroup.POST("/refresh", handlers.UserRefresh)
 	userGroup.POST("/recovery", handlers.UserRecovery)
 
-	authorized := router.Group("/", handlers.AuthRequired)
+	authorized := apiGroup.Group("/", handlers.AuthRequired)
 
-	movieGroup := authorized.Group("/movies")
+	movieGroup := apiGroup.Group("/movies")
 	movieGroup.POST("/", handlers.MovieCreate)
+	// movieGroup.GET("/", handlers.MovieCreate)
 	// movieGroup.GET("/:id") - get info about :id
 	// movieGroup.UPDATE("/:id/favorite") - make movie :id unfavorite
 	// movieGroup.DELETE("/:id/favorite") - add :id favorite
 	// movieGroup.GET("/") - search for movie
 
-	// vocabularyGroup := authorized.Group("/vocabulary")
-	// vocabularyGroup.GET("/challenge") - get a challenge to show
+	vocabularyGroup := authorized.Group("/vocabulary")
+	vocabularyGroup.GET("/challenge", handlers.GetChallenge)
 	// vocabularyGroup.PATCH("/challenge") - submit the challenge result
 
 	server := server.NewServer(router)
