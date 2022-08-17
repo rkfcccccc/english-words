@@ -37,7 +37,7 @@ Future<void> refresh() async {
     return;
   }
 
-  final data = await request("post", "/user/signup", body: {
+  final data = await request("post", "/user/refresh", body: {
     "token": await storage.read(key: "refresh"),
   });
 
