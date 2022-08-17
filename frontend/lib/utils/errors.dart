@@ -65,6 +65,7 @@ void throwSomeAppError(String? errorName) {
         message: "Wrong code",
       );
     default:
+      print("unhanlded error name $errorName");
       throw const AppError(
         key: FailureError.unknownError,
         message: "Unknown error",
