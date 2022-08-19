@@ -37,7 +37,6 @@ dependencies:
   sizer: ^2.0.15
   provider: ^6.0.3
   google_fonts: ^3.0.1
-  faker: ^2.0.0
   flutter_secure_storage: ^5.1.0
 
 dev_dependencies:
