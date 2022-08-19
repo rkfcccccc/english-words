@@ -8,7 +8,6 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/rkfcccccc/english_words/services/gateway/internal/handler"
 	"github.com/rkfcccccc/english_words/services/gateway/pkg/auth"
@@ -30,32 +29,7 @@ func main() {
 
 	services := services.NewService()
 	handlers := handler.NewHandlers(services, authHelper)
-
-	// TODO: definitely all this router lines to handler package
-	router := gin.Default()
-	router.Use(gin.Recovery())
-
-	apiGroup := router.Group("/api")
-
-	userGroup := apiGroup.Group("/user")
-	userGroup.POST("/signup", handlers.UserSignup)
-	userGroup.POST("/login", handlers.UserLogin)
-	userGroup.POST("/refresh", handlers.UserRefresh)
-	userGroup.POST("/recovery", handlers.UserRecovery)
-
-	authorized := apiGroup.Group("/", handlers.AuthRequired)
-
-	movieGroup := apiGroup.Group("/movies")
-	movieGroup.POST("/", handlers.MovieCreate)
-	// movieGroup.GET("/", handlers.MovieCreate)
-	// movieGroup.GET("/:id") - get info about :id
-	// movieGroup.UPDATE("/:id/favorite") - make movie :id unfavorite
-	// movieGroup.DELETE("/:id/favorite") - add :id favorite
-	// movieGroup.GET("/") - search for movie
-
-	vocabularyGroup := authorized.Group("/vocabulary")
-	vocabularyGroup.GET("/challenge", handlers.GetChallenge)
-	// vocabularyGroup.PATCH("/challenge") - submit the challenge result
+	router := handlers.GetRouter()
 
 	server := server.NewServer(router)
 	server.Run()
