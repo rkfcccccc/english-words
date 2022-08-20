@@ -157,7 +157,7 @@ func (repo *postgresRepository) Search(ctx context.Context, searchQuery string) 
 	WHERE lower(title) LIKE $1
 	GROUP BY id ORDER BY count(mu.user_id) desc`, moviesTbl, moviesUsersTbl)
 
-	err := pgxscan.Select(ctx, repo.db, result, query, searchQuery)
+	err := pgxscan.Select(ctx, repo.db, &result, query, searchQuery)
 
 	if errors.Is(err, pgx.ErrNoRows) {
 		return []Movie{}, nil
