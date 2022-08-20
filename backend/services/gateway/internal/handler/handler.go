@@ -19,26 +19,26 @@ func (h *Handlers) GetRouter() *gin.Engine {
 	router := gin.Default()
 	router.Use(gin.Recovery())
 
-	apiGroup := router.Group("/api")
-	authorized := apiGroup.Group("/", h.AuthRequired)
+	api := router.Group("/api")
+	authorized := api.Group("/", h.AuthRequired)
 
-	userGroup := apiGroup.Group("/user")
+	user := api.Group("/user")
 
-	userGroup.POST("/signup", h.UserSignup)
-	userGroup.POST("/login", h.UserLogin)
-	userGroup.POST("/refresh", h.UserRefresh)
-	userGroup.POST("/recovery", h.UserRecovery)
+	user.POST("/signup", h.UserSignup)
+	user.POST("/login", h.UserLogin)
+	user.POST("/refresh", h.UserRefresh)
+	user.POST("/recovery", h.UserRecovery)
 
-	movieGroup := apiGroup.Group("/movies")
-	movieGroup.POST("/", h.MovieCreate)
-	movieGroup.GET("/", h.MovieSearch)
+	movies := api.Group("/movies")
+	movies.POST("/", h.MovieCreate)
+	movies.GET("/", h.MovieSearch)
 	// movieGroup.GET("/:id") - get info about :id
 	// movieGroup.UPDATE("/:id/favorite") - make movie :id unfavorite
 	// movieGroup.DELETE("/:id/favorite") - add :id favorite
 	// movieGroup.GET("/") - search for movie
 
-	vocabularyGroup := authorized.Group("/vocabulary")
-	vocabularyGroup.GET("/challenge", h.GetChallenge)
+	vocabulary := authorized.Group("/vocabulary")
+	vocabulary.GET("/challenge", h.GetChallenge)
 	// vocabularyGroup.PATCH("/challenge") - submit the challenge result
 
 	return router
