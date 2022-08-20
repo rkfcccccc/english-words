@@ -11,6 +11,7 @@ func transformMovieToGRPC(movie *Movie) *pb.Movie {
 	}
 
 	return &pb.Movie{
+		Id:        int32(movie.Id),
 		ImdbId:    movie.ImdbId,
 		Title:     movie.Title,
 		Year:      int32(movie.Year),
@@ -24,6 +25,7 @@ func transformMovieFromGRPC(movie *pb.Movie) *Movie {
 	}
 
 	return &Movie{
+		Id:        int(movie.Id),
 		ImdbId:    movie.ImdbId,
 		Title:     movie.Title,
 		Year:      int(movie.Year),
