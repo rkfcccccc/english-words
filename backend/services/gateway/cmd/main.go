@@ -25,7 +25,7 @@ func main() {
 	redis := redis.NewClient(os.Getenv("REDIS_HOST"), os.Getenv("REDIS_PORT"))
 	cache := redcache.NewCacheRepository(redis)
 
-	authHelper := auth.NewHelper(os.Getenv("JWT_KEY"), cache)
+	authHelper := auth.NewHelper(os.Getenv("JWT_KEY"), os.Getenv("SERVICE_KEY"), cache)
 
 	services := services.NewService()
 	handlers := handler.NewHandlers(services, authHelper)

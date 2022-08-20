@@ -34,3 +34,12 @@ func (h *Handlers) AuthRequired(c *gin.Context) {
 
 	c.Set("user_id", claims.UserId)
 }
+
+func (h *Handlers) ServiceKeyRequired(c *gin.Context) {
+	header := c.GetHeader("Service-Key")
+
+	if !h.Auth.CheckServiceKey(header) {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, h.newError("INVALID_KEY"))
+		return
+	}
+}

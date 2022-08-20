@@ -24,9 +24,11 @@ type UserClaims struct {
 
 type Helper struct {
 	signingKey []byte
-	cache      cache.Repository
+	serviceKey string
+
+	cache cache.Repository
 }
 
-func NewHelper(signingKey string, repo cache.Repository) *Helper {
-	return &Helper{[]byte(signingKey), repo}
+func NewHelper(signingKey, serviceKey string, repo cache.Repository) *Helper {
+	return &Helper{[]byte(signingKey), serviceKey, repo}
 }

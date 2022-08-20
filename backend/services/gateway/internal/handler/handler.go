@@ -21,6 +21,7 @@ func (h *Handlers) GetRouter() *gin.Engine {
 
 	api := router.Group("/api")
 	authorized := api.Group("/", h.AuthRequired)
+	service := api.Group("/", h.ServiceKeyRequired)
 
 	user := api.Group("/user")
 
@@ -29,8 +30,7 @@ func (h *Handlers) GetRouter() *gin.Engine {
 	user.POST("/refresh", h.UserRefresh)
 	user.POST("/recovery", h.UserRecovery)
 
-	movies := api.Group("/movies")
-	movies.POST("/", h.MovieCreate)
+	movies := authorized.Group("/movies")
 	movies.GET("/", h.MovieSearch)
 	// movieGroup.GET("/:id") - get info about :id
 	// movieGroup.UPDATE("/:id/favorite") - make movie :id unfavorite
@@ -40,6 +40,8 @@ func (h *Handlers) GetRouter() *gin.Engine {
 	vocabulary := authorized.Group("/vocabulary")
 	vocabulary.GET("/challenge", h.GetChallenge)
 	// vocabularyGroup.PATCH("/challenge") - submit the challenge result
+
+	service.POST("/movies", h.MovieCreate)
 
 	return router
 }
