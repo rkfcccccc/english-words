@@ -1,8 +1,9 @@
 package movie
 
 type Movie struct {
-	ImdbId    string
-	Title     string
-	Year      int
-	PosterUrl string
+	Id        int    `json:"id"`
+	ImdbId    string `json:"imdb_id"`
+	Title     string `json:"title"`
+	Year      int    `json:"year"`
+	PosterUrl string `json:"poster_url"`
 }
