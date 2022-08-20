@@ -75,3 +75,19 @@ func (c *Client) RemoveUser(ctx context.Context, movieId int, userId int) error 
 	_, err := c.client.RemoveUser(ctx, &pb.RemoveUserRequest{UserId: int32(userId), MovieId: int32(movieId)})
 	return err
 }
+
+func (c *Client) Search(ctx context.Context, query string) ([]*Movie, error) {
+	response, err := c.client.Search(ctx, &pb.SearchRequest{Query: query})
+
+	grpcMovies := response.GetMovies()
+	if grpcMovies == nil {
+		return nil, err
+	}
+
+	movies := make([]*Movie, len(grpcMovies))
+	for i, movie := range grpcMovies {
+		movies[i] = transformMovieFromGRPC(movie)
+	}
+
+	return movies, err
+}

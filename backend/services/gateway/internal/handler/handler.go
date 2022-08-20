@@ -31,7 +31,7 @@ func (h *Handlers) GetRouter() *gin.Engine {
 
 	movieGroup := apiGroup.Group("/movies")
 	movieGroup.POST("/", h.MovieCreate)
-	// movieGroup.GET("/", handlers.MovieCreate)
+	movieGroup.GET("/", h.MovieSearch)
 	// movieGroup.GET("/:id") - get info about :id
 	// movieGroup.UPDATE("/:id/favorite") - make movie :id unfavorite
 	// movieGroup.DELETE("/:id/favorite") - add :id favorite

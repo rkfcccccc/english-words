@@ -110,3 +110,18 @@ func (server *Server) RemoveUser(ctx context.Context, in *pb.RemoveUserRequest) 
 
 	return &pb.RemoveUserResponse{}, nil
 }
+
+func (server *Server) Search(ctx context.Context, in *pb.SearchRequest) (*pb.SearchResponse, error) {
+	movies, err := server.service.Search(ctx, in.Query)
+
+	if err != nil {
+		return nil, err
+	}
+
+	grpcMovies := make([]*pb.Movie, len(movies))
+	for i, movie := range movies {
+		grpcMovies[i] = TransformMovieToGRPC(&movie)
+	}
+
+	return &pb.SearchResponse{Movies: grpcMovies}, nil
+}

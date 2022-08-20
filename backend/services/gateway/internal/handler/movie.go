@@ -42,3 +42,15 @@ func (h *Handlers) MovieCreate(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"movie_id": movieId})
 }
+
+func (h *Handlers) MovieSearch(c *gin.Context) {
+	query := c.Query("query")
+
+	movies, err := h.Services.Movie.Search(c, query)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, movies)
+}
