@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:english_words/utils/api/user/user.dart';
+import 'package:english_words/utils/api/user/auth.dart';
 import 'package:english_words/utils/errors.dart';
 
 const authority = "localhost:8080";

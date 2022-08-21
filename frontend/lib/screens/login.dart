@@ -5,6 +5,7 @@ import 'package:english_words/utils/errors.dart';
 import 'package:english_words/widgets/gradient_button.dart';
 import 'package:english_words/widgets/gradient_text_field.dart';
 import 'package:english_words/utils/api/user/user.dart' as user_api;
+import 'package:english_words/utils/api/user/auth.dart' as auth_api;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
@@ -25,7 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       final navigator = Navigator.of(context);
       final data = await user_api.login(email, password);
-      await user_api.storeCredentials(data.jwt, data.refresh);
+      await auth_api.storeCredentials(data.jwt, data.refresh);
 
       navigator.pushReplacement(
         FadeTransitionRoute(child: const HomeScreen()),
