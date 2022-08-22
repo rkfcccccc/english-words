@@ -39,7 +39,7 @@ func (h *Handlers) GetRouter() *gin.Engine {
 
 	vocabulary := authorized.Group("/vocabulary")
 	vocabulary.GET("/challenge", h.GetChallenge)
-	// vocabularyGroup.PATCH("/challenge") - submit the challenge result
+	vocabulary.POST("/challenge", h.FinishChallenge)
 
 	service.POST("/movies", h.MovieCreate)
 

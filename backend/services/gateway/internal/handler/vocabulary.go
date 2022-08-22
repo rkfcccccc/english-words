@@ -27,3 +27,35 @@ func (h *Handlers) GetChallenge(c *gin.Context) {
 		"learning_step": challenge.LearningStep,
 	})
 }
+
+type finishChallengeInput struct {
+	Action string `json:"action" binding:"required"`
+	WordId string `json:"word_id" binding:"required"`
+}
+
+func (h *Handlers) FinishChallenge(c *gin.Context) {
+	var body finishChallengeInput
+
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	userId := c.GetInt("user_id")
+
+	var err error
+	switch body.Action {
+	case "promote":
+		err = h.Services.Vocabulary.PromoteWord(c, userId, body.WordId)
+	case "resist":
+		err = h.Services.Vocabulary.ResistWord(c, userId, body.WordId)
+	default:
+		c.AbortWithError(http.StatusBadRequest, fmt.Errorf("got unknown action: %s", body.Action))
+		return
+	}
+
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+}
