@@ -22,7 +22,7 @@ func (repo *postgresRepository) GetChallenge(ctx context.Context, userId int, ch
 	query1 := fmt.Sprintf("select * from %s where user_id=$1 and next_challenge is not null and next_challenge <= $2 and already_learned is false and count > 0 order by next_challenge limit 1", vocabularyTbl)
 	query2 := fmt.Sprintf("select * from %s where user_id=$1 and next_challenge is null and already_learned is false and count > 0 order by count desc limit 1", vocabularyTbl)
 
-	query := fmt.Sprintf("(%s) union (%s) limit 1", query1, query2)
+	query := fmt.Sprintf("(%s) union (%s) order by next_challenge desc nulls last limit 1", query1, query2)
 
 	var words []WordData
 	if err := pgxscan.Select(ctx, repo.db, &words, query, userId, challengeNo); err != nil {
