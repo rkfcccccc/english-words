@@ -1,3 +1,4 @@
+import 'package:english_words/screens/lesson.dart';
 import 'package:english_words/screens/search.dart';
 import 'package:english_words/transitions/fade_page.dart';
 import 'package:english_words/widgets/gradient_text_field.dart';
@@ -43,19 +44,25 @@ class HomeScreen extends StatelessWidget {
                 SizedBox(height: 4.w),
                 const FavoriteMoviesSection(),
                 SizedBox(height: 4.w),
-                Section(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Text(
-                        "Start lesson",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (ctx) => const LessonScreen()));
+                  },
+                  child: Section(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [
+                        Text(
+                          "Start lesson",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
-                      ),
-                      Icon(Icons.chevron_right_rounded)
-                    ],
+                        Icon(Icons.chevron_right_rounded)
+                      ],
+                    ),
                   ),
                 ),
               ],

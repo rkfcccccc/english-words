@@ -5,6 +5,7 @@ var appTheme = ThemeData.dark().copyWith(
   textSelectionTheme: TextSelectionThemeData(
       selectionColor: Gradients.purple2pink.colors.last.withOpacity(0.2)),
   scaffoldBackgroundColor: const Color.fromRGBO(17, 17, 17, 1),
+  dividerColor: const Color.fromRGBO(74, 74, 74, 1),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(
       elevation: MaterialStateProperty.all(0),
