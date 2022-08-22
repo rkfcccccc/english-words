@@ -14,7 +14,7 @@ type Meaning struct {
 }
 
 type WordEntry struct {
-	Id       string    `bson:"_id,omitempty"`
+	Id       string    `json:"id"`
 	Word     string    `json:"word"`
 	Phonetic string    `json:"phonetic"`
 	Meanings []Meaning `json:"meanings"`

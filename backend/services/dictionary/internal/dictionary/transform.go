@@ -37,6 +37,7 @@ func TransformToGRPC(dEntry *WordEntry) *pb.WordEntry {
 	}
 
 	entry := pb.WordEntry{
+		Id:       dEntry.Id,
 		Word:     dEntry.Word,
 		Phonetic: dEntry.Phonetic,
 	}
