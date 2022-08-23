@@ -59,3 +59,25 @@ func (h *Handlers) FinishChallenge(c *gin.Context) {
 		return
 	}
 }
+
+type alreadyLearnedInput struct {
+	WordId string `json:"word_id" binding:"required"`
+	State  bool   `json:"state" binding:"required"`
+}
+
+func (h *Handlers) AlreadyLearned(c *gin.Context) {
+	var body alreadyLearnedInput
+
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	userId := c.GetInt("user_id")
+	err := h.Services.Vocabulary.SetAlreadyLearned(c, userId, body.WordId, body.State)
+
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+}
