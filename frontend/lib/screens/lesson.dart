@@ -65,6 +65,27 @@ class _LessonScreenState extends State<LessonScreen> {
     }
   }
 
+  Future<void> setAlreadyLearned() async {
+    final currentPage = _pageController.page!.toInt();
+    final entry = challenges[currentPage]!.entry;
+
+    _pageController.nextPage(
+      duration: const Duration(milliseconds: 500),
+      // curve: Curves.easeInOutQuart,
+      curve: Curves.easeOutExpo,
+    );
+
+    await vocabulary_api.setAlreadyLearned(entry.id, true);
+
+    final nextChallenge = await vocabulary_api.getChallenge();
+
+    setState(() {
+      challenges[currentPage + 1] = nextChallenge;
+    });
+
+    challenges.remove(currentPage);
+  }
+
   // Future<void> () async {
   //   final currentPage = _pageController.page!.toInt();
   //   final entry = challenges[currentPage]!.entry;
@@ -127,7 +148,7 @@ class _LessonScreenState extends State<LessonScreen> {
                 onPrimary: () => finishChallenge("promote"),
                 primaryText: "Yes",
                 onSecondary: () => finishChallenge("resist"),
-                secondaryText: "I dont remember",
+                secondaryText: "I don't remember",
               ),
               child: FloatingContainer(
                 child: Padding(
@@ -157,6 +178,8 @@ class _LessonScreenState extends State<LessonScreen> {
             actions: _Actions(
               onPrimary: () => finishChallenge("promote"),
               primaryText: "Next",
+              onSecondary: () => setAlreadyLearned(),
+              secondaryText: "I already know this word",
             ),
             child: _WordEntry(entry: challenge.entry),
           );

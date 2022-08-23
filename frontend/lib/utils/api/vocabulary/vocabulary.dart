@@ -20,3 +20,12 @@ Future<void> finishChallenge(String action, wordId) async {
     body: {"action": action, "word_id": wordId},
   );
 }
+
+Future<void> setAlreadyLearned(String wordId, bool state) async {
+  await request(
+    "post",
+    "/vocabulary/learned",
+    authRequired: true,
+    body: {"word_id": wordId, "state": state},
+  );
+}
