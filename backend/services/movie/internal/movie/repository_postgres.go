@@ -155,7 +155,8 @@ func (repo *postgresRepository) Search(ctx context.Context, searchQuery string) 
 	query := fmt.Sprintf(`
 	SELECT m.* FROM %s m LEFT JOIN %s mu ON m.id = mu.movie_id
 	WHERE lower(title) LIKE $1
-	GROUP BY id ORDER BY count(mu.user_id) desc`, moviesTbl, moviesUsersTbl)
+	GROUP BY id ORDER BY count(mu.user_id) DESC
+	LIMIT 20`, moviesTbl, moviesUsersTbl)
 
 	err := pgxscan.Select(ctx, repo.db, &result, query, searchQuery)
 
