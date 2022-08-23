@@ -74,7 +74,7 @@ func (repo *postgresRepository) ResistWord(ctx context.Context, userId int, word
 }
 
 func (repo *postgresRepository) SetAlreadyLearned(ctx context.Context, userId int, wordId string, isAlreadyLearned bool) error {
-	query := fmt.Sprintf("update %s set is_already_learned=$3 where user_id=$1 and word_id=$2", vocabularyTbl)
+	query := fmt.Sprintf("update %s set already_learned=$3 where user_id=$1 and word_id=$2", vocabularyTbl)
 	_, err := repo.db.Exec(ctx, query, userId, wordId, isAlreadyLearned)
 
 	if err != nil {
