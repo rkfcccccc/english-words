@@ -18,7 +18,7 @@ func TestServiceCreate(t *testing.T) {
 	stub := dsync.NewStubClient()
 	dict := dictionaryapi.NewMockClient()
 	lemm := lemmatizer.New("en")
-	service := dictionary.NewService(repo, stub, dict, lemm)
+	service := dictionary.NewService(repo, stub, dict, lemm, nil)
 
 	dEntry := dictionaryapi.Entry{
 		Word:     "test entry word",
@@ -63,7 +63,7 @@ func TestServiceGet(t *testing.T) {
 	stub := dsync.NewStubClient()
 	dict := dictionaryapi.NewMockClient()
 	lemm := lemmatizer.New("en")
-	service := dictionary.NewService(repo, stub, dict, lemm)
+	service := dictionary.NewService(repo, stub, dict, lemm, nil)
 
 	expectedEntry := &WordEntry{}
 
@@ -91,7 +91,7 @@ func TestDelete(t *testing.T) {
 	stub := dsync.NewStubClient()
 	dict := dictionaryapi.NewMockClient()
 	lemm := lemmatizer.New("en")
-	service := dictionary.NewService(repo, stub, dict, lemm)
+	service := dictionary.NewService(repo, stub, dict, lemm, nil)
 
 	repo.PushErrResponse(nil)
 	err := service.Delete(context.Background(), "some_id")

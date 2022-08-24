@@ -35,8 +35,9 @@ func main() {
 	dict := dictionaryapi.NewClient()
 	lemm := lemmatizer.New("en")
 
+	producer := dictionary.NewKafkaProducer()
 	repo := dictionary.NewMongoRepository(db.Collection("dictionary"))
-	service := dictionary.NewService(repo, sync, dict, lemm)
+	service := dictionary.NewService(repo, sync, dict, lemm, producer)
 	server := dictionary.NewServer(service)
 
 	listener, err := net.Listen("tcp", os.Getenv("DICTIONARY_GRPC_ADDR"))
