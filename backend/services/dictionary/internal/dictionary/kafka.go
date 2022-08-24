@@ -36,15 +36,13 @@ func (c *Consumer) Serve(conn *kafka.Conn) error {
 	})
 
 	for {
-		ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
-
-		m, err := r.ReadMessage(ctx)
+		m, err := r.ReadMessage(context.Background())
 		if err != nil {
 			log.Printf("failed to read message: %v", err)
-			cancel()
 			break
 		}
 
+		ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 		wordId := string(m.Value)
 		entry, err := c.service.GetById(ctx, wordId)
 		if err != nil {
