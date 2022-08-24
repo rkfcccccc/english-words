@@ -4,7 +4,6 @@ package dictionary_test
 
 import (
 	"context"
-	"crypto/rand"
 	"fmt"
 	"os"
 	"testing"
@@ -33,12 +32,6 @@ func getRepository() (dictionary.Repository, error) {
 
 	collection := db.Collection("dictionary")
 	return dictionary.NewMongoRepository(collection), nil
-}
-
-func generateRandomString() string {
-	b := make([]byte, 8)
-	rand.Read(b)
-	return fmt.Sprintf("%x", b)
 }
 
 var repo, repoErr = getRepository()
@@ -81,7 +74,7 @@ func TestScenario(t *testing.T) {
 		t.Fatalf("No repository: %v", repoErr)
 	}
 
-	word := fmt.Sprintf("test_%s", generateRandomString())
+	word := "test_word"
 	expectedEntry := WordEntry{
 		Word:     word,
 		Phonetic: "testing purpose word's phonetic",
@@ -135,4 +128,25 @@ func TestScenario(t *testing.T) {
 	entry, err := repo.GetById(context.Background(), wordId)
 	assert.Nil(t, err)
 	assert.Nil(t, entry, "retrieved entry should be nil because it was deleted")
+}
+
+func TestSearch(t *testing.T) {
+	wordIds := []string{}
+
+	for i := 0; i < 3; i++ {
+		entry := &WordEntry{Word: fmt.Sprintf("test_search_%d", i)}
+		wordId, err := repo.Create(context.Background(), entry)
+		assert.Nil(t, err)
+
+		wordIds = append(wordIds, wordId)
+	}
+
+	results, err := repo.Search(context.Background(), "test_search_")
+	assert.Nil(t, err)
+	assert.Equal(t, 3, len(results))
+
+	for i := 0; i < 3; i++ {
+		err := repo.Delete(context.Background(), wordIds[i])
+		assert.Nil(t, err)
+	}
 }

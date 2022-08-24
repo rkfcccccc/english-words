@@ -50,3 +50,19 @@ func (c *Client) GetByName(ctx context.Context, word string) (*WordEntry, error)
 	response, err := c.client.GetByName(ctx, &pb.Word{Word: word})
 	return transformFromGRPC(response), err
 }
+
+func (c *Client) Search(ctx context.Context, query string) ([]*WordEntry, error) {
+	response, err := c.client.Search(ctx, &pb.SearchRequest{Query: query})
+
+	grpcEntries := response.GetEntries()
+	if grpcEntries == nil {
+		return nil, err
+	}
+
+	entries := make([]*WordEntry, len(grpcEntries))
+	for i := 0; i < len(entries); i++ {
+		entries[i] = transformFromGRPC(grpcEntries[i])
+	}
+
+	return entries, err
+}

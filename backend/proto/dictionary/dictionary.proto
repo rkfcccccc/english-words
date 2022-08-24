@@ -29,8 +29,19 @@ message WordId {
     string wordId = 1;
 }
 
+
+message SearchRequest {
+    string query = 1;
+}
+
+message SearchResponse {
+    repeated WordEntry entries = 1;
+}
+
 service DictionaryService {
     rpc Create(Word) returns (WordId) {}
     rpc GetById(WordId) returns (WordEntry) {}
     rpc GetByName(Word) returns (WordEntry) {}
+
+    rpc Search(SearchRequest) returns (SearchResponse) {}
 }

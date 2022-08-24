@@ -25,6 +25,7 @@ type DictionaryServiceClient interface {
 	Create(ctx context.Context, in *Word, opts ...grpc.CallOption) (*WordId, error)
 	GetById(ctx context.Context, in *WordId, opts ...grpc.CallOption) (*WordEntry, error)
 	GetByName(ctx context.Context, in *Word, opts ...grpc.CallOption) (*WordEntry, error)
+	Search(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*SearchResponse, error)
 }
 
 type dictionaryServiceClient struct {
@@ -62,6 +63,15 @@ func (c *dictionaryServiceClient) GetByName(ctx context.Context, in *Word, opts 
 	return out, nil
 }
 
+func (c *dictionaryServiceClient) Search(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*SearchResponse, error) {
+	out := new(SearchResponse)
+	err := c.cc.Invoke(ctx, "/dictionary.DictionaryService/Search", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DictionaryServiceServer is the server API for DictionaryService service.
 // All implementations must embed UnimplementedDictionaryServiceServer
 // for forward compatibility
@@ -69,6 +79,7 @@ type DictionaryServiceServer interface {
 	Create(context.Context, *Word) (*WordId, error)
 	GetById(context.Context, *WordId) (*WordEntry, error)
 	GetByName(context.Context, *Word) (*WordEntry, error)
+	Search(context.Context, *SearchRequest) (*SearchResponse, error)
 	mustEmbedUnimplementedDictionaryServiceServer()
 }
 
@@ -84,6 +95,9 @@ func (UnimplementedDictionaryServiceServer) GetById(context.Context, *WordId) (*
 }
 func (UnimplementedDictionaryServiceServer) GetByName(context.Context, *Word) (*WordEntry, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetByName not implemented")
+}
+func (UnimplementedDictionaryServiceServer) Search(context.Context, *SearchRequest) (*SearchResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Search not implemented")
 }
 func (UnimplementedDictionaryServiceServer) mustEmbedUnimplementedDictionaryServiceServer() {}
 
@@ -152,6 +166,24 @@ func _DictionaryService_GetByName_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _DictionaryService_Search_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DictionaryServiceServer).Search(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/dictionary.DictionaryService/Search",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DictionaryServiceServer).Search(ctx, req.(*SearchRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // DictionaryService_ServiceDesc is the grpc.ServiceDesc for DictionaryService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -170,6 +202,10 @@ var DictionaryService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetByName",
 			Handler:    _DictionaryService_GetByName_Handler,
+		},
+		{
+			MethodName: "Search",
+			Handler:    _DictionaryService_Search_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

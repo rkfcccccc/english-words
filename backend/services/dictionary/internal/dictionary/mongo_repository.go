@@ -108,3 +108,27 @@ func (repo *repository) SetPictures(ctx context.Context, wordId string, pictures
 
 	return nil
 }
+
+// TODO: manage limit and offsets with parameters
+func (repo *repository) Search(ctx context.Context, query string) ([]*WordEntry, error) {
+	filter := bson.M{"word": bson.M{"$regex": primitive.Regex{
+		Pattern: "^" + query,
+		Options: "i",
+	}}}
+
+	cursor, err := repo.collection.Find(ctx, filter, options.Find().SetLimit(20))
+	if err != nil {
+		return nil, fmt.Errorf("collection.Find: %v", err)
+	}
+
+	var result []*WordEntry
+	if err := cursor.All(ctx, &result); err != nil {
+		return nil, fmt.Errorf("cursor.All: %v", err)
+	}
+
+	if result == nil {
+		result = []*WordEntry{}
+	}
+
+	return result, nil
+}

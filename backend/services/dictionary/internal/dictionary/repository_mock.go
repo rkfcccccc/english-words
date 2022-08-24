@@ -45,6 +45,17 @@ func (repo *repositoryMock) pullEntry() *WordEntry {
 	return nil
 }
 
+func (repo *repositoryMock) pullAllEntries() []*WordEntry {
+	result := make([]*WordEntry, repo.entriesQueue.Len())
+
+	for i := 0; i < len(result); i++ {
+		result[i] = repo.entriesQueue.Front().Value.(*WordEntry)
+		repo.entriesQueue.Remove(repo.entriesQueue.Front())
+	}
+
+	return nil
+}
+
 func (repo *repositoryMock) PushErrResponse(x error) {
 	repo.errQueue.PushBack(x)
 }
@@ -83,4 +94,8 @@ func (repo *repositoryMock) Delete(ctx context.Context, wordId string) error {
 
 func (repo *repositoryMock) SetPictures(ctx context.Context, wordId string, pictures []SourcedPicture) error {
 	return repo.pullErr()
+}
+
+func (repo *repositoryMock) Search(ctx context.Context, query string) ([]*WordEntry, error) {
+	return repo.pullAllEntries(), repo.pullErr()
 }

@@ -58,3 +58,17 @@ func (server *Server) GetByName(ctx context.Context, in *pb.Word) (*pb.WordEntry
 
 	return TransformToGRPC(entry), nil
 }
+
+func (server *Server) Search(ctx context.Context, in *pb.SearchRequest) (*pb.SearchResponse, error) {
+	entries, err := server.service.Search(ctx, in.GetQuery())
+	if err != nil {
+		return nil, err
+	}
+
+	grpcEntries := make([]*pb.WordEntry, len(entries))
+	for i := 0; i < len(entries); i++ {
+		grpcEntries[i] = TransformToGRPC(entries[i])
+	}
+
+	return &pb.SearchResponse{Entries: grpcEntries}, nil
+}

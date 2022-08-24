@@ -77,3 +77,7 @@ func (service *Service) Delete(ctx context.Context, wordId string) error {
 func (service *Service) SetPictures(ctx context.Context, wordId string, pictures []SourcedPicture) error {
 	return service.repo.SetPictures(ctx, wordId, pictures)
 }
+
+func (service *Service) Search(ctx context.Context, query string) ([]*WordEntry, error) {
+	return service.repo.Search(ctx, query)
+}
