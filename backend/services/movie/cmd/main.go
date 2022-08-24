@@ -8,7 +8,9 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/rkfcccccc/english_words/services/movie/internal/movie"
+	"github.com/rkfcccccc/english_words/shared_pkg/dsync/redsync"
 	"github.com/rkfcccccc/english_words/shared_pkg/postgres"
+	"github.com/rkfcccccc/english_words/shared_pkg/redis"
 	"github.com/rkfcccccc/english_words/shared_pkg/services/dictionary"
 	"github.com/rkfcccccc/english_words/shared_pkg/services/vocabulary"
 	"google.golang.org/grpc"
@@ -27,8 +29,11 @@ func main() {
 	dictionary := dictionary.NewClient("localhost" + os.Getenv("DICTIONARY_GRPC_ADDR"))
 	vocabulary := vocabulary.NewClient("localhost"+os.Getenv("VOCABULARY_GRPC_ADDR"), "localhost:9092")
 
+	redis := redis.NewClient(os.Getenv("REDIS_HOST"), os.Getenv("REDIS_PORT"))
+	sync := redsync.NewClient(redis)
+
 	repo := movie.NewPostgresRepository(db)
-	service := movie.NewService(repo, dictionary, vocabulary)
+	service := movie.NewService(repo, sync, dictionary, vocabulary)
 	server := movie.NewServer(service)
 
 	listener, err := net.Listen("tcp", os.Getenv("MOVIE_GRPC_ADDR"))

@@ -7,6 +7,7 @@ import (
 	"log"
 
 	"github.com/rkfcccccc/english_words/services/movie/pkg/srt"
+	"github.com/rkfcccccc/english_words/shared_pkg/dsync"
 	"github.com/rkfcccccc/english_words/shared_pkg/services/dictionary"
 	"github.com/rkfcccccc/english_words/shared_pkg/services/vocabulary"
 )
@@ -14,12 +15,14 @@ import (
 type Service struct {
 	repo Repository
 
+	sync dsync.Client
+
 	dictionary *dictionary.Client
 	vocabulary *vocabulary.Client
 }
 
-func NewService(repo Repository, dictionary *dictionary.Client, vocabulary *vocabulary.Client) *Service {
-	return &Service{repo, dictionary, vocabulary}
+func NewService(repo Repository, sync dsync.Client, dictionary *dictionary.Client, vocabulary *vocabulary.Client) *Service {
+	return &Service{repo, sync, dictionary, vocabulary}
 }
 
 func (service *Service) CreateByUrl(ctx context.Context, movie *Movie, subtitlesUrl string) (int, error) {
@@ -74,6 +77,13 @@ func (service *Service) GetWords(ctx context.Context, movieId int) ([]string, er
 }
 
 func (service *Service) AddUser(ctx context.Context, movieId int, userId int) error {
+	mutex := service.sync.NewMutex(fmt.Sprintf("movies_favorite:%d:%d", movieId, userId))
+	if err := mutex.Lock(); err != nil {
+		return fmt.Errorf("mutex.Lock: %v", err)
+	}
+
+	defer mutex.Unlock()
+
 	if fav, err := service.repo.IsFavorite(ctx, movieId, userId); err != nil {
 		return fmt.Errorf("repo.IsFavorite: %v", err)
 	} else if fav {
@@ -97,6 +107,13 @@ func (service *Service) AddUser(ctx context.Context, movieId int, userId int) er
 }
 
 func (service *Service) RemoveUser(ctx context.Context, movieId int, userId int) error {
+	mutex := service.sync.NewMutex(fmt.Sprintf("movies_favorite:%d:%d", movieId, userId))
+	if err := mutex.Lock(); err != nil {
+		return fmt.Errorf("mutex.Lock: %v", err)
+	}
+
+	defer mutex.Unlock()
+
 	if fav, err := service.repo.IsFavorite(ctx, movieId, userId); err != nil {
 		return fmt.Errorf("repo.IsFavorite: %v", err)
 	} else if !fav {
