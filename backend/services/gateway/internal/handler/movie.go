@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/rkfcccccc/english_words/shared_pkg/services/movie"
@@ -53,4 +54,32 @@ func (h *Handlers) MovieSearch(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, movies)
+}
+
+func (h *Handlers) MovieFavorite(c *gin.Context) {
+	movieId, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	userId := c.GetInt("user_id")
+	if err := h.Services.Movie.AddUser(c, movieId, userId); err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+}
+
+func (h *Handlers) MovieUnfavorite(c *gin.Context) {
+	movieId, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	userId := c.GetInt("user_id")
+	if err := h.Services.Movie.RemoveUser(c, movieId, userId); err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 }

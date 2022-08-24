@@ -33,8 +33,8 @@ func (h *Handlers) GetRouter() *gin.Engine {
 	movies := authorized.Group("/movies")
 	movies.GET("/", h.MovieSearch)
 	// movieGroup.GET("/:id") - get info about :id
-	// movieGroup.UPDATE("/:id/favorite") - make movie :id unfavorite
-	// movieGroup.DELETE("/:id/favorite") - add :id favorite
+	movies.POST("/:id/favorite", h.MovieFavorite)
+	movies.DELETE("/:id/favorite", h.MovieUnfavorite)
 	// movieGroup.GET("/") - search for movie
 
 	vocabulary := authorized.Group("/vocabulary")
