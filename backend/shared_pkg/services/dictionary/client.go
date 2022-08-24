@@ -11,6 +11,8 @@ import (
 	"google.golang.org/grpc/status"
 
 	pb "github.com/rkfcccccc/english_words/proto/dictionary"
+
+	. "github.com/rkfcccccc/english_words/shared_pkg/services/dictionary/models"
 )
 
 var ErrNoDefinitionsFound = errors.New("no definitions found")

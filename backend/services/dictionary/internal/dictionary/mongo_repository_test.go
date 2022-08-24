@@ -13,6 +13,8 @@ import (
 	"github.com/rkfcccccc/english_words/services/dictionary/internal/dictionary"
 	"github.com/rkfcccccc/english_words/shared_pkg/mongodb"
 	"github.com/stretchr/testify/assert"
+
+	. "github.com/rkfcccccc/english_words/shared_pkg/services/dictionary/models"
 )
 
 func getRepository() (dictionary.Repository, error) {
@@ -80,13 +82,13 @@ func TestScenario(t *testing.T) {
 	}
 
 	word := fmt.Sprintf("test_%s", generateRandomString())
-	expectedEntry := dictionary.WordEntry{
+	expectedEntry := WordEntry{
 		Word:     word,
 		Phonetic: "testing purpose word's phonetic",
-		Meanings: []dictionary.Meaning{
+		Meanings: []Meaning{
 			{
 				PartOfSpeech: "noun",
-				Definitions: []dictionary.Definition{
+				Definitions: []Definition{
 					{
 						Text:    "some definition of word",
 						Example: "example of that definition",
@@ -97,7 +99,7 @@ func TestScenario(t *testing.T) {
 			},
 			{
 				PartOfSpeech: "verb",
-				Definitions: []dictionary.Definition{
+				Definitions: []Definition{
 					{
 						Text:    "some other definition of word",
 						Example: "one more example of that definition",
@@ -118,7 +120,7 @@ func TestScenario(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, &expectedEntry, actualEntry, "retrieved entry should be equal to initial")
 
-	expectedEntry.Pictures = []dictionary.SourcedPicture{{"picture1.png", "source1"}, {"picture2.png", "source2"}}
+	expectedEntry.Pictures = []SourcedPicture{{Url: "picture1.png", Source: "source1"}, {Url: "picture2.png", Source: "source2"}}
 
 	err = repo.SetPictures(context.Background(), wordId, expectedEntry.Pictures)
 	assert.Nil(t, err)

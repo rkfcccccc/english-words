@@ -9,6 +9,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+
+	. "github.com/rkfcccccc/english_words/shared_pkg/services/dictionary/models"
 )
 
 type repository struct {

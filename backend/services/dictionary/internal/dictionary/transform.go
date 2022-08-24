@@ -3,6 +3,7 @@ package dictionary
 import (
 	pb "github.com/rkfcccccc/english_words/proto/dictionary"
 	"github.com/rkfcccccc/english_words/services/dictionary/pkg/dictionaryapi"
+	. "github.com/rkfcccccc/english_words/shared_pkg/services/dictionary/models"
 )
 
 func TransformFromApi(dEntry *dictionaryapi.Entry) *WordEntry {

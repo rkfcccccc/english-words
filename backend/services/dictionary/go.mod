@@ -16,7 +16,7 @@ require (
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/hashicorp/errwrap v1.0.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.0 // indirect
-	github.com/klauspost/compress v1.15.4 // indirect
+	github.com/klauspost/compress v1.15.7 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
@@ -24,9 +24,9 @@ require (
 	github.com/xdg-go/stringprep v1.0.3 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
 	golang.org/x/crypto v0.0.0-20220518034528-6f7dac969898 // indirect
-	golang.org/x/net v0.0.0-20220520000938-2e3eb7b945c2 // indirect
+	golang.org/x/net v0.0.0-20220706163947-c90051bbdb60 // indirect
 	golang.org/x/sync v0.0.0-20220513210516-0976fa681c29 // indirect
-	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
+	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
@@ -39,6 +39,7 @@ require (
 	github.com/rkfcccccc/english_words/shared_pkg/dsync v0.0.0
 	github.com/rkfcccccc/english_words/shared_pkg/mongodb v0.0.0
 	github.com/rkfcccccc/english_words/shared_pkg/redis v0.0.0
+	github.com/rkfcccccc/english_words/shared_pkg/services v0.0.0
 )
 
 replace github.com/rkfcccccc/english_words/proto => ../../proto
@@ -51,9 +52,11 @@ replace github.com/rkfcccccc/english_words/shared_pkg/cache => ../../shared_pkg/
 
 replace github.com/rkfcccccc/english_words/shared_pkg/mongodb => ../../shared_pkg/mongodb
 
+replace github.com/rkfcccccc/english_words/shared_pkg/services => ../../shared_pkg/services
+
 require (
 	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/joho/godotenv v1.4.0
 	go.mongodb.org/mongo-driver v1.9.1
-	google.golang.org/grpc v1.46.2
+	google.golang.org/grpc v1.48.0
 )

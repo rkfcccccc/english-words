@@ -2,6 +2,8 @@ package dictionary
 
 import (
 	"context"
+
+	. "github.com/rkfcccccc/english_words/shared_pkg/services/dictionary/models"
 )
 
 type Repository interface {

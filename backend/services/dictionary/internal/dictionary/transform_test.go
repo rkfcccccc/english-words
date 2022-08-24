@@ -7,6 +7,8 @@ import (
 	"github.com/rkfcccccc/english_words/services/dictionary/internal/dictionary"
 	"github.com/rkfcccccc/english_words/services/dictionary/pkg/dictionaryapi"
 	"github.com/stretchr/testify/assert"
+
+	. "github.com/rkfcccccc/english_words/shared_pkg/services/dictionary/models"
 )
 
 func TestTransformFromApi(t *testing.T) {
@@ -28,13 +30,13 @@ func TestTransformFromApi(t *testing.T) {
 		},
 	}
 
-	expectedOutput := &dictionary.WordEntry{
+	expectedOutput := &WordEntry{
 		Word:     "test entry word",
 		Phonetic: "oajoadh",
-		Meanings: []dictionary.Meaning{
+		Meanings: []Meaning{
 			{
 				PartOfSpeech: "verb",
-				Definitions: []dictionary.Definition{
+				Definitions: []Definition{
 					{
 						Text:    "some definition",
 						Example: "some example",
@@ -51,13 +53,13 @@ func TestTransformFromApi(t *testing.T) {
 }
 
 func TestTransformToGRPC(t *testing.T) {
-	input := &dictionary.WordEntry{
+	input := &WordEntry{
 		Word:     "test entry word",
 		Phonetic: "oajoadh",
-		Meanings: []dictionary.Meaning{
+		Meanings: []Meaning{
 			{
 				PartOfSpeech: "verb",
-				Definitions: []dictionary.Definition{
+				Definitions: []Definition{
 					{
 						Text:    "some definition",
 						Example: "some example",

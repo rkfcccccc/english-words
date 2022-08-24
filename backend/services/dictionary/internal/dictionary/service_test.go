@@ -9,6 +9,8 @@ import (
 	"github.com/rkfcccccc/english_words/services/dictionary/pkg/lemmatizer"
 	"github.com/rkfcccccc/english_words/shared_pkg/dsync"
 	"github.com/stretchr/testify/assert"
+
+	. "github.com/rkfcccccc/english_words/shared_pkg/services/dictionary/models"
 )
 
 func TestServiceCreate(t *testing.T) {
@@ -63,7 +65,7 @@ func TestServiceGet(t *testing.T) {
 	lemm := lemmatizer.New("en")
 	service := dictionary.NewService(repo, stub, dict, lemm)
 
-	expectedEntry := &dictionary.WordEntry{}
+	expectedEntry := &WordEntry{}
 
 	// GetById
 	repo.PushEntryResponse(expectedEntry)

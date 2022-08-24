@@ -8,6 +8,8 @@ import (
 	"github.com/rkfcccccc/english_words/services/dictionary/pkg/dictionaryapi"
 	"github.com/rkfcccccc/english_words/services/dictionary/pkg/lemmatizer"
 	"github.com/rkfcccccc/english_words/shared_pkg/dsync"
+
+	. "github.com/rkfcccccc/english_words/shared_pkg/services/dictionary/models"
 )
 
 type Service struct {

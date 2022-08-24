@@ -2,6 +2,8 @@ package dictionary
 
 import (
 	pb "github.com/rkfcccccc/english_words/proto/dictionary"
+
+	. "github.com/rkfcccccc/english_words/shared_pkg/services/dictionary/models"
 )
 
 func transformFromGRPC(dEntry *pb.WordEntry) *WordEntry {
