@@ -60,5 +60,15 @@ func TransformToGRPC(dEntry *models.WordEntry) *pb.WordEntry {
 		}
 	}
 
+	if dEntry.Pictures != nil {
+		entry.Pictures = make([]*pb.SourcedPicture, len(dEntry.Pictures))
+		for i, picture := range dEntry.Pictures {
+			entry.Pictures[i] = &pb.SourcedPicture{
+				Url:    picture.Url,
+				Source: picture.Source,
+			}
+		}
+	}
+
 	return &entry
 }

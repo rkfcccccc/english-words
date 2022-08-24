@@ -2,6 +2,11 @@ syntax = "proto3";
 package dictionary;
 option go_package = "github.com/rkfcccccc/english_words/proto/dictionary";
 
+message SourcedPicture {
+    string url = 1;
+    string source = 2;
+}
+
 message Definition {
     string text = 1;
     string example = 2;
@@ -19,6 +24,7 @@ message WordEntry {
     string word = 2;
     string phonetic = 3;
     repeated Meaning meanings = 4;
+    repeated SourcedPicture pictures = 5;
 }
 
 message Word {
