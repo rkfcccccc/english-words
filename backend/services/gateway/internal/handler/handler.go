@@ -42,6 +42,9 @@ func (h *Handlers) GetRouter() *gin.Engine {
 	vocabulary.POST("/challenge", h.FinishChallenge)
 	vocabulary.POST("/learned", h.AlreadyLearned)
 
+	dictionary := api.Group("/dictionary")
+	dictionary.GET("/", h.DictionarySearch)
+
 	service.POST("/movies", h.MovieCreate)
 
 	return router
