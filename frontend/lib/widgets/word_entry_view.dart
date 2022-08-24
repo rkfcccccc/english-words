@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:english_words/utils/api/dictionary/models.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
@@ -17,18 +18,7 @@ class WordEntryView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          color: const Color.fromRGBO(43, 43, 43, 1),
-          height: 25.h,
-          child: PageView.builder(
-            itemBuilder: (ctx, index) => Image.network(
-              "https://images.unsplash.com/photo-1537420327992-d6e192287183?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8c3BhY2V8ZW58MHx8MHx8&auto=format&fit=crop&w=900&q=60",
-              width: double.infinity,
-              fit: BoxFit.fitWidth,
-            ),
-            itemCount: 3,
-          ),
-        ),
+        if (entry.pictures != null) _Pictures(pictures: entry.pictures!),
         Padding(
           padding: EdgeInsets.all(4.w),
           child: Column(
@@ -56,6 +46,50 @@ class WordEntryView extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _Pictures extends StatelessWidget {
+  const _Pictures({
+    Key? key,
+    required this.pictures,
+  }) : super(key: key);
+
+  final List<SourcedPicture> pictures;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: const Color.fromRGBO(43, 43, 43, 1),
+      height: 25.h,
+      child: PageView.builder(
+        itemBuilder: (ctx, index) => Stack(
+          fit: StackFit.expand,
+          children: [
+            CachedNetworkImage(
+              imageUrl: pictures[index].url,
+              fit: BoxFit.fitWidth,
+            ),
+            Positioned(
+              bottom: 1.w,
+              left: 1.w,
+              child: Container(
+                padding: EdgeInsets.all(1.w),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(7),
+                  color: Color.fromRGBO(33, 33, 33, 0.7),
+                ),
+                child: Text(
+                  pictures[index].source,
+                  style: TextStyle(fontSize: 8.sp),
+                ),
+              ),
+            ),
+          ],
+        ),
+        itemCount: pictures.length,
+      ),
     );
   }
 }
