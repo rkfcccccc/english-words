@@ -69,7 +69,7 @@ class _Pictures extends StatelessWidget {
           children: [
             CachedNetworkImage(
               imageUrl: pictures[index].url,
-              fit: BoxFit.fitWidth,
+              fit: BoxFit.cover,
             ),
             Positioned(
               bottom: 1.w,
