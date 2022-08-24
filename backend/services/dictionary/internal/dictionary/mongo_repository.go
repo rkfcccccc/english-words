@@ -10,7 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
-	. "github.com/rkfcccccc/english_words/shared_pkg/services/dictionary/models"
+	models "github.com/rkfcccccc/english_words/shared_pkg/services/dictionary/models"
 )
 
 type repository struct {
@@ -32,7 +32,7 @@ func (repo *repository) CreateWordIndex(ctx context.Context) error {
 	return err
 }
 
-func (repo *repository) Create(ctx context.Context, entry *WordEntry) (string, error) {
+func (repo *repository) Create(ctx context.Context, entry *models.WordEntry) (string, error) {
 	result, err := repo.collection.InsertOne(ctx, entry)
 	if err != nil {
 		return "", fmt.Errorf("collection.InsertOne: %v", err)
@@ -46,13 +46,13 @@ func (repo *repository) Create(ctx context.Context, entry *WordEntry) (string, e
 	return insertedId.Hex(), nil
 }
 
-func (repo *repository) GetById(ctx context.Context, wordId string) (*WordEntry, error) {
+func (repo *repository) GetById(ctx context.Context, wordId string) (*models.WordEntry, error) {
 	objectId, err := primitive.ObjectIDFromHex(wordId)
 	if err != nil {
 		return nil, fmt.Errorf("primitive.ObjectIDFromHex: %v", err)
 	}
 
-	var result WordEntry
+	var result models.WordEntry
 	err = repo.collection.FindOne(ctx, bson.M{"_id": objectId}).Decode(&result)
 
 	if errors.Is(err, mongo.ErrNoDocuments) {
@@ -66,8 +66,8 @@ func (repo *repository) GetById(ctx context.Context, wordId string) (*WordEntry,
 	return &result, nil
 }
 
-func (repo *repository) GetByWord(ctx context.Context, word string) (*WordEntry, error) {
-	var result WordEntry
+func (repo *repository) GetByWord(ctx context.Context, word string) (*models.WordEntry, error) {
+	var result models.WordEntry
 	err := repo.collection.FindOne(ctx, bson.M{"word": word}).Decode(&result)
 
 	if errors.Is(err, mongo.ErrNoDocuments) {
@@ -95,7 +95,7 @@ func (repo *repository) Delete(ctx context.Context, wordId string) error {
 	return nil
 }
 
-func (repo *repository) SetPictures(ctx context.Context, wordId string, pictures []SourcedPicture) error {
+func (repo *repository) SetPictures(ctx context.Context, wordId string, pictures []models.SourcedPicture) error {
 	objectId, err := primitive.ObjectIDFromHex(wordId)
 	if err != nil {
 		return fmt.Errorf("primitive.ObjectIDFromHex: %v", err)
@@ -110,7 +110,7 @@ func (repo *repository) SetPictures(ctx context.Context, wordId string, pictures
 }
 
 // TODO: manage limit and offsets with parameters
-func (repo *repository) Search(ctx context.Context, query string) ([]*WordEntry, error) {
+func (repo *repository) Search(ctx context.Context, query string) ([]*models.WordEntry, error) {
 	filter := bson.M{"word": bson.M{"$regex": primitive.Regex{
 		Pattern: "^" + query,
 		Options: "i",
@@ -121,13 +121,13 @@ func (repo *repository) Search(ctx context.Context, query string) ([]*WordEntry,
 		return nil, fmt.Errorf("collection.Find: %v", err)
 	}
 
-	var result []*WordEntry
+	var result []*models.WordEntry
 	if err := cursor.All(ctx, &result); err != nil {
 		return nil, fmt.Errorf("cursor.All: %v", err)
 	}
 
 	if result == nil {
-		result = []*WordEntry{}
+		result = []*models.WordEntry{}
 	}
 
 	return result, nil

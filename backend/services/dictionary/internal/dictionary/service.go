@@ -9,7 +9,7 @@ import (
 	"github.com/rkfcccccc/english_words/services/dictionary/pkg/lemmatizer"
 	"github.com/rkfcccccc/english_words/shared_pkg/dsync"
 
-	. "github.com/rkfcccccc/english_words/shared_pkg/services/dictionary/models"
+	models "github.com/rkfcccccc/english_words/shared_pkg/services/dictionary/models"
 )
 
 type Service struct {
@@ -61,12 +61,12 @@ func (service *Service) Create(ctx context.Context, word string) (string, error)
 	return wordId, nil
 }
 
-func (service *Service) GetByWord(ctx context.Context, word string) (*WordEntry, error) {
+func (service *Service) GetByWord(ctx context.Context, word string) (*models.WordEntry, error) {
 	word = service.lemmatizer.Lemma(word)
 	return service.repo.GetByWord(ctx, word)
 }
 
-func (service *Service) GetById(ctx context.Context, wordId string) (*WordEntry, error) {
+func (service *Service) GetById(ctx context.Context, wordId string) (*models.WordEntry, error) {
 	return service.repo.GetById(ctx, wordId)
 }
 
@@ -74,10 +74,10 @@ func (service *Service) Delete(ctx context.Context, wordId string) error {
 	return service.repo.Delete(ctx, wordId)
 }
 
-func (service *Service) SetPictures(ctx context.Context, wordId string, pictures []SourcedPicture) error {
+func (service *Service) SetPictures(ctx context.Context, wordId string, pictures []models.SourcedPicture) error {
 	return service.repo.SetPictures(ctx, wordId, pictures)
 }
 
-func (service *Service) Search(ctx context.Context, query string) ([]*WordEntry, error) {
+func (service *Service) Search(ctx context.Context, query string) ([]*models.WordEntry, error) {
 	return service.repo.Search(ctx, query)
 }
