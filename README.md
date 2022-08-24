@@ -27,6 +27,10 @@ For now it looks like this:
 <img src="preview/signup.png" width="128"/>
 <img src="preview/verification.png" width="128"/>
 <img src="preview/home.png" width="128"/>
+<img src="preview/search_words.png" width="128"/>
+<img src="preview/search_movies.png" width="128"/>
+<img src="preview/lesson_bed.png" width="128"/>
+<img src="preview/do_you_remember.png" width="128"/>
 </p>
 
 ## Future growth opportunities
