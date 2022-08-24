@@ -1,5 +1,10 @@
 package dictionary
 
+type SourcedPicture struct {
+	Url    string `json:"url"`
+	Source string `json:"source"`
+}
+
 type Definition struct {
 	Text    string `json:"text"`
 	Example string `json:"example"`
@@ -17,4 +22,6 @@ type WordEntry struct {
 	Word     string    `json:"word"`
 	Phonetic string    `json:"phonetic"`
 	Meanings []Meaning `json:"meanings"`
+
+	Pictures []SourcedPicture `json:"pictures"`
 }

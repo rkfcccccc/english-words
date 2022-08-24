@@ -92,3 +92,17 @@ func (repo *repository) Delete(ctx context.Context, wordId string) error {
 
 	return nil
 }
+
+func (repo *repository) SetPictures(ctx context.Context, wordId string, pictures []SourcedPicture) error {
+	objectId, err := primitive.ObjectIDFromHex(wordId)
+	if err != nil {
+		return fmt.Errorf("primitive.ObjectIDFromHex: %v", err)
+	}
+
+	_, err = repo.collection.UpdateByID(ctx, objectId, bson.D{{Key: "$set", Value: bson.M{"pictures": pictures}}})
+	if err != nil {
+		return fmt.Errorf("collection.DeleteOne: %v", err)
+	}
+
+	return nil
+}

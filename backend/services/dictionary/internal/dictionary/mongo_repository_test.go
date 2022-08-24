@@ -118,6 +118,11 @@ func TestScenario(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, &expectedEntry, actualEntry, "retrieved entry should be equal to initial")
 
+	expectedEntry.Pictures = []dictionary.SourcedPicture{{"picture1.png", "source1"}, {"picture2.png", "source2"}}
+
+	err = repo.SetPictures(context.Background(), wordId, expectedEntry.Pictures)
+	assert.Nil(t, err)
+
 	actualEntry, err = repo.GetByWord(context.Background(), word)
 	assert.Nil(t, err)
 	assert.Equal(t, &expectedEntry, actualEntry, "retrieved entry should be equal to initial")

@@ -78,3 +78,7 @@ func (repo *repositoryMock) GetByWord(ctx context.Context, word string) (*WordEn
 func (repo *repositoryMock) Delete(ctx context.Context, wordId string) error {
 	return repo.pullErr()
 }
+
+func (repo *repositoryMock) SetPictures(ctx context.Context, wordId string, pictures []SourcedPicture) error {
+	return repo.pullErr()
+}
