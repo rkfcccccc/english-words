@@ -35,3 +35,4 @@ For now it looks like this:
 
 ## Future growth opportunities
 Implement a language-dependent API for learning words not only in English.
+Don't limit yourself to movies and add other content (e.g. books)
