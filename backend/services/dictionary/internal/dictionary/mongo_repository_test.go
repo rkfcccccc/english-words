@@ -8,7 +8,6 @@ import (
 	"os"
 	"testing"
 
-	"github.com/joho/godotenv"
 	"github.com/rkfcccccc/english_words/services/dictionary/internal/dictionary"
 	"github.com/rkfcccccc/english_words/shared_pkg/mongodb"
 	"github.com/stretchr/testify/assert"
@@ -17,10 +16,6 @@ import (
 )
 
 func getRepository() (dictionary.Repository, error) {
-	if err := godotenv.Load("../../../../.env"); err != nil {
-		return nil, fmt.Errorf("godotenv.Load: %v", err)
-	}
-
 	db, err := mongodb.NewClient(
 		context.Background(), os.Getenv("MONGO_USER"), os.Getenv("MONGO_PASSWORD"),
 		"localhost", os.Getenv("MONGO_PORT"), os.Getenv("MONGO_DB"),

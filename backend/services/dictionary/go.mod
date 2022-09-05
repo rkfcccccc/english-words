@@ -55,7 +55,6 @@ replace github.com/rkfcccccc/english_words/shared_pkg/services => ../../shared_p
 
 require (
 	github.com/PuerkitoBio/goquery v1.8.0
-	github.com/joho/godotenv v1.4.0
 	go.mongodb.org/mongo-driver v1.9.1
 	google.golang.org/grpc v1.48.0
 )

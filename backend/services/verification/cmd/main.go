@@ -8,7 +8,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/joho/godotenv"
 	"github.com/rkfcccccc/english_words/services/verification/internal/verification"
 	"github.com/rkfcccccc/english_words/services/verification/pkg/mail"
 	"github.com/rkfcccccc/english_words/shared_pkg/dsync/redsync"
@@ -19,10 +18,6 @@ import (
 
 func main() {
 	rand.Seed(time.Now().UnixNano())
-
-	if err := godotenv.Load("../../.env"); err != nil {
-		log.Fatalf("failed to load .env: %v", err)
-	}
 
 	db := postgres.NewPool(
 		context.Background(), os.Getenv("POSTGRES_USER"), os.Getenv("POSTGRES_PASSWORD"),

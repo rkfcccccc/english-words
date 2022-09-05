@@ -43,7 +43,6 @@ replace github.com/rkfcccccc/english_words/shared_pkg/postgres => ../../shared_p
 require (
 	github.com/georgysavva/scany v1.0.0
 	github.com/jackc/pgx/v4 v4.16.1
-	github.com/joho/godotenv v1.4.0
 	github.com/rkfcccccc/english_words/shared_pkg/redis v0.0.0
 	google.golang.org/grpc v1.46.2
 )

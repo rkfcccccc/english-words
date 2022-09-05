@@ -41,7 +41,6 @@ replace github.com/rkfcccccc/english_words/shared_pkg/postgres => ../../shared_p
 require (
 	github.com/georgysavva/scany v0.3.0
 	github.com/jackc/pgx/v4 v4.16.1
-	github.com/joho/godotenv v1.4.0
 	github.com/rkfcccccc/english_words/shared_pkg/redis v0.0.0
 	golang.org/x/crypto v0.0.0-20220518034528-6f7dac969898
 	google.golang.org/grpc v1.46.0

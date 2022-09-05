@@ -6,7 +6,6 @@ import (
 	"net"
 	"os"
 
-	"github.com/joho/godotenv"
 	"github.com/rkfcccccc/english_words/services/user/internal/user"
 	"github.com/rkfcccccc/english_words/shared_pkg/dsync/redsync"
 	"github.com/rkfcccccc/english_words/shared_pkg/postgres"
@@ -15,10 +14,6 @@ import (
 )
 
 func main() {
-	if err := godotenv.Load("../../.env"); err != nil {
-		log.Fatalf("failed to load .env: %v", err)
-	}
-
 	db := postgres.NewPool(
 		context.Background(), os.Getenv("POSTGRES_USER"), os.Getenv("POSTGRES_PASSWORD"),
 		os.Getenv("POSTGRES_HOST"), os.Getenv("POSTGRES_PORT"), os.Getenv("POSTGRES_DB"),

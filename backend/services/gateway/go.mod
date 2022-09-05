@@ -30,7 +30,6 @@ require (
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-redis/redis/v8 v8.11.5 // indirect
 	github.com/golang-jwt/jwt/v4 v4.4.2
-	github.com/joho/godotenv v1.4.0
 )
 
 replace github.com/rkfcccccc/english_words/proto => ../../proto

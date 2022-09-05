@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/joho/godotenv"
 	"github.com/rkfcccccc/english_words/services/dictionary/internal/dictionary"
 	"github.com/rkfcccccc/english_words/services/dictionary/pkg/pictureapi"
 	"github.com/rkfcccccc/english_words/services/dictionary/pkg/pictureapi/freepik"
@@ -15,10 +14,6 @@ import (
 )
 
 func main() {
-	if err := godotenv.Load("../../.env"); err != nil {
-		log.Fatalf("failed to load .env: %v", err)
-	}
-
 	db, err := mongodb.NewClient(
 		context.Background(), os.Getenv("MONGO_USER"), os.Getenv("MONGO_PASSWORD"),
 		os.Getenv("MONGO_HOST"), os.Getenv("MONGO_PORT"), os.Getenv("MONGO_DB"),

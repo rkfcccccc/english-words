@@ -8,7 +8,6 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/joho/godotenv"
 	"github.com/rkfcccccc/english_words/services/gateway/internal/handler"
 	"github.com/rkfcccccc/english_words/services/gateway/pkg/auth"
 	"github.com/rkfcccccc/english_words/services/gateway/pkg/server"
@@ -18,10 +17,6 @@ import (
 )
 
 func main() {
-	if err := godotenv.Load("../../.env"); err != nil {
-		log.Fatalf("failed to load .env: %v", err)
-	}
-
 	redis := redis.NewClient(os.Getenv("REDIS_HOST"), os.Getenv("REDIS_PORT"))
 	cache := redcache.NewCacheRepository(redis)
 
