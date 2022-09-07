@@ -1,0 +1,64 @@
+version: '3'
+
+services:
+  gateway:
+    env_file: .env
+    build:
+      dockerfile: ./docker/microservice/Dockerfile
+      args:
+        SERVICE_NAME: gateway
+    ports:
+      - 8080:8080
+
+  user:
+    env_file: .env
+    build:
+      dockerfile: ./docker/microservice/Dockerfile
+      args:
+        SERVICE_NAME: user
+
+  verification:
+    env_file: .env
+    build:
+      dockerfile: ./docker/microservice/Dockerfile
+      args:
+        SERVICE_NAME: verification
+
+  movie:
+    env_file: .env
+    build:
+      dockerfile: ./docker/microservice/Dockerfile
+      args:
+        SERVICE_NAME: movie
+  
+  dictionary-grpc:
+    env_file: .env
+    build:
+      dockerfile: ./docker/microservice/Dockerfile
+      args:
+        SERVICE_NAME: dictionary
+        SERVICE_EXEC: grpc
+  
+  dictionary-kafka:
+    env_file: .env
+    build:
+      dockerfile: ./docker/microservice/Dockerfile
+      args:
+        SERVICE_NAME: dictionary
+        SERVICE_EXEC: kafka
+
+  vocabulary-grpc:
+    env_file: .env
+    build:
+      dockerfile: ./docker/microservice/Dockerfile
+      args:
+        SERVICE_NAME: vocabulary
+        SERVICE_EXEC: grpc
+
+  vocabulary-kafka:
+    env_file: .env
+    build:
+      dockerfile: ./docker/microservice/Dockerfile
+      args:
+        SERVICE_NAME: vocabulary
+        SERVICE_EXEC: kafka
