@@ -39,7 +39,7 @@ services:
       - zookeeper
   
   init-kafka:
-    image: confluentinc/cp-kafka:7.3`.0
+    image: confluentinc/cp-kafka:7.3.0
     entrypoint: [ '/bin/sh', '-c' ]
     command: |
       "
