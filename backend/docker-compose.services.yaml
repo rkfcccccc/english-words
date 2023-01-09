@@ -3,6 +3,7 @@ version: '3'
 services:
   gateway:
     env_file: .env
+    restart: always
     build:
       dockerfile: ./docker/microservice/Dockerfile
       args:
@@ -12,6 +13,7 @@ services:
 
   user:
     env_file: .env
+    restart: always
     build:
       dockerfile: ./docker/microservice/Dockerfile
       args:
@@ -19,6 +21,7 @@ services:
 
   verification:
     env_file: .env
+    restart: always
     build:
       dockerfile: ./docker/microservice/Dockerfile
       args:
@@ -33,6 +36,7 @@ services:
   
   dictionary-grpc:
     env_file: .env
+    restart: always
     build:
       dockerfile: ./docker/microservice/Dockerfile
       args:
@@ -41,6 +45,7 @@ services:
   
   dictionary-kafka:
     env_file: .env
+    restart: always
     build:
       dockerfile: ./docker/microservice/Dockerfile
       args:
@@ -49,6 +54,7 @@ services:
 
   vocabulary-grpc:
     env_file: .env
+    restart: always
     build:
       dockerfile: ./docker/microservice/Dockerfile
       args:
@@ -57,6 +63,7 @@ services:
 
   vocabulary-kafka:
     env_file: .env
+    restart: always
     build:
       dockerfile: ./docker/microservice/Dockerfile
       args:
