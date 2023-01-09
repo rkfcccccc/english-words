@@ -23,7 +23,7 @@ func NewService() *Services {
 	movieClient := movie.NewClient("localhost" + os.Getenv("MOVIE_GRPC_ADDR"))
 	dictionaryClient := dictionary.NewClient("localhost" + os.Getenv("DICTIONARY_GRPC_ADDR"))
 	verificationClient := verification.NewClient("localhost" + os.Getenv("VERIFICATION_GRPC_ADDR"))
-	vocabularyClient := vocabulary.NewClient("localhost"+os.Getenv("VOCABULARY_GRPC_ADDR"), "localhost:9092")
+	vocabularyClient := vocabulary.NewClient("localhost"+os.Getenv("VOCABULARY_GRPC_ADDR"), os.Getenv("KAFKA_ADDR"))
 
 	return &Services{
 		userClient,

@@ -15,21 +15,22 @@ import (
 const MAX_PICTURES = 10
 
 type Consumer struct {
-	service  *Service
-	pictures *pictureapi.Service
+	service   *Service
+	pictures  *pictureapi.Service
+	kafkaAddr string
 }
 
-func NewKafkaConsumer(service *Service, pictures *pictureapi.Service) *Consumer {
-	return &Consumer{service, pictures}
+func NewKafkaConsumer(service *Service, pictures *pictureapi.Service, kafkaAddr string) *Consumer {
+	return &Consumer{service, pictures, kafkaAddr}
 }
 
-func NewKafkaProducer() *kafka.Writer {
-	return &kafka.Writer{Addr: kafka.TCP("localhost:9092"), Topic: "pictures"}
+func NewKafkaProducer(kafkaAddr string) *kafka.Writer {
+	return &kafka.Writer{Addr: kafka.TCP(kafkaAddr), Topic: "pictures"}
 }
 
 func (c *Consumer) Serve(conn *kafka.Conn) error {
 	r := kafka.NewReader(kafka.ReaderConfig{
-		Brokers:  []string{"localhost:9092"},
+		Brokers:  []string{c.kafkaAddr},
 		Topic:    "pictures",
 		GroupID:  "group-1",
 		MaxBytes: 10e6, // 10MB

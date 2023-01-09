@@ -23,12 +23,12 @@ func main() {
 	repo := vocabulary.NewPostgresRepository(db)
 	service := vocabulary.NewService(repo, state)
 
-	conn, err := kafka.DialLeader(context.Background(), "tcp", os.Getenv("KAFKA_ADDRESS"), "vocabulary", 0)
+	conn, err := kafka.DialLeader(context.Background(), "tcp", os.Getenv("KAFKA_ADDR"), "vocabulary", 0)
 	if err != nil {
 		log.Fatalf("failed to dial leader: %v", err)
 	}
 
-	consumer := vocabulary.NewKafkaConsumer(service)
+	consumer := vocabulary.NewKafkaConsumer(service, os.Getenv("KAFKA_ADDR"))
 	if err := consumer.Serve(conn); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}

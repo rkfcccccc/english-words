@@ -30,7 +30,7 @@ func main() {
 	dict := dictionaryapi.NewClient()
 	lemm := lemmatizer.New("en")
 
-	producer := dictionary.NewKafkaProducer()
+	producer := dictionary.NewKafkaProducer(os.Getenv("KAFKA_ADDR"))
 	repo := dictionary.NewMongoRepository(db.Collection("dictionary"))
 	service := dictionary.NewService(repo, sync, dict, lemm, producer)
 	server := dictionary.NewServer(service)

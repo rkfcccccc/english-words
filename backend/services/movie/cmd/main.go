@@ -22,7 +22,7 @@ func main() {
 	)
 
 	dictionary := dictionary.NewClient("localhost" + os.Getenv("DICTIONARY_GRPC_ADDR"))
-	vocabulary := vocabulary.NewClient("localhost"+os.Getenv("VOCABULARY_GRPC_ADDR"), "localhost:9092")
+	vocabulary := vocabulary.NewClient("localhost"+os.Getenv("VOCABULARY_GRPC_ADDR"), os.Getenv("KAFKA_ADDR"))
 
 	redis := redis.NewClient(os.Getenv("REDIS_HOST"), os.Getenv("REDIS_PORT"))
 	sync := redsync.NewClient(redis)

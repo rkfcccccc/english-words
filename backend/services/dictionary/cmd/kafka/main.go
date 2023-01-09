@@ -28,12 +28,12 @@ func main() {
 	repo := dictionary.NewMongoRepository(db.Collection("dictionary"))
 	service := dictionary.NewService(repo, nil, nil, nil, nil)
 
-	conn, err := kafka.DialLeader(context.Background(), "tcp", os.Getenv("KAFKA_ADDRESS"), "pictures", 0)
+	conn, err := kafka.DialLeader(context.Background(), "tcp", os.Getenv("KAFKA_ADDR"), "pictures", 0)
 	if err != nil {
 		log.Fatalf("failed to dial leader: %v", err)
 	}
 
-	consumer := dictionary.NewKafkaConsumer(service, pictures)
+	consumer := dictionary.NewKafkaConsumer(service, pictures, os.Getenv("KAFKA_ADDR"))
 	if err := consumer.Serve(conn); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}

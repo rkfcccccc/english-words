@@ -10,16 +10,17 @@ import (
 )
 
 type Consumer struct {
-	service *Service
+	service   *Service
+	kafkaAddr string
 }
 
-func NewKafkaConsumer(service *Service) *Consumer {
-	return &Consumer{service}
+func NewKafkaConsumer(service *Service, kafkaAddr string) *Consumer {
+	return &Consumer{service, kafkaAddr}
 }
 
 func (c *Consumer) Serve(conn *kafka.Conn) error {
 	r := kafka.NewReader(kafka.ReaderConfig{
-		Brokers:  []string{"localhost:9092"},
+		Brokers:  []string{c.kafkaAddr},
 		Topic:    "vocabulary",
 		GroupID:  "group-1",
 		MaxBytes: 10e6, // 10MB
