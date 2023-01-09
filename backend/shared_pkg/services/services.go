@@ -19,11 +19,11 @@ type Services struct {
 }
 
 func NewService() *Services {
-	userClient := user.NewClient("localhost" + os.Getenv("USER_GRPC_ADDR"))
-	movieClient := movie.NewClient("localhost" + os.Getenv("MOVIE_GRPC_ADDR"))
-	dictionaryClient := dictionary.NewClient("localhost" + os.Getenv("DICTIONARY_GRPC_ADDR"))
-	verificationClient := verification.NewClient("localhost" + os.Getenv("VERIFICATION_GRPC_ADDR"))
-	vocabularyClient := vocabulary.NewClient("localhost"+os.Getenv("VOCABULARY_GRPC_ADDR"), os.Getenv("KAFKA_ADDR"))
+	userClient := user.NewClient(os.Getenv("USER_GRPC_ADDR"))
+	movieClient := movie.NewClient(os.Getenv("MOVIE_GRPC_ADDR"))
+	dictionaryClient := dictionary.NewClient(os.Getenv("DICTIONARY_GRPC_ADDR"))
+	verificationClient := verification.NewClient(os.Getenv("VERIFICATION_GRPC_ADDR"))
+	vocabularyClient := vocabulary.NewClient(os.Getenv("VOCABULARY_GRPC_ADDR"), os.Getenv("KAFKA_ADDR"))
 
 	return &Services{
 		userClient,
