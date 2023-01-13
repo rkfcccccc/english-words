@@ -53,7 +53,7 @@ func (repo *postgresRepository) PromoteWord(ctx context.Context, userId int, wor
 	learningStep += 1
 
 	query = fmt.Sprintf("update %s set next_challenge=$3, learning_step=$4 where user_id=$1 and word_id=$2", vocabularyTbl)
-	if _, err := tx.Exec(ctx, query, userId, wordId, challengeNo+learningStep*2, learningStep); err != nil {
+	if _, err := tx.Exec(ctx, query, userId, wordId, challengeNo+learningStep*learningStep, learningStep); err != nil {
 		tx.Rollback(ctx)
 		return fmt.Errorf("db.Exec: %v", err)
 	}
@@ -63,7 +63,7 @@ func (repo *postgresRepository) PromoteWord(ctx context.Context, userId int, wor
 }
 
 func (repo *postgresRepository) ResistWord(ctx context.Context, userId int, wordId string, challengeNo int) error {
-	query := fmt.Sprintf("update %s set next_challenge=$3, learning_step=0 where user_id=$1 and word_id=$2", vocabularyTbl)
+	query := fmt.Sprintf("update %s set next_challenge=$3, learning_step=learning_step*2/3 where user_id=$1 and word_id=$2", vocabularyTbl)
 	_, err := repo.db.Exec(ctx, query, userId, wordId, challengeNo)
 
 	if err != nil {
