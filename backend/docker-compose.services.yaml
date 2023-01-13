@@ -3,7 +3,7 @@ version: '3'
 services:
   gateway:
     env_file: .env
-    restart: always
+    restart: unless-stopped
     build:
       dockerfile: ./docker/microservice/Dockerfile
       args:
@@ -13,9 +13,9 @@ services:
 
   user:
     env_file: .env
-    restart: always
+    restart: unless-stopped
     ports:
-      - 50053:50050
+      - 50050:50050
     build:
       dockerfile: ./docker/microservice/Dockerfile
       args:
@@ -23,7 +23,7 @@ services:
 
   verification:
     env_file: .env
-    restart: always
+    restart: unless-stopped
     ports:
       - 50051:50051
     build:
@@ -33,7 +33,7 @@ services:
 
   movie:
     env_file: .env
-    restart: always
+    restart: unless-stopped
     ports:
       - 50053:50053
     build:
@@ -43,7 +43,7 @@ services:
   
   dictionary-grpc:
     env_file: .env
-    restart: always
+    restart: unless-stopped
     build:
       dockerfile: ./docker/microservice/Dockerfile
       args:
@@ -52,7 +52,7 @@ services:
   
   dictionary-kafka:
     env_file: .env
-    restart: always
+    restart: unless-stopped
     build:
       dockerfile: ./docker/microservice/Dockerfile
       args:
@@ -61,7 +61,7 @@ services:
 
   vocabulary-grpc:
     env_file: .env
-    restart: always
+    restart: unless-stopped
     ports:
       - 50054:50054
     build:
@@ -72,7 +72,7 @@ services:
 
   vocabulary-kafka:
     env_file: .env
-    restart: always
+    restart: unless-stopped
     build:
       dockerfile: ./docker/microservice/Dockerfile
       args:
