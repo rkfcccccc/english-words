@@ -124,7 +124,7 @@ func (c *Consumer) Serve(conn *kafka.Conn) error {
 		MaxBytes: 10e6, // 10MB
 	})
 
-	sem := semaphore.NewWeighted(20)
+	sem := semaphore.NewWeighted(MAX_CONCURRENT)
 
 	for {
 		message, err := r.ReadMessage(context.Background())
@@ -138,8 +138,10 @@ func (c *Consumer) Serve(conn *kafka.Conn) error {
 			break
 		}
 
-		c.processWord(string(message.Value))
-		sem.Release(1)
+		go func() {
+			c.processWord(string(message.Value))
+			sem.Release(1)
+		}()
 	}
 
 	if err := conn.Close(); err != nil {
