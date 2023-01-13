@@ -32,3 +32,19 @@ func transformMovieFromGRPC(movie *pb.Movie) *Movie {
 		PosterUrl: movie.PosterUrl,
 	}
 }
+
+func transformSearchResultFromGRPC(movie *pb.SearchResult) *SearchResult {
+	if movie == nil {
+		return nil
+	}
+
+	return &SearchResult{
+		Id:        int(movie.Id),
+		ImdbId:    movie.ImdbId,
+		Title:     movie.Title,
+		Year:      int(movie.Year),
+		PosterUrl: movie.PosterUrl,
+
+		VocabularyPercent: float32(movie.VocabularyPercent),
+	}
+}
