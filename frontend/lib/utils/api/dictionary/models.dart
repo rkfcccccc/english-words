@@ -79,6 +79,7 @@ class WordEntry {
   final String phonetic;
   final List<Meaning> meanings;
   final List<SourcedPicture>? pictures;
+  final List<String>? translations;
 
   bool _precached = false;
 
@@ -88,6 +89,7 @@ class WordEntry {
     required this.phonetic,
     required this.meanings,
     this.pictures,
+    this.translations,
   });
 
   factory WordEntry.fromMap(Map<String, dynamic> map) {
@@ -101,6 +103,7 @@ class WordEntry {
           ? List<SourcedPicture>.from(
               map['pictures']?.map((x) => SourcedPicture.fromMap(x)))
           : null,
+      translations: List<String>.from(map['translations']),
     );
   }
 
