@@ -64,7 +64,7 @@ func (c *Consumer) populateWithPictures(ctx context.Context, entry *models.WordE
 }
 
 func (c *Consumer) populateWithTranslations(ctx context.Context, entry *models.WordEntry) {
-	if entry.Pictures != nil {
+	if entry.Translations != nil {
 		return
 	}
 
