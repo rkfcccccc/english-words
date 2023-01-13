@@ -29,25 +29,12 @@ class _LessonScreenState extends State<LessonScreen> {
 
     challenges = {};
     vocabulary_api.getChallenge().then((challenge) {
-      precacheChallenge(challenge);
-
       setState(() {
         challenges[initialPage] = challenge;
       });
     });
 
     super.initState();
-  }
-
-  void precacheChallenge(Challenge challenge) {
-    final pictures = challenge.entry.pictures;
-    if (pictures == null || pictures.isEmpty || challenge.learningStep != 0) {
-      return;
-    }
-
-    for (int i = 0; i < min(pictures.length * 2 / 3, 1); i++) {
-      precacheImage(CachedNetworkImageProvider(pictures[i].url), context);
-    }
   }
 
   Future<void> finishChallenge(String action) async {
@@ -63,7 +50,6 @@ class _LessonScreenState extends State<LessonScreen> {
 
     if (action == "promote") {
       final nextChallenge = await vocabulary_api.getChallenge();
-      precacheChallenge(nextChallenge);
 
       setState(() {
         challenges[currentPage + 1] = nextChallenge;
@@ -72,7 +58,6 @@ class _LessonScreenState extends State<LessonScreen> {
       challenges.remove(currentPage);
     } else if (action == "resist") {
       final nextChallenge = challenges[currentPage]!.copyWith(learningStep: 0);
-      precacheChallenge(nextChallenge);
 
       setState(() {
         challenges[currentPage + 1] = nextChallenge;

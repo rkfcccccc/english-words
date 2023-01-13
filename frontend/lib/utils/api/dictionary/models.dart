@@ -1,4 +1,8 @@
 import 'dart:convert';
+import 'dart:math';
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 
 class SourcedPicture {
   final String url;
@@ -76,6 +80,8 @@ class WordEntry {
   final List<Meaning> meanings;
   final List<SourcedPicture>? pictures;
 
+  bool _precached = false;
+
   WordEntry({
     required this.id,
     required this.word,
@@ -100,4 +106,19 @@ class WordEntry {
 
   factory WordEntry.fromJson(String source) =>
       WordEntry.fromMap(json.decode(source));
+
+  void precache(BuildContext context) async {
+    if (_precached || pictures == null) {
+      return;
+    }
+
+    for (int i = 0; i < pictures!.length ~/ 2; i++) {
+      await precacheImage(
+        CachedNetworkImageProvider(pictures![i].url),
+        context,
+      );
+    }
+
+    _precached = true;
+  }
 }

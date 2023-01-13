@@ -15,6 +15,8 @@ class WordEntryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    entry.precache(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -24,22 +26,48 @@ class WordEntryView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                entry.word,
-                style: TextStyle(
-                  fontSize: 19.sp,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              if (entry.phonetic != "")
-                Text(
-                  entry.phonetic,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    children: [
+                      Text(
+                        entry.word,
+                        style: TextStyle(
+                          fontSize: 19.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      if (entry.phonetic != "")
+                        Text(
+                          entry.phonetic,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                    ],
                   ),
-                ),
-              // Row(
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size.zero, // Set this
+                      padding: EdgeInsets.all(2.w),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      backgroundColor: const Color.fromRGBO(44, 44, 44, 1),
+                      foregroundColor: const Color.fromRGBO(74, 74, 74, 1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7),
+                      ),
+                    ),
+                    child: Icon(
+                      Icons.translate_rounded,
+                      size: 14.sp,
+                      color: const Color.fromRGBO(222, 222, 222, 1),
+                    ),
+                  ),
+                ],
+              ),
               const Divider(),
               _WordMeanings(meanings: entry.meanings),
             ],
@@ -78,7 +106,7 @@ class _Pictures extends StatelessWidget {
                 padding: EdgeInsets.all(1.w),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(7),
-                  color: Color.fromRGBO(33, 33, 33, 0.7),
+                  color: const Color.fromRGBO(33, 33, 33, 0.7),
                 ),
                 child: Text(
                   pictures[index].source,
