@@ -15,7 +15,7 @@ import (
 	"golang.org/x/sync/semaphore"
 )
 
-const MAX_CONCURRENT = 10
+const MAX_CONCURRENT = 2
 const MAX_PICTURES = 10
 
 type Consumer struct {
