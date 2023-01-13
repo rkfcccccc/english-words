@@ -114,7 +114,7 @@ class FloatingActions extends StatelessWidget {
           if (onSecondary != null)
             SizedBox(
               width: double.infinity,
-              height: 8.w,
+              height: 10.w,
               child: TextButton(
                 onPressed: onSecondary,
                 child: Text(
