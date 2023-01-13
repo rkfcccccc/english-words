@@ -103,7 +103,9 @@ class WordEntry {
           ? List<SourcedPicture>.from(
               map['pictures']?.map((x) => SourcedPicture.fromMap(x)))
           : null,
-      translations: List<String>.from(map['translations']),
+      translations: map['translations'] != null
+          ? List<String>.from(map['translations'])
+          : null,
     );
   }
 
