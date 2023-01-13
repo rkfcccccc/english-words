@@ -25,13 +25,39 @@ func NewKafkaConsumer(service *Service, pictures *pictureapi.Service, kafkaAddr 
 }
 
 func NewKafkaProducer(kafkaAddr string) *kafka.Writer {
-	return &kafka.Writer{Addr: kafka.TCP(kafkaAddr), Topic: "pictures"}
+	return &kafka.Writer{Addr: kafka.TCP(kafkaAddr), Topic: "dictionary"}
+}
+
+func (c *Consumer) populateWithPictures(ctx context.Context, entry *models.WordEntry) {
+	pictures := c.pictures.Search(ctx, entry.Word)
+	rand.Shuffle(len(pictures), func(i, j int) {
+		pictures[i], pictures[j] = pictures[j], pictures[i]
+	})
+
+	count := MAX_PICTURES
+	if len(pictures) < count {
+		count = len(pictures)
+	}
+
+	sourced := make([]models.SourcedPicture, count)
+	for i := 0; i < count; i++ {
+		sourced[i] = models.SourcedPicture{
+			Url:    pictures[i].Url,
+			Source: pictures[i].Source,
+		}
+	}
+
+	if err := c.service.SetPictures(ctx, entry.Id, sourced); err != nil {
+		log.Printf("got error when processing word: %v", err)
+	}
+
+	fmt.Printf("populated %s with %d pictures\n", entry.Word, count)
 }
 
 func (c *Consumer) Serve(conn *kafka.Conn) error {
 	r := kafka.NewReader(kafka.ReaderConfig{
 		Brokers:  []string{c.kafkaAddr},
-		Topic:    "pictures",
+		Topic:    "dictionary",
 		GroupID:  "group-1",
 		MaxBytes: 10e6, // 10MB
 	})
@@ -44,37 +70,15 @@ func (c *Consumer) Serve(conn *kafka.Conn) error {
 		}
 
 		ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
-		wordId := string(m.Value)
-		entry, err := c.service.GetById(ctx, wordId)
+
+		entry, err := c.service.GetById(ctx, string(m.Value))
 		if err != nil {
 			log.Printf("service.GetById: %v", err)
 			cancel()
 			continue
 		}
 
-		pictures := c.pictures.Search(ctx, entry.Word)
-		rand.Shuffle(len(pictures), func(i, j int) {
-			pictures[i], pictures[j] = pictures[j], pictures[i]
-		})
-
-		count := MAX_PICTURES
-		if len(pictures) < count {
-			count = len(pictures)
-		}
-
-		sourced := make([]models.SourcedPicture, count)
-		for i := 0; i < count; i++ {
-			sourced[i] = models.SourcedPicture{
-				Url:    pictures[i].Url,
-				Source: pictures[i].Source,
-			}
-		}
-
-		if err := c.service.SetPictures(ctx, wordId, sourced); err != nil {
-			log.Printf("got error when processing word: %v", err)
-		}
-
-		fmt.Printf("populated %s with %d pictures\n", entry.Word, count)
+		c.populateWithPictures(ctx, entry)
 		cancel()
 	}
 
