@@ -52,7 +52,6 @@ func (*client) GetTranslation(ctx context.Context, input string, from string, to
 		return nil, fmt.Errorf("io.ReadAll: %v", err)
 	}
 
-	fmt.Println(string(body))
 	var result translationResponse
 	if err := json.Unmarshal(body, &result); err != nil {
 		return nil, fmt.Errorf("json.Unmarshal: %v", err)
