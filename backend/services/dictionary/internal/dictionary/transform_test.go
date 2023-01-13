@@ -54,8 +54,9 @@ func TestTransformFromApi(t *testing.T) {
 
 func TestTransformToGRPC(t *testing.T) {
 	input := &WordEntry{
-		Word:     "test entry word",
-		Phonetic: "oajoadh",
+		Word:         "test entry word",
+		Phonetic:     "oajoadh",
+		Translations: []string{"translation1", "translation2"},
 		Meanings: []Meaning{
 			{
 				PartOfSpeech: "verb",
@@ -72,8 +73,9 @@ func TestTransformToGRPC(t *testing.T) {
 	}
 
 	expectedOutput := &pb.WordEntry{
-		Word:     "test entry word",
-		Phonetic: "oajoadh",
+		Word:         "test entry word",
+		Phonetic:     "oajoadh",
+		Translations: []string{"translation1", "translation2"},
 		Meanings: []*pb.Meaning{
 			{
 				PartOfSpeech: "verb",
