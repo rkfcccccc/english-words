@@ -50,7 +50,7 @@ func (service *Service) Create(ctx context.Context, word string) (string, error)
 	}
 
 	if entry != nil {
-		if entry.Pictures == nil {
+		if entry.Pictures == nil || entry.Translations == nil {
 			go service.writeToPopulationQueue(entry.Id)
 		}
 
@@ -90,6 +90,10 @@ func (service *Service) Delete(ctx context.Context, wordId string) error {
 
 func (service *Service) SetPictures(ctx context.Context, wordId string, pictures []models.SourcedPicture) error {
 	return service.repo.SetPictures(ctx, wordId, pictures)
+}
+
+func (service *Service) SetTranslations(ctx context.Context, wordId string, translations []string) error {
+	return service.repo.SetTranslations(ctx, wordId, translations)
 }
 
 func (service *Service) Search(ctx context.Context, query string) ([]*models.WordEntry, error) {

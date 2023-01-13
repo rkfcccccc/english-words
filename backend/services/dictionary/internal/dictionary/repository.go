@@ -11,6 +11,7 @@ type Repository interface {
 
 	Create(ctx context.Context, entry *models.WordEntry) (string, error)
 	SetPictures(ctx context.Context, wordId string, pictures []models.SourcedPicture) error
+	SetTranslations(ctx context.Context, wordId string, translations []string) error
 
 	GetById(ctx context.Context, wordId string) (*models.WordEntry, error)
 	GetByWord(ctx context.Context, word string) (*models.WordEntry, error)

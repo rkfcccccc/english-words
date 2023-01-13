@@ -109,6 +109,20 @@ func (repo *repository) SetPictures(ctx context.Context, wordId string, pictures
 	return nil
 }
 
+func (repo *repository) SetTranslations(ctx context.Context, wordId string, translations []string) error {
+	objectId, err := primitive.ObjectIDFromHex(wordId)
+	if err != nil {
+		return fmt.Errorf("primitive.ObjectIDFromHex: %v", err)
+	}
+
+	_, err = repo.collection.UpdateByID(ctx, objectId, bson.D{{Key: "$set", Value: bson.M{"translations": translations}}})
+	if err != nil {
+		return fmt.Errorf("collection.DeleteOne: %v", err)
+	}
+
+	return nil
+}
+
 // TODO: manage limit and offsets with parameters
 func (repo *repository) Search(ctx context.Context, query string) ([]*models.WordEntry, error) {
 	filter := bson.M{"word": bson.M{"$regex": primitive.Regex{
