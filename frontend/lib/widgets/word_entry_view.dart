@@ -69,6 +69,32 @@ class WordEntryView extends StatelessWidget {
                   ),
                 ],
               ),
+              if (entry.translations != null) ...[
+                SizedBox(height: 1.w),
+                Wrap(
+                  spacing: 1.w,
+                  runSpacing: 1.w,
+                  children: entry.translations!
+                      .map(
+                        (translation) => Container(
+                          padding: EdgeInsets.all(1.w),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).hoverColor,
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                          child: Text(
+                            translation,
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.w400,
+                              color: const Color.fromRGBO(222, 222, 222, 1),
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ],
               const Divider(),
               _WordMeanings(meanings: entry.meanings),
             ],
