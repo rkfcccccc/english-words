@@ -136,8 +136,8 @@ func (service *Service) RemoveUser(ctx context.Context, movieId int, userId int)
 	return nil
 }
 
-func (service *Service) Search(ctx context.Context, query string) ([]Movie, error) {
-	return service.repo.Search(ctx, query)
+func (service *Service) Search(ctx context.Context, query string, userId int) ([]*SearchResult, error) {
+	return service.repo.Search(ctx, query, userId)
 }
 
 func (service *Service) GetUserFavorites(ctx context.Context, userId int) ([]Movie, error) {

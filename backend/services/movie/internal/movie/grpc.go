@@ -112,15 +112,15 @@ func (server *Server) RemoveUser(ctx context.Context, in *pb.RemoveUserRequest) 
 }
 
 func (server *Server) Search(ctx context.Context, in *pb.SearchRequest) (*pb.SearchResponse, error) {
-	movies, err := server.service.Search(ctx, in.Query)
+	movies, err := server.service.Search(ctx, in.Query, int(in.UserId))
 
 	if err != nil {
 		return nil, err
 	}
 
-	grpcMovies := make([]*pb.Movie, len(movies))
+	grpcMovies := make([]*pb.SearchResult, len(movies))
 	for i, movie := range movies {
-		grpcMovies[i] = TransformMovieToGRPC(&movie)
+		grpcMovies[i] = TransformSearchResultToGRPC(movie)
 	}
 
 	return &pb.SearchResponse{Movies: grpcMovies}, nil

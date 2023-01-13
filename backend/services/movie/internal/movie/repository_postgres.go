@@ -15,6 +15,7 @@ const moviesTbl = "movies"
 const moviesWordsTbl = "movies_words"
 const moviesUsersTbl = "movies_users"
 const chunkSize = 1000
+const maxLearningStep = 30
 
 type postgresRepository struct {
 	db *pgxpool.Pool
@@ -148,20 +149,34 @@ func (repo *postgresRepository) IsFavorite(ctx context.Context, movieId int, use
 	return result, nil
 }
 
-func (repo *postgresRepository) Search(ctx context.Context, searchQuery string) ([]Movie, error) {
-	var result []Movie
+func (repo *postgresRepository) Search(ctx context.Context, searchQuery string, userId int) ([]*SearchResult, error) {
+	var result []*SearchResult
 
 	searchQuery = "%" + searchQuery + "%"
+	searchSelect := fmt.Sprintf(`SELECT m.* FROM %s m WHERE lower(title) LIKE $1 LIMIT 20`, moviesTbl)
+	learningStepCases := fmt.Sprintf(`
+	CASE
+		WHEN v.already_learned
+			OR v.learning_step > %d THEN %d
+		WHEN v.learning_step IS NULL THEN 0
+		ELSE v.learning_step
+	END`, maxLearningStep, maxLearningStep)
+
+	percentsSelect := fmt.Sprintf(`
+	SELECT movie_id, sum(%s)::decimal / (count(*) * %d) * 100 AS vocabulary_percent
+	FROM %s mw
+	LEFT JOIN vocabulary v ON mw.word_id = v.word_id AND v.user_id=$2
+	GROUP BY movie_id`, learningStepCases, maxLearningStep, moviesWordsTbl)
+
 	query := fmt.Sprintf(`
-	SELECT m.* FROM %s m LEFT JOIN %s mu ON m.id = mu.movie_id
-	WHERE lower(title) LIKE $1
-	GROUP BY id ORDER BY count(mu.user_id) DESC
-	LIMIT 20`, moviesTbl, moviesUsersTbl)
+	SELECT * FROM (%s) search_results
+	LEFT JOIN (%s) percents ON percents.movie_id = search_results.id
+	`, searchSelect, percentsSelect)
 
 	err := pgxscan.Select(ctx, repo.db, &result, query, searchQuery)
 
 	if errors.Is(err, pgx.ErrNoRows) {
-		return []Movie{}, nil
+		return []*SearchResult{}, nil
 	}
 
 	if err != nil {
