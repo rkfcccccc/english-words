@@ -35,7 +35,6 @@ func (h *Handlers) GetRouter() *gin.Engine {
 	// movieGroup.GET("/:id") - get info about :id
 	movies.POST("/:id/favorite", h.MovieFavorite)
 	movies.DELETE("/:id/favorite", h.MovieUnfavorite)
-	// movieGroup.GET("/") - search for movie
 
 	vocabulary := authorized.Group("/vocabulary")
 	vocabulary.GET("/challenge", h.GetChallenge)
