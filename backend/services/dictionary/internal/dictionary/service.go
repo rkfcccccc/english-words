@@ -28,9 +28,9 @@ func NewService(repo Repository, sync dsync.Client, dict dictionaryapi.Client, l
 	return &Service{repo, sync, dict, lemm, writer}
 }
 
-func (service *Service) writeToPicturesQueue(wordId string) {
+func (service *Service) writeToPopulationQueue(wordId string) {
 	if err := service.kafka.WriteMessages(context.Background(), kafka.Message{Value: []byte(wordId)}); err != nil {
-		log.Printf("failed writing to pictures queue: %v", err)
+		log.Printf("failed writing to population queue: %v", err)
 	}
 }
 
@@ -51,7 +51,7 @@ func (service *Service) Create(ctx context.Context, word string) (string, error)
 
 	if entry != nil {
 		if entry.Pictures == nil {
-			go service.writeToPicturesQueue(entry.Id)
+			go service.writeToPopulationQueue(entry.Id)
 		}
 
 		return entry.Id, nil
@@ -71,7 +71,7 @@ func (service *Service) Create(ctx context.Context, word string) (string, error)
 		return "", fmt.Errorf("repo.Create: %v", err)
 	}
 
-	go service.writeToPicturesQueue(wordId)
+	go service.writeToPopulationQueue(wordId)
 	return wordId, nil
 }
 
