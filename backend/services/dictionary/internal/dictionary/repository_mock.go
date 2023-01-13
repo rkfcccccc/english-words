@@ -96,6 +96,10 @@ func (repo *repositoryMock) SetPictures(ctx context.Context, wordId string, pict
 	return repo.pullErr()
 }
 
+func (repo *repositoryMock) SetTranslations(ctx context.Context, wordId string, translations []string) error {
+	return repo.pullErr()
+}
+
 func (repo *repositoryMock) Search(ctx context.Context, query string) ([]*models.WordEntry, error) {
 	return repo.pullAllEntries(), repo.pullErr()
 }
