@@ -51,7 +51,7 @@ func (c *Consumer) populateWithPictures(ctx context.Context, entry *models.WordE
 		log.Printf("got error when processing word: %v", err)
 	}
 
-	fmt.Printf("populated %s with %d pictures\n", entry.Word, count)
+	log.Printf("populated %s with %d pictures\n", entry.Word, count)
 }
 
 func (c *Consumer) Serve(conn *kafka.Conn) error {
