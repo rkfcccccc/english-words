@@ -63,7 +63,7 @@ services:
     env_file: .env
     restart: always
     ports:
-      - 50051:50054
+      - 50054:50054
     build:
       dockerfile: ./docker/microservice/Dockerfile
       args:
