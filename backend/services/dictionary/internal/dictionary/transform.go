@@ -38,9 +38,10 @@ func TransformToGRPC(dEntry *models.WordEntry) *pb.WordEntry {
 	}
 
 	entry := pb.WordEntry{
-		Id:       dEntry.Id,
-		Word:     dEntry.Word,
-		Phonetic: dEntry.Phonetic,
+		Id:           dEntry.Id,
+		Word:         dEntry.Word,
+		Phonetic:     dEntry.Phonetic,
+		Translations: dEntry.Translations,
 	}
 
 	entry.Meanings = make([]*pb.Meaning, len(dEntry.Meanings))

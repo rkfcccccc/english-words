@@ -12,9 +12,10 @@ func transformFromGRPC(dEntry *pb.WordEntry) *WordEntry {
 	}
 
 	entry := WordEntry{
-		Id:       dEntry.Id,
-		Word:     dEntry.Word,
-		Phonetic: dEntry.Phonetic,
+		Id:           dEntry.Id,
+		Word:         dEntry.Word,
+		Phonetic:     dEntry.Phonetic,
+		Translations: dEntry.Translations,
 	}
 
 	entry.Meanings = make([]Meaning, len(dEntry.Meanings))

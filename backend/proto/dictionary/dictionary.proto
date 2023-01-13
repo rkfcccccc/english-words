@@ -25,6 +25,7 @@ message WordEntry {
     string phonetic = 3;
     repeated Meaning meanings = 4;
     repeated SourcedPicture pictures = 5;
+    repeated string translations = 6;
 }
 
 message Word {

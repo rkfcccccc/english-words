@@ -24,4 +24,6 @@ type WordEntry struct {
 	Meanings []Meaning `json:"meanings"`
 
 	Pictures []SourcedPicture `json:"pictures"`
+
+	Translations []string `json:"translations"`
 }
