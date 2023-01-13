@@ -4,14 +4,32 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
+	"time"
 )
+
+var ErrTooManyRequests = errors.New("too many requests")
 
 type client struct{}
 
-func (*client) GetTranslation(ctx context.Context, input string, from string, to string) (*translationResponse, error) {
+func (client *client) GetTranslation(ctx context.Context, input string, from string, to string) (*translationResponse, error) {
+	for {
+		result, err := client.getTranslation(ctx, input, from, to)
+		if errors.Is(err, ErrTooManyRequests) {
+			log.Println("reverso got too many requests")
+			time.Sleep(time.Minute)
+			continue
+		}
+
+		return result, err
+	}
+}
+
+func (*client) getTranslation(ctx context.Context, input string, from string, to string) (*translationResponse, error) {
 	url := "https://api.reverso.net/translate/v1/translation"
 
 	requestBody, err := json.Marshal(translationRequestBody{
@@ -47,6 +65,10 @@ func (*client) GetTranslation(ctx context.Context, input string, from string, to
 
 	defer response.Body.Close()
 
+	if response.StatusCode == http.StatusTooManyRequests {
+		return nil, ErrTooManyRequests
+	}
+
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		return nil, fmt.Errorf("io.ReadAll: %v", err)
@@ -54,7 +76,7 @@ func (*client) GetTranslation(ctx context.Context, input string, from string, to
 
 	var result translationResponse
 	if err := json.Unmarshal(body, &result); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal: %v", err)
+		return nil, fmt.Errorf("json.Unmarshal: %v (%s)", err, string(body))
 	}
 
 	return &result, nil
