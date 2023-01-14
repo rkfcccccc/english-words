@@ -199,7 +199,7 @@ class _WordDefinitions extends StatelessWidget {
             (definitions.length > 1 ? "${index + 1}. " : "") +
                 definitions[index].text,
             style: TextStyle(
-              fontSize: 11.5.sp,
+              fontSize: 11.sp,
               fontWeight: FontWeight.w400,
             ),
           ),
