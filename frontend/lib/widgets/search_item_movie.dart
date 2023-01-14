@@ -39,6 +39,22 @@ class MovieSearchItem extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Container(
+                      padding: EdgeInsets.all(1.w),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).hoverColor,
+                        borderRadius: BorderRadius.circular(7),
+                      ),
+                      child: Text(
+                        '${movie.vocabularyPercent.toStringAsFixed(2)}% of your vocabulary',
+                        style: TextStyle(
+                          fontSize: 9.sp,
+                          fontWeight: FontWeight.w400,
+                          color: const Color.fromRGBO(190, 190, 190, 1),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 1.w),
                     Text(
                       movie.title,
                       style: TextStyle(
