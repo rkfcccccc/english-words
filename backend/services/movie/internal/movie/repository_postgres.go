@@ -169,11 +169,11 @@ func (repo *postgresRepository) Search(ctx context.Context, searchQuery string, 
 	GROUP BY movie_id`, learningStepCases, maxLearningStep, moviesWordsTbl)
 
 	query := fmt.Sprintf(`
-	SELECT * FROM (%s) search_results
+	SELECT search_results.*, percents.vocabulary_percent FROM (%s) search_results
 	LEFT JOIN (%s) percents ON percents.movie_id = search_results.id
 	`, searchSelect, percentsSelect)
 
-	err := pgxscan.Select(ctx, repo.db, &result, query, searchQuery)
+	err := pgxscan.Select(ctx, repo.db, &result, query, searchQuery, userId)
 
 	if errors.Is(err, pgx.ErrNoRows) {
 		return []*SearchResult{}, nil
