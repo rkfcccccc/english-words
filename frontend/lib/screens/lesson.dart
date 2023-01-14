@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -8,6 +9,7 @@ import 'package:english_words/widgets/word_entry_view.dart';
 import 'package:flutter/material.dart';
 import 'package:english_words/utils/api/vocabulary/vocabulary.dart'
     as vocabulary_api;
+import 'package:just_audio/just_audio.dart';
 import 'package:sizer/sizer.dart';
 
 const initialPage = 100000000;
@@ -22,13 +24,17 @@ class LessonScreen extends StatefulWidget {
 class _LessonScreenState extends State<LessonScreen> {
   late PageController _pageController;
   late Map<int, Challenge> challenges;
+  late AudioPlayer _audioPlayer;
 
   @override
   void initState() {
+    _audioPlayer = AudioPlayer();
     _pageController = PageController(initialPage: initialPage);
 
     challenges = {};
     vocabulary_api.getChallenge().then((challenge) {
+      playPronounciation(challenge);
+
       setState(() {
         challenges[initialPage] = challenge;
       });
@@ -37,7 +43,18 @@ class _LessonScreenState extends State<LessonScreen> {
     super.initState();
   }
 
+  Future<void> playPronounciation(Challenge challenge) async {
+    await _audioPlayer.setUrl(
+        // ignore: prefer_interpolation_to_compose_strings
+        'https://voice.reverso.net/RestPronunciation.svc/v1/output=json/GetVoiceStream/voiceName=Heather22k?voiceSpeed=100&inputText=' +
+            base64Encode(utf8.encode(challenge.entry.word)));
+
+    _audioPlayer.play();
+  }
+
   Future<void> finishChallenge(String action) async {
+    await _audioPlayer.stop();
+
     final currentPage = _pageController.page!.toInt();
     final entry = challenges[currentPage]!.entry;
 
@@ -50,6 +67,7 @@ class _LessonScreenState extends State<LessonScreen> {
 
     if (action == "promote") {
       final nextChallenge = await vocabulary_api.getChallenge();
+      playPronounciation(nextChallenge);
 
       setState(() {
         challenges[currentPage + 1] = nextChallenge;
@@ -58,6 +76,7 @@ class _LessonScreenState extends State<LessonScreen> {
       challenges.remove(currentPage);
     } else if (action == "resist") {
       final nextChallenge = challenges[currentPage]!.copyWith(learningStep: 0);
+      playPronounciation(nextChallenge);
 
       setState(() {
         challenges[currentPage + 1] = nextChallenge;
@@ -80,6 +99,7 @@ class _LessonScreenState extends State<LessonScreen> {
     await vocabulary_api.setAlreadyLearned(entry.id, true);
 
     final nextChallenge = await vocabulary_api.getChallenge();
+    playPronounciation(nextChallenge);
 
     setState(() {
       challenges[currentPage + 1] = nextChallenge;
