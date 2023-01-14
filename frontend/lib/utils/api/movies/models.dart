@@ -7,12 +7,15 @@ class Movie {
   final int year;
   final String posterUrl;
 
+  final double vocabularyPercent;
+
   Movie({
     required this.id,
     required this.imdbId,
     required this.title,
     required this.year,
     required this.posterUrl,
+    required this.vocabularyPercent,
   });
 
   factory Movie.fromMap(Map<String, dynamic> map) {
@@ -22,6 +25,7 @@ class Movie {
       title: map['title'] ?? '',
       year: map['year']?.toInt() ?? 0,
       posterUrl: map['poster_url'] ?? '',
+      vocabularyPercent: map['vocabulary_percent']?.toDouble() ?? 0.0,
     );
   }
 
