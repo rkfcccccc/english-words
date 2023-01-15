@@ -81,8 +81,6 @@ class WordEntry {
   final List<SourcedPicture>? pictures;
   final List<String>? translations;
 
-  bool _precached = false;
-
   WordEntry({
     required this.id,
     required this.word,
@@ -111,19 +109,4 @@ class WordEntry {
 
   factory WordEntry.fromJson(String source) =>
       WordEntry.fromMap(json.decode(source));
-
-  void precache(BuildContext context) async {
-    if (_precached || pictures == null) {
-      return;
-    }
-
-    for (int i = 0; i < pictures!.length ~/ 2; i++) {
-      await precacheImage(
-        CachedNetworkImageProvider(pictures![i].url),
-        context,
-      );
-    }
-
-    _precached = true;
-  }
 }

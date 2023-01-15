@@ -5,7 +5,7 @@ import 'package:english_words/utils/api/dictionary/models.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-class WordEntryView extends StatelessWidget {
+class WordEntryView extends StatefulWidget {
   final WordEntry entry;
 
   const WordEntryView({
@@ -14,13 +14,35 @@ class WordEntryView extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    entry.precache(context);
+  State<WordEntryView> createState() => _WordEntryViewState();
+}
 
+class _WordEntryViewState extends State<WordEntryView> {
+  void precache() async {
+    final pictures = widget.entry.pictures;
+    if (pictures == null) {
+      return;
+    }
+
+    for (int i = 0; i < pictures.length ~/ 2; i++) {
+      if (!mounted) return;
+      await precacheImage(CachedNetworkImageProvider(pictures[i].url), context);
+    }
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) => precache());
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (entry.pictures != null) _Pictures(pictures: entry.pictures!),
+        if (widget.entry.pictures != null)
+          _Pictures(pictures: widget.entry.pictures!),
         Padding(
           padding: EdgeInsets.all(4.w),
           child: Column(
@@ -33,15 +55,15 @@ class WordEntryView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        entry.word,
+                        widget.entry.word,
                         style: TextStyle(
                           fontSize: 19.sp,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      if (entry.phonetic != "")
+                      if (widget.entry.phonetic != "")
                         Text(
-                          entry.phonetic,
+                          widget.entry.phonetic,
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
@@ -69,12 +91,12 @@ class WordEntryView extends StatelessWidget {
                   ),
                 ],
               ),
-              if (entry.translations != null) ...[
+              if (widget.entry.translations != null) ...[
                 SizedBox(height: 1.w),
                 Wrap(
                   spacing: 1.w,
                   runSpacing: 1.w,
-                  children: entry.translations!
+                  children: widget.entry.translations!
                       .map(
                         (translation) => Container(
                           padding: EdgeInsets.all(1.w),
@@ -96,7 +118,7 @@ class WordEntryView extends StatelessWidget {
                 ),
               ],
               const Divider(),
-              _WordMeanings(meanings: entry.meanings),
+              _WordMeanings(meanings: widget.entry.meanings),
             ],
           ),
         ),
