@@ -44,6 +44,8 @@ class _LessonScreenState extends State<LessonScreen> {
   }
 
   Future<void> playPronounciation(Challenge challenge) async {
+    await _audioPlayer.stop();
+
     await _audioPlayer.setUrl(
         // ignore: prefer_interpolation_to_compose_strings
         'https://voice.reverso.net/RestPronunciation.svc/v1/output=json/GetVoiceStream/voiceName=Heather22k?voiceSpeed=100&inputText=' +
@@ -53,8 +55,6 @@ class _LessonScreenState extends State<LessonScreen> {
   }
 
   Future<void> finishChallenge(String action) async {
-    await _audioPlayer.stop();
-
     final currentPage = _pageController.page!.toInt();
     final entry = challenges[currentPage]!.entry;
 
