@@ -42,6 +42,11 @@ func (service *Service) ResistWord(ctx context.Context, userId int, wordId strin
 }
 
 func (service *Service) SetAlreadyLearned(ctx context.Context, userId int, wordId string, isAlreadyLearned bool) error {
+	_, err := service.state.Increment(ctx, userId)
+	if err != nil {
+		return fmt.Errorf("state.Increment: %v", err)
+	}
+
 	return service.repo.SetAlreadyLearned(ctx, userId, wordId, isAlreadyLearned)
 }
 
