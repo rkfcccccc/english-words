@@ -51,9 +51,10 @@ func (repo *postgresRepository) PromoteWord(ctx context.Context, userId int, wor
 	}
 
 	learningStep += 1
+	nextChallenge := challengeNo + learningStep*learningStep*learningStep
 
 	query = fmt.Sprintf("update %s set next_challenge=$3, learning_step=$4 where user_id=$1 and word_id=$2", vocabularyTbl)
-	if _, err := tx.Exec(ctx, query, userId, wordId, challengeNo+learningStep*learningStep, learningStep); err != nil {
+	if _, err := tx.Exec(ctx, query, userId, wordId, nextChallenge, learningStep); err != nil {
 		tx.Rollback(ctx)
 		return fmt.Errorf("db.Exec: %v", err)
 	}

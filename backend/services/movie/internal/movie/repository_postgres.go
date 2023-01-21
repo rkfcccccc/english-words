@@ -15,7 +15,7 @@ const moviesTbl = "movies"
 const moviesWordsTbl = "movies_words"
 const moviesUsersTbl = "movies_users"
 const chunkSize = 1000
-const maxLearningStep = 30
+const maxLearningStep = 15
 
 type postgresRepository struct {
 	db *pgxpool.Pool
