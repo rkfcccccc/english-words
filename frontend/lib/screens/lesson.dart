@@ -150,32 +150,33 @@ class _LessonScreenState extends State<LessonScreen> {
           if (challenge.learningStep > 0) {
             return FloatingWrapper(
               children: [
-                FloatingContainer(
-                  child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 4.w, vertical: 10.w),
-                    child: Column(
-                      children: [
-                        Text(
-                          "Do you remember the meaning of",
-                          style: TextStyle(fontSize: 12.sp),
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 4.w, vertical: 10.w),
+                  child: Column(
+                    children: [
+                      Text(
+                        "Do you remember the meaning of",
+                        style: TextStyle(fontSize: 12.sp),
+                      ),
+                      Text(
+                        "${challenge.entry.word}?",
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
                         ),
-                        Text(
-                          "${challenge.entry.word}?",
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-                FloatingActions(
-                  onPrimary: () => finishChallenge("promote"),
-                  primaryText: "Yes",
-                  onSecondary: () => finishChallenge("resist"),
-                  secondaryText: "I don't remember",
+                Padding(
+                  padding: EdgeInsets.all(4.w),
+                  child: FloatingActions(
+                    onPrimary: () => finishChallenge("promote"),
+                    primaryText: "Yes",
+                    onSecondary: () => finishChallenge("resist"),
+                    secondaryText: "I don't remember",
+                  ),
                 ),
               ],
             );

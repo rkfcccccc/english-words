@@ -10,7 +10,7 @@ class FloatingContainer extends StatelessWidget {
       width: double.infinity,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: const Color.fromRGBO(32, 32, 32, 1),
+        color: const Color.fromRGBO(30, 30, 30, 1),
         borderRadius: BorderRadius.circular(13),
         boxShadow: [
           BoxShadow(

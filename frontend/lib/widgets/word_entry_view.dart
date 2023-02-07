@@ -227,6 +227,7 @@ class _WordDefinitions extends StatelessWidget {
             (definitions.length > 1 ? "${index + 1}. " : "") +
                 definitions[index].text,
             style: TextStyle(
+              color: const Color.fromRGBO(230, 230, 230, 1),
               fontSize: 11.sp,
               fontWeight: FontWeight.w400,
             ),
@@ -236,7 +237,7 @@ class _WordDefinitions extends StatelessWidget {
         ],
       ),
       shrinkWrap: true,
-      separatorBuilder: (ctx, index) => const SizedBox(height: 6.0),
+      separatorBuilder: (ctx, index) => const SizedBox(height: 4.0),
       physics: const NeverScrollableScrollPhysics(),
       itemCount:
           min(definitions.length, 3), // TODO: add a button to increase it
@@ -255,7 +256,7 @@ class _WordExample extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(height: 4),
+        const SizedBox(height: 8),
         Container(
           padding: const EdgeInsets.symmetric(
             horizontal: 8.0,
