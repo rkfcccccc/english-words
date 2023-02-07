@@ -7,9 +7,11 @@ import 'package:sizer/sizer.dart';
 
 class WordEntryView extends StatefulWidget {
   final WordEntry entry;
+  final Widget? actions;
 
   const WordEntryView({
     Key? key,
+    this.actions,
     required this.entry,
   }) : super(key: key);
 
@@ -119,6 +121,10 @@ class _WordEntryViewState extends State<WordEntryView> {
               ],
               const Divider(),
               _WordMeanings(meanings: widget.entry.meanings),
+              if (widget.actions != null) ...[
+                SizedBox(height: 4.w),
+                widget.actions!,
+              ]
             ],
           ),
         ),

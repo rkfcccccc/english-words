@@ -3,8 +3,7 @@ import 'package:english_words/widgets/search_item.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-import 'floating_wrapper.dart';
-import 'word_entry_view.dart';
+import 'word_entry_view_wrapped.dart';
 
 class WordSearchItem extends StatelessWidget {
   final WordEntry entry;
@@ -20,10 +19,8 @@ class WordSearchItem extends StatelessWidget {
       onPressed: () => Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => Scaffold(
-            body: FloatingWrapper(
-              child: WordEntryView(
-                entry: entry,
-              ),
+            body: WrappedWordEntryView(
+              entry: entry,
             ),
           ),
         ),

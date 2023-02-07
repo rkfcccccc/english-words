@@ -1,11 +1,9 @@
 import 'dart:convert';
-import 'dart:math';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:english_words/utils/api/vocabulary/models.dart';
 import 'package:english_words/widgets/floating_container.dart';
 import 'package:english_words/widgets/floating_wrapper.dart';
-import 'package:english_words/widgets/word_entry_view.dart';
+import 'package:english_words/widgets/word_entry_view_wrapped.dart';
 import 'package:flutter/material.dart';
 import 'package:english_words/utils/api/vocabulary/vocabulary.dart'
     as vocabulary_api;
@@ -118,30 +116,32 @@ class _LessonScreenState extends State<LessonScreen> {
         itemBuilder: (context, index) {
           if (!challenges.containsKey(index)) {
             return FloatingWrapper(
-              child: Padding(
-                padding: EdgeInsets.all(4.w),
-                child: Row(
-                  children: [
-                    SizedBox.square(
-                      dimension: 3.w,
-                      child: const CircularProgressIndicator(
-                        strokeWidth: 3,
-                        color: Color.fromRGBO(70, 70, 70, 1),
-                      ),
-                    ),
-                    SizedBox(width: 4.w),
-                    Flexible(
-                      child: Text(
-                        "We are choosing the right words for you...",
-                        style: TextStyle(
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w600,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(4.w),
+                  child: Row(
+                    children: [
+                      SizedBox.square(
+                        dimension: 3.w,
+                        child: const CircularProgressIndicator(
+                          strokeWidth: 3,
+                          color: Color.fromRGBO(70, 70, 70, 1),
                         ),
                       ),
-                    ),
-                  ],
+                      SizedBox(width: 4.w),
+                      Flexible(
+                        child: Text(
+                          "We are choosing the right words for you...",
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+              ],
             );
           }
 
@@ -149,44 +149,46 @@ class _LessonScreenState extends State<LessonScreen> {
 
           if (challenge.learningStep > 0) {
             return FloatingWrapper(
-              actions: FloatingActions(
-                onPrimary: () => finishChallenge("promote"),
-                primaryText: "Yes",
-                onSecondary: () => finishChallenge("resist"),
-                secondaryText: "I don't remember",
-              ),
-              child: FloatingContainer(
-                child: Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 4.w, vertical: 10.w),
-                  child: Column(
-                    children: [
-                      Text(
-                        "Do you remember the meaning of",
-                        style: TextStyle(fontSize: 12.sp),
-                      ),
-                      Text(
-                        "${challenge.entry.word}?",
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w600,
+              children: [
+                FloatingContainer(
+                  child: Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 4.w, vertical: 10.w),
+                    child: Column(
+                      children: [
+                        Text(
+                          "Do you remember the meaning of",
+                          style: TextStyle(fontSize: 12.sp),
                         ),
-                      ),
-                    ],
+                        Text(
+                          "${challenge.entry.word}?",
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
+                FloatingActions(
+                  onPrimary: () => finishChallenge("promote"),
+                  primaryText: "Yes",
+                  onSecondary: () => finishChallenge("resist"),
+                  secondaryText: "I don't remember",
+                ),
+              ],
             );
           }
 
-          return FloatingWrapper(
+          return WrappedWordEntryView(
+            entry: challenge.entry,
             actions: FloatingActions(
               onPrimary: () => finishChallenge("promote"),
               primaryText: "Next",
               onSecondary: () => setAlreadyLearned(),
               secondaryText: "I already know this word",
             ),
-            child: WordEntryView(entry: challenge.entry),
           );
         },
       ),
