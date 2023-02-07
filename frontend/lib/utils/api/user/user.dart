@@ -1,6 +1,5 @@
 import 'package:english_words/utils/api/api.dart';
 import 'package:english_words/utils/api/user/models.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 Future<SignupResponse> signup(
   String email,
